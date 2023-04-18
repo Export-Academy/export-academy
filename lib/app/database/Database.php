@@ -1,15 +1,15 @@
 <?php
 
 
-namespace common\app\database;
+namespace lib\app\database;
 
-use common\config\Configuration;
-use common\util\BaseObject;
+use lib\config\Configuration;
+use lib\util\BaseObject;
 use PDO;
 use PDOException;
 
-require_once 'C:\xampp\htdocs\academy\common\config\Configuration.php';
-require_once  'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once 'C:\xampp\htdocs\academy\lib\config\Configuration.php';
+require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 class Database extends BaseObject
 {

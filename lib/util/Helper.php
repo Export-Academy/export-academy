@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common\util;
+namespace lib\util;
 
 use stdClass;
 
@@ -23,6 +23,10 @@ class Helper
 
       case '@common':
         $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'common';
+        break;
+
+      case '@lib':
+        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'lib';
         break;
 
       case '@vendor':

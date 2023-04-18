@@ -1,11 +1,11 @@
 <?php
 
-namespace common\app\view;
+namespace lib\app\view;
 
 use common\controller\Controller;
-use common\util\Helper;
+use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\common\util\Helper.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
 require_once Helper::getAlias('@common\controller\Controller.php');
 
 class View

@@ -1,7 +1,7 @@
 <?php
 
-use common\app\auth;
-use common\app\http\Request;
+use lib\app\auth;
+use lib\app\http\Request;
 
 class Authentication
 {

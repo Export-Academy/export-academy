@@ -1,15 +1,15 @@
 <?php
 
-namespace common\router;
+namespace lib\app\router;
 
-use common\app\http\Request;
+use lib\app\http\Request;
 use common\controller\BaseController;
-use common\util\BaseObject;
-use common\util\Helper;
+use lib\util\BaseObject;
+use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\common\util\Helper.php';
-require_once 'C:\xampp\htdocs\academy\common\app\http\Request.php';
-require_once 'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\http\Request.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 class Router extends BaseObject
 {

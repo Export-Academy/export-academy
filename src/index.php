@@ -1,8 +1,8 @@
 <?php
 
-use common\app\App;
+use lib\app\App;
 
-require_once('../common/app/App.php');
+require_once('../lib/app/App.php');
 
 
 require_once 'C:\xampp\htdocs\academy\site\controller\AssessmentController.php';

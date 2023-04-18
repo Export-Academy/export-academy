@@ -1,23 +1,23 @@
 <?php
 
 
-namespace common\app\database;
+namespace lib\app\database;
 
-use common\app\database\query\Condition;
-use common\app\database\query\Expression;
-use common\app\database\query\IExpression;
-use common\app\database\query\OnCondition;
-use common\app\database\query\Select;
+use lib\app\database\query\Condition;
+use lib\app\database\query\Expression;
+use lib\app\database\query\IExpression;
+use lib\app\database\query\OnCondition;
+use lib\app\database\query\Select;
 use common\models\base\BaseModel;
-use common\util\BaseObject;
-use common\util\Helper;
+use lib\util\BaseObject;
+use lib\util\Helper;
 use Exception;
 use PDO;
 
-require_once 'C:\xampp\htdocs\academy\common\app\database\query\IExpression.php';
-require_once 'C:\xampp\htdocs\academy\common\app\database\query\Expressions.php';
-require_once  'C:\xampp\htdocs\academy\common\util\Helper.php';
-require_once 'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\database\query\IExpression.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\database\query\Expressions.php';
+require_once  'C:\xampp\htdocs\academy\lib\util\Helper.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 require_once 'C:\xampp\htdocs\academy\common\models\base\BaseModel.php';
 
 

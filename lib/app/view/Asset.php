@@ -1,9 +1,9 @@
 <?php
 
 
-namespace common\util\Helper;
+namespace lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\common\util\Helper.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
 
 
 class Asset

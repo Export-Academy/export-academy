@@ -2,14 +2,14 @@
 
 namespace common\controller;
 
-use common\app\http\request\Request;
-use common\app\view\View;
-use common\util\BaseObject;
-use common\util\Helper;
+use lib\app\http\request\Request;
+use lib\app\view\View;
+use lib\util\BaseObject;
+use lib\util\Helper;
 
-require_once('C:\xampp\htdocs\academy\common\app\view\View.php');
-require_once('C:\xampp\htdocs\academy\common\app\http\Request.php');
-require_once  'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once('C:\xampp\htdocs\academy\lib\app\view\View.php');
+require_once('C:\xampp\htdocs\academy\lib\app\http\Request.php');
+require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 /**
  * @property View $view

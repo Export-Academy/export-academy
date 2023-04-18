@@ -1,7 +1,7 @@
 <?php
 
-use common\app\view\View;
-use common\util\Helper;
+use lib\app\view\View;
+use lib\util\Helper;
 
 /**
  * @var string $method

@@ -1,18 +1,18 @@
 <?php
 
 
-namespace common\app;
+namespace lib\app;
 
-use common\app\database\Database;
-use common\app\http\Request;
-use common\router\Router;
-use common\util\BaseObject;
+use lib\app\database\Database;
+use lib\app\http\Request;
+use lib\app\router\Router;
+use lib\util\BaseObject;
 
-require_once 'C:\xampp\htdocs\academy\common\util\Helper.php';
-require_once 'C:\xampp\htdocs\academy\common\app\http\Request.php';
-require_once 'C:\xampp\htdocs\academy\common\app\router\Router.php';
-require_once 'C:\xampp\htdocs\academy\common\app\database\Database.php';
-require_once  'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\http\Request.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\router\Router.php';
+require_once 'C:\xampp\htdocs\academy\lib\app\database\Database.php';
+require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 
 class App extends BaseObject

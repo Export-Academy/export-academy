@@ -2,11 +2,11 @@
 
 
 
-namespace common\config;
+namespace lib\config;
 
-use common\util\BaseObject;
+use lib\util\BaseObject;
 
-require_once  'C:\xampp\htdocs\academy\common\util\BaseObject.php';
+require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 
 class Configuration extends BaseObject

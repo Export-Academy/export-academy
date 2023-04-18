@@ -1,6 +1,6 @@
 <?php
 
-namespace common\app\database\query;
+namespace lib\app\database\query;
 
 
 

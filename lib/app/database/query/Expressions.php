@@ -1,8 +1,8 @@
 <?php
 
-namespace common\app\database\query;
+namespace lib\app\database\query;
 
-use common\util\Helper;
+use lib\util\Helper;
 
 class Select implements IExpression
 {

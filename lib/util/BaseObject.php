@@ -1,8 +1,8 @@
 <?php
 
-namespace common\util;
+namespace lib\util;
 
-require_once  'C:\xampp\htdocs\academy\common\util\Helper.php';
+require_once  'C:\xampp\htdocs\academy\lib\util\Helper.php';
 
 use Exception;
 
