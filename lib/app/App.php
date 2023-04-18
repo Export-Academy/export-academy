@@ -7,12 +7,14 @@ use lib\app\database\Database;
 use lib\app\http\Request;
 use lib\app\router\Router;
 use lib\util\BaseObject;
+use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
-require_once 'C:\xampp\htdocs\academy\lib\app\http\Request.php';
-require_once 'C:\xampp\htdocs\academy\lib\app\router\Router.php';
-require_once 'C:\xampp\htdocs\academy\lib\app\database\Database.php';
-require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
+
+
+require_once Helper::getAlias('@lib\app\http\Request.php');
+require_once Helper::getAlias('@lib\app\router\Router.php');
+require_once Helper::getAlias('@lib\app\database\Database.php');
+require_once Helper::getAlias('@lib\util\BaseObject.php');
 
 
 class App extends BaseObject

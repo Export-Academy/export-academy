@@ -5,7 +5,6 @@ namespace lib\app\view;
 use common\controller\Controller;
 use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
 require_once Helper::getAlias('@common\controller\Controller.php');
 
 class View

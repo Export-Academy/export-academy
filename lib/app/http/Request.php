@@ -3,9 +3,10 @@
 
 namespace lib\app\http;
 
+use lib\util\Helper;
 use lib\util\BaseObject;
 
-require_once 'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
+require_once Helper::getAlias('@lib\util\BaseObject.php');
 
 class Request extends BaseObject
 {

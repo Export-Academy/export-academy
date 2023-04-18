@@ -6,8 +6,7 @@ namespace common\models\access;
 use common\models\base\BaseModel;
 
 
-require_once 'C:\xampp\htdocs\academy\common\models\index.php';
-require_once 'C:\xampp\htdocs\academy\common\models\base\BaseModel.php';
+
 /**
  * Grant Entity
  * 
@@ -26,14 +25,16 @@ class Grant extends BaseModel
   public $enabled;
 
 
-  public function getRole()
+  public function getRole($result = true)
   {
-    return [];
+    $query = self::hasOne(Role::class, ['id' => $this->role_id]);
+    return $result ? $query->all() : $query;
   }
 
 
-  public function getPermission()
+  public function getPermission($result = true)
   {
-    return [];
+    $query = self::hasOne(Role::class, ['id' => $this->permission_id]);
+    return $result ? $query->all() : $query;
   }
 }

@@ -4,8 +4,7 @@
 namespace common\models\access;
 
 use common\models\base\BaseModel;
-
-require_once 'C:\xampp\htdocs\academy\common\models\base\BaseModel.php';
+use common\models\User;
 
 /**
  * UserRole Entity
@@ -29,13 +28,15 @@ class UserRole extends BaseModel
   }
 
 
-  public function getUser()
+  public function getUser($result = true)
   {
-    return [];
+    $query = self::hasOne(User::class, ['id' => $this->user_id]);
+    return $result ? $query->all() : $query;
   }
 
-  public function getRole()
+  public function getRole($result = true)
   {
-    return [];
+    $query = self::hasOne(Role::class, ['id' => $this->role_id]);
+    return $result ? $query->all() : $query;
   }
 }

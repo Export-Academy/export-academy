@@ -5,9 +5,6 @@ namespace common\models\access;
 
 use common\models\base\BaseModel;
 
-
-require_once 'C:\xampp\htdocs\academy\common\models\base\BaseModel.php';
-
 /**
  * Permission Entity
  * 

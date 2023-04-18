@@ -4,9 +4,7 @@
 namespace common\models\access;
 
 use common\models\base\BaseModel;
-
-require_once 'C:\xampp\htdocs\academy\common\models\base\BaseModel.php';
-require_once 'C:\xampp\htdocs\academy\common\models\index.php';
+use common\models\User;
 
 /**
  * Restriction Entity
@@ -27,9 +25,10 @@ class Restriction extends BaseModel
 
 
 
-  public function getUser()
+  public function getUser($result = true)
   {
-    return [];
+    $query = self::hasOne(User::class, ['id' => $this->user_id]);
+    return $result ? $query->all() : $query;
   }
 
   public function getPermission($result = true)

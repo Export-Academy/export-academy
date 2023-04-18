@@ -2,8 +2,6 @@
 
 namespace lib\util;
 
-require_once  'C:\xampp\htdocs\academy\lib\util\Helper.php';
-
 use Exception;
 
 class BaseObject

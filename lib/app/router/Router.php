@@ -7,9 +7,10 @@ use common\controller\BaseController;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
-require_once 'C:\xampp\htdocs\academy\lib\app\http\Request.php';
-require_once 'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
+
+
+require_once Helper::getAlias('@lib\app\http\Request.php');
+require_once Helper::getAlias('@lib\util\BaseObject.php');
 
 class Router extends BaseObject
 {
