@@ -10,31 +10,31 @@ class Helper
 
   public static function aliases($alias)
   {
-
     $path  = false;
+    $basePath = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['HTTP_BASE_PATH'];
     switch ($alias) {
       case '@admin':
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'admin';
+        $path =  $basePath . DIRECTORY_SEPARATOR . 'admin';
         break;
 
       case '@site':
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'site';
+        $path =  $basePath . DIRECTORY_SEPARATOR . 'site';
         break;
 
       case '@common':
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'common';
+        $path =  $basePath . DIRECTORY_SEPARATOR . 'common';
         break;
 
       case '@lib':
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'lib';
+        $path =  $basePath . DIRECTORY_SEPARATOR . 'lib';
         break;
 
       case '@vendor':
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor';
+        $path =  $basePath . DIRECTORY_SEPARATOR . 'vendor';
         break;
 
       default:
-        $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_HTTP_BASE_PATH'];
+        $path =  $basePath;
         break;
     }
 
@@ -90,5 +90,11 @@ class Helper
   {
     if (isset($array[$key])) return $array[$key];
     return $default;
+  }
+
+
+  public static function getURL($path)
+  {
+    return $_SERVER['HTTP_HOST'] . $_SERVER['HTTP_BASE_PATH'] . $path;
   }
 }

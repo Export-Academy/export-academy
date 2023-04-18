@@ -3,38 +3,37 @@
 namespace common\controller;
 
 use common\controller\Controller;
+use lib\util\Helper;
 
-require_once 'C:\xampp\htdocs\academy\common\controller\Controller.php';
-require_once 'C:\xampp\htdocs\academy\lib\app\http\Request.php';
+require_once Helper::getAlias('@common\controller\Controller.php');
+require_once Helper::getAlias('@lib\app\http\Request.php');
 
 
 class BaseController extends Controller
 {
   public function actionIndex()
   {
-    $this->jsonResponse('Index Page');
+    $this->render('index');
   }
-
 
   public function actionLogin()
   {
-    $this->jsonResponse('Login Page');
+    $this->render('login');
   }
-
 
   public function actionSignUp()
   {
-    $this->jsonResponse('Sign up Page');
+    $this->render('register');
   }
 
   public function action404()
   {
-    $this->jsonResponse('Page Not Found');
+    $this->render('_404');
   }
 
   public function action401()
   {
-    $this->jsonResponse('Unauthorized');
+    $this->render('_401');
   }
 
   public function action500()
