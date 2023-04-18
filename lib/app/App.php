@@ -14,7 +14,7 @@ use lib\util\Helper;
 require_once Helper::getAlias('@lib\app\http\Request.php');
 require_once Helper::getAlias('@lib\app\router\Router.php');
 require_once Helper::getAlias('@lib\app\database\Database.php');
-require_once Helper::getAlias('@lib\util\BaseObject.php');
+
 
 
 class App extends BaseObject
@@ -29,6 +29,8 @@ class App extends BaseObject
   /** @var Router */
   public $router;
   public $logger;
+
+  /** @var Database */
   public $database;
 
   /**

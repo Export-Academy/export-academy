@@ -1,6 +1,7 @@
 <?php
 
 use lib\app\view\View;
+use lib\util\html\HtmlHelper;
 
 /**
  * @var string $method
@@ -9,15 +10,13 @@ use lib\app\view\View;
 
 
 
-$this->context->pageTitleName('Access Control');
+$this->context->setTitle('Access Control');
 
 ?>
 
-
-
 <div class="container">
   <h1>Access Controller Index</h1>
-  <input class="form-control form-control-sm" />
+  <?= HtmlHelper::input('Joel Henry', 'User[name]', ['class' => 'form-control', 'placeholder' => 'Enter your name']) ?>
 </div>
 
 

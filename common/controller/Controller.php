@@ -40,7 +40,7 @@ class Controller extends BaseObject
 
 
 
-  public function pageTitleName(string $title)
+  public function setTitle(string $title)
   {
     $this->titleName = $title;
   }
