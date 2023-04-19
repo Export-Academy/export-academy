@@ -20,6 +20,3 @@ require_once Helper::getAlias('@lib\util\html\HtmlHelper.php');
 
 $app = App::instance(['site', 'admin']);
 $app->route();
-
-
-echo HtmlHelper::tag('a', 'Click me', ['class' => 'btn btn-primary', 'href' => '/academy/site/control']);

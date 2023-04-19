@@ -31,4 +31,10 @@ class AssessmentController extends Controller
         return $this->render('index', ['method' => $this->request->method()]);
     }
   }
+
+
+  public function actionLogin()
+  {
+    $this->jsonResponse($this->request->data());
+  }
 }

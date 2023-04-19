@@ -27,7 +27,6 @@ class UserRole extends BaseModel
     return "user_role";
   }
 
-
   public function getUser($result = true)
   {
     $query = self::hasOne(User::class, ['id' => $this->user_id]);

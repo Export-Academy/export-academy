@@ -24,10 +24,13 @@ class Request extends BaseObject
   }
 
 
-  public function data($name, $default = null)
+  public function data($name = null, $default = null)
   {
-    if (isset($_POST[$name])) return $_POST[$name];
-    return $default;
+    if (isset($name)) {
+      if (isset($_POST[$name])) return $_POST[$name];
+      return $default;
+    }
+    return $_POST;
   }
 
   public function url()
