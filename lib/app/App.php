@@ -11,6 +11,7 @@ use lib\util\Helper;
 
 
 
+require_once Helper::getAlias('@lib\config\Configuration.php');
 require_once Helper::getAlias('@lib\app\http\Request.php');
 require_once Helper::getAlias('@lib\app\router\Router.php');
 require_once Helper::getAlias('@lib\app\database\Database.php');
@@ -51,7 +52,7 @@ class App extends BaseObject
   }
 
 
-  public function route()
+  public function run()
   {
     $this->router->route();
   }

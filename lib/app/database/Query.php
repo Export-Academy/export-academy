@@ -16,12 +16,6 @@ use PDO;
 
 require_once Helper::getAlias('@lib\app\database\query\IExpression.php');
 require_once Helper::getAlias('@lib\app\database\query\Expressions.php');
-require_once Helper::getAlias('@lib\util\BaseObject.php');
-require_once Helper::getAlias('@common\models\base\BaseModel.php');
-
-
-
-
 
 
 class Query extends BaseObject implements IExpression

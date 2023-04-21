@@ -8,29 +8,33 @@ use stdClass;
 class Helper
 {
 
-  public static function aliases($alias)
+  public static function aliases($alias, $separator = DIRECTORY_SEPARATOR)
   {
     $path  = false;
     $basePath = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['HTTP_BASE_PATH'];
     switch ($alias) {
       case '@admin':
-        $path =  $basePath . DIRECTORY_SEPARATOR . 'admin';
+        $path =  $basePath . $separator . 'admin';
         break;
 
       case '@site':
-        $path =  $basePath . DIRECTORY_SEPARATOR . 'site';
+        $path =  $basePath . $separator . 'site';
         break;
 
       case '@common':
-        $path =  $basePath . DIRECTORY_SEPARATOR . 'common';
+        $path =  $basePath . $separator . 'common';
         break;
 
       case '@lib':
-        $path =  $basePath . DIRECTORY_SEPARATOR . 'lib';
+        $path =  $basePath . $separator . 'lib';
         break;
 
       case '@vendor':
-        $path =  $basePath . DIRECTORY_SEPARATOR . 'vendor';
+        $path =  $basePath . $separator . 'vendor';
+        break;
+
+      case '@web':
+        $path =  $basePath . $separator . 'web';
         break;
 
       default:
@@ -43,18 +47,17 @@ class Helper
 
 
 
-  static function getAlias($alias)
+  static function getAlias($alias, $separator = DIRECTORY_SEPARATOR)
   {
     if (strpos($alias, '@') !== 0) {
       // not an alias
       return $alias;
     }
 
-    $pos = strpos($alias, DIRECTORY_SEPARATOR);
+    $pos = strpos($alias, $separator);
 
 
     $root = $pos === false ? $alias : substr($alias, 0, $pos);
-
     $path = static::aliases($root);
 
     if ($path) {
@@ -93,8 +96,8 @@ class Helper
   }
 
 
-  public static function getURL($path)
+  public static function getURL($path, $separator = DIRECTORY_SEPARATOR)
   {
-    return $_SERVER['HTTP_HOST'] . $_SERVER['HTTP_BASE_PATH'] . $path;
+    return $_SERVER['HTTP_BASE_PATH'] . $separator . $path;
   }
 }

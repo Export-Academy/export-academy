@@ -5,9 +5,6 @@
 namespace lib\config;
 
 use lib\util\BaseObject;
-use lib\util\Helper;
-
-require_once  Helper::getAlias('@lib\util\BaseObject.php');
 
 
 class Configuration extends BaseObject

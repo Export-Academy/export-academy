@@ -3,14 +3,10 @@
 
 namespace lib\app\database;
 
-use lib\util\Helper;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use PDO;
 use PDOException;
-
-require_once Helper::getAlias('@lib\config\Configuration.php');
-require_once  Helper::getAlias('@lib\util\BaseObject.php');
 
 class Database extends BaseObject
 {

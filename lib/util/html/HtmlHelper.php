@@ -19,9 +19,14 @@ class HtmlHelper extends BaseObject
 
   public static function tag($container, $content, $options = [])
   {
-    $html = "<$container " . self::renderAttributes($options) . " >";
+    $html = "<$container" . self::renderAttributes($options) . " >";
     $html .= $content . "</$container>";
     return $html;
+  }
+
+  public static function linkTag($src, $options = [])
+  {
+    return "<link" . self::renderAttributes(array_merge($options, ['href' => $src, "rel" => 'stylesheet'])) . " />";
   }
 
   public static function input($value, $name, $options = [])

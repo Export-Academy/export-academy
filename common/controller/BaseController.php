@@ -3,12 +3,6 @@
 namespace common\controller;
 
 use common\controller\Controller;
-use lib\app\http\Request;
-use lib\util\Helper;
-
-require_once Helper::getAlias('@common\controller\Controller.php');
-require_once Helper::getAlias('@lib\app\http\Request.php');
-
 
 
 class BaseController extends Controller
@@ -34,8 +28,16 @@ class BaseController extends Controller
 
   public function actionSignUp()
   {
+    switch ($this->request->method()) {
+      case 'POST':
+        $this->jsonResponse($this->request->data());
+        break;
 
-    $this->render('register');
+      case 'GET':
+      default:
+        $this->render('sign_up');
+        break;
+    }
   }
 
   public function action404()

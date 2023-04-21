@@ -7,10 +7,6 @@ use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-require_once('C:\xampp\htdocs\academy\lib\app\view\View.php');
-require_once('C:\xampp\htdocs\academy\lib\app\http\Request.php');
-require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
-
 /**
  * @property View $view
  */
@@ -32,19 +28,6 @@ class Controller extends BaseObject
   /** @var string */
   public $module;
 
-
-  /** @var string */
-  private $titleName;
-
-
-
-
-
-  public function setTitle(string $title)
-  {
-    $this->titleName = $title;
-  }
-
   protected function render($path_to_view, $params = [], $layout_file_name = 'main')
   {
     $view_path = $this->getViewPath();
@@ -53,8 +36,7 @@ class Controller extends BaseObject
     $layoutFilePath = $this->getLayoutFile($layout_file_name);
 
     $content = $this->getView()->generateContent($layoutFilePath, [
-      'content' => $body,
-      'title' => $this->titleName
+      'content' => $body
     ]);
 
     $content ? $this->getView()->renderContent($content) :  $this->getView()->renderContent($body);
@@ -69,6 +51,37 @@ class Controller extends BaseObject
     echo json_encode($data);
     exit();
   }
+
+
+  protected function returnScript($__filename__)
+  {
+    ob_clean();
+    header_remove();
+    header('Content-Type: text/javascript');
+    if (file_exists($__filename__)) {
+      http_response_code(200);
+      echo file_get_contents($__filename__);
+    } else {
+      http_response_code(404);
+    }
+    exit();
+  }
+
+
+  protected function returnStylesheet($__filename__)
+  {
+    ob_clean();
+    header_remove();
+    header('Content-Type: text/css');
+    if (file_exists($__filename__)) {
+      http_response_code(200);
+      echo file_get_contents($__filename__);
+    } else {
+      http_response_code(404);
+    }
+    exit();
+  }
+
 
   protected function renderFile($file, $params = [])
   {
@@ -103,5 +116,15 @@ class Controller extends BaseObject
   {
     $path = Helper::getAlias($this->module) . '/views/layout/' . $name;
     return $path;
+  }
+
+  /**
+   * The default asset directory for the controller
+   *
+   * @return void
+   */
+  public function getAssetDirectory()
+  {
+    return Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1])) . DIRECTORY_SEPARATOR . "assets";
   }
 }

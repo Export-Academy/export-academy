@@ -3,10 +3,7 @@
 
 namespace lib\app\http;
 
-use lib\util\Helper;
 use lib\util\BaseObject;
-
-require_once Helper::getAlias('@lib\util\BaseObject.php');
 
 class Request extends BaseObject
 {

@@ -7,11 +7,6 @@ use common\controller\BaseController;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-
-
-require_once Helper::getAlias('@lib\app\http\Request.php');
-require_once Helper::getAlias('@lib\util\BaseObject.php');
-
 class Router extends BaseObject
 {
 
@@ -22,10 +17,11 @@ class Router extends BaseObject
   public $modules = [];
   public $defaultModule;
   public $request;
+  public $publicModule;
 
-  static function instance($modules = [], $defaultModule = 'common')
+  static function instance($modules = [], $defaultModule = 'common', $publicModule = 'web')
   {
-    return new Router(array_merge(['modules' => $modules, 'defaultModule' => $defaultModule, 'request' => Request::instance()]));
+    return new Router(array_merge(['modules' => $modules, 'defaultModule' => $defaultModule, 'request' => Request::instance(), 'publicModule' => $publicModule]));
   }
 
 
@@ -43,7 +39,7 @@ class Router extends BaseObject
     if (!empty($modules))
       $module = array_values($modules)[0];
 
-    $action = $controller = false;
+    $action = $controller = $param = false;
 
 
     if ($module == $this->defaultModule) {
@@ -66,6 +62,10 @@ class Router extends BaseObject
       } else {
         $action = 'actionIndex';
       }
+
+      if ($module == $this->publicModule) {
+        $param = isset($request_url_sections[5]) ? $request_url_sections[5] : false;
+      }
     }
 
     if ($controller)
@@ -76,7 +76,8 @@ class Router extends BaseObject
     return [
       'module' => $module,
       'controller' => $controller,
-      'action' => $action
+      'action' => $action,
+      'param' => $param
     ];
   }
 
@@ -91,9 +92,10 @@ class Router extends BaseObject
       $context = $this->getAction();
 
 
-    $controller = $context['controller'];
-    $module = $context['module'];
-    $action = $context['action'];
+    $controller = Helper::getValue('controller', $context, null);
+    $module = Helper::getValue('module', $context, null);
+    $action = Helper::getValue('action', $context, null);
+    $param = Helper::getValue('param', $context, null);
 
     try {
       if (class_exists($controller)) {
@@ -107,7 +109,7 @@ class Router extends BaseObject
 
 
         if (is_callable($action)) {
-          call_user_func_array($action, []);
+          call_user_func_array($action, $module == $this->publicModule ? [$param ? $param : 'index.js'] : []);
         } else {
           $this->route([
             'module' => $this->defaultModule,

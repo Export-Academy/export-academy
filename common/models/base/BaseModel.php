@@ -5,12 +5,6 @@ namespace common\models\base;
 
 use lib\app\database\Query;
 use lib\util\BaseObject;
-use PDO;
-
-
-require_once 'C:\xampp\htdocs\academy\lib\app\database\Database.php';
-require_once  'C:\xampp\htdocs\academy\lib\util\Helper.php';
-require_once  'C:\xampp\htdocs\academy\lib\util\BaseObject.php';
 
 class BaseModel extends BaseObject
 {
