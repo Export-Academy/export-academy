@@ -17,6 +17,11 @@ class Configuration extends BaseObject
         'username' => 'system',
         'password' => 'password123',
         'db' => 'export-academy'
+      ],
+      'auth' => [
+        "challengePath" => "/academy/login",
+        "forbiddenPath" => "/academy/_401",
+        "redirectPath" => "/academy/admin/dashboard/"
       ]
     ];
     return isset($params[$key]) ? $params[$key] : $default;

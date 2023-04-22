@@ -2,15 +2,19 @@
 
 namespace common\controller;
 
+use Exception;
+use lib\app\auth\interface\IAuthController;
 use lib\app\http\request\Request;
 use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
+require_once Helper::getAlias("@lib\app\auth\interface\IAuthController.php");
+
 /**
  * @property View $view
  */
-class Controller extends BaseObject
+class Controller extends BaseObject implements IAuthController
 {
 
   /** @var View */
@@ -27,6 +31,14 @@ class Controller extends BaseObject
 
   /** @var string */
   public $module;
+
+
+  public function secure()
+  {
+    return [];
+  }
+
+
 
   protected function render($path_to_view, $params = [], $layout_file_name = 'main')
   {
@@ -125,6 +137,7 @@ class Controller extends BaseObject
    */
   public function getAssetDirectory()
   {
-    return Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1])) . DIRECTORY_SEPARATOR . "assets";
+    $base =  Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1])) . DIRECTORY_SEPARATOR . "assets";
+    return $base;
   }
 }

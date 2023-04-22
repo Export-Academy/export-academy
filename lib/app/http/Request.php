@@ -3,21 +3,46 @@
 
 namespace lib\app\http;
 
+use lib\app\auth\interface\IAuthHandler;
+use lib\app\auth\interface\IAuthIdentity;
 use lib\util\BaseObject;
 
 class Request extends BaseObject
 {
+  /** @var IAuthIdentity */
+  private $__identity;
 
+  /** @var IAuthHandler */
+  public $auth;
 
-  static function instance()
+  static function instance($auth)
   {
-    return new Request();
+    $request = new Request(['auth' => $auth]);
+    return $request;
   }
+
+
 
   public function params($name, $default = null)
   {
     if (isset($_GET[$name])) return $_GET[$name];
     return $default;
+  }
+
+  /**
+   * Returns the current user
+   *
+   * @return IAuthIdentity|false Returns user, false if no user exist
+   */
+  public function getIdentity()
+  {
+    return isset($this->__identity) ? $this->__identity : false;
+  }
+
+
+  public function setIdentity(IAuthIdentity $identity)
+  {
+    $this->__identity = $identity;
   }
 
 
@@ -30,7 +55,12 @@ class Request extends BaseObject
     return $_POST;
   }
 
-  public function url()
+  public static function path()
+  {
+    return $_SERVER['REDIRECT_URL'];
+  }
+
+  public static function url()
   {
     return $_SERVER['REQUEST_URI'];
   }

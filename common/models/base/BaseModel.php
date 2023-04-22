@@ -3,20 +3,16 @@
 
 namespace common\models\base;
 
+use common\models\base\interface\IActiveModel;
 use lib\app\database\Query;
 use lib\util\BaseObject;
+use lib\util\Helper;
 
-class BaseModel extends BaseObject
+require_once Helper::getAlias("@common\models\base\interface\IActiveModel.php", "\\");
+require_once Helper::getAlias("@lib\app\database\Query.php");
+
+class BaseModel extends BaseObject implements IActiveModel
 {
-
-
-  function __instance($config = [])
-  {
-    $class = get_called_class();
-    return new $class($config);
-  }
-
-
   public static function tableName()
   {
     return strtolower(basename(get_called_class()));
@@ -29,20 +25,26 @@ class BaseModel extends BaseObject
     return $condition ? $query->where($condition) : $query;
   }
 
+  /**
+   * Returns a single instance of BaseModel matching the condition
+   *
+   * @param boolean $condition
+   * @return void
+   */
   public static function findOne($condition = false)
   {
     return self::find($condition)->limit(1)->one();
   }
 
 
-  public static function hasMany($className, $condition)
+  public function hasMany($className, $condition)
   {
     return Query::create($className)->where($condition);
   }
 
 
-  public static function hasOne($className, $condition)
+  public function hasOne($className, $condition)
   {
-    return self::hasMany($className, $condition)->limit(1);
+    return $this->hasMany($className, $condition)->limit(1);
   }
 }

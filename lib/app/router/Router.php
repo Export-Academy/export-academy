@@ -19,16 +19,16 @@ class Router extends BaseObject
   public $request;
   public $publicModule;
 
-  static function instance($modules = [], $defaultModule = 'common', $publicModule = 'web')
+  static function instance(Request &$request, $modules = [], $defaultModule = 'common', $publicModule = 'web')
   {
-    return new Router(array_merge(['modules' => $modules, 'defaultModule' => $defaultModule, 'request' => Request::instance(), 'publicModule' => $publicModule]));
+    return new Router(array_merge(['modules' => $modules, 'defaultModule' => $defaultModule, 'request' => $request, 'publicModule' => $publicModule]));
   }
 
 
 
   public function getAction()
   {
-    $request_url = $this->request->url();
+    $request_url = $this->request->path();
 
     $request_url_sections = explode('/', $request_url);
 
@@ -76,7 +76,7 @@ class Router extends BaseObject
     return [
       'module' => $module,
       'controller' => $controller,
-      'action' => $action,
+      'action' => $action ? $action : "actionIndex",
       'param' => $param
     ];
   }
@@ -133,5 +133,12 @@ class Router extends BaseObject
 
       echo $ex->getMessage();
     }
+  }
+
+
+  public static function redirect($path, $permanent = true)
+  {
+    header("Location: " . $path, true, $permanent ? 301 : 302);
+    die();
   }
 }

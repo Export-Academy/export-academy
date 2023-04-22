@@ -42,13 +42,17 @@ class View
   }
 
 
-  public function render(string $__file__, array $params = [])
+  public function render(string $__file__, array $params = [], $render = false)
   {
     if (!strpos($__file__, '.php'))
       $__file__ .= '.php';
 
     $content = $this->generateContent($__file__, $params);
-    return $this->renderContent($content);
+    if ($render) {
+      $this->renderContent($content);
+    } else {
+      return $this->renderContent($content);
+    }
   }
 
 
@@ -105,7 +109,9 @@ class View
 
     if (!strpos($__file__, ".$type"))
       $__file__ .= ".$type";
+
     if (!file_exists($__file__)) return null;
+
 
     $content = file_get_contents($__file__);
     $hash = hash('md5', $content);

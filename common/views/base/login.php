@@ -12,13 +12,13 @@ use lib\util\html\HtmlHelper;
       <div class="card-body">
         <div class="form-group my-2">
           <div class="form-label">Email</div>
-          <?= HtmlHelper::input('', 'user[email]', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
+          <?= HtmlHelper::input('', 'email', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
         </div>
 
 
         <div class="form-group my-2">
           <div class="form-label">Password</div>
-          <?= HtmlHelper::input('', 'user[password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
+          <?= HtmlHelper::input('', 'password', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
         </div>
       </div>
       <div class="card-footer">
