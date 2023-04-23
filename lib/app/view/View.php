@@ -2,31 +2,46 @@
 
 namespace lib\app\view;
 
-use common\controller\Controller;
+use lib\app\view\interface\IViewable;
+use lib\util\BaseObject;
 use lib\util\Helper;
 use lib\util\html\HtmlHelper;
+use ScssPhp\ScssPhp\Compiler;
 
 require_once Helper::getAlias('@common\controller\Controller.php');
 
-class View
+class View extends BaseObject
 {
 
   const POS_HEAD = 'HEAD';
   const POS_LOAD = 'LOAD';
   const POS_END = 'END';
 
-
-
-  /** @var Controller */
+  /** @var IViewable */
   public $context;
 
-
-  private $scripts = [];
-  private $stylesheets = [];
-  private $jsFiles = [];
-
-
+  /** @var string */
   public $title;
+
+
+  /** @var array */
+  public $css_styles = [];
+
+  /** @var array */
+  public $scss_styles = [];
+
+  /** @var array */
+  public $scripts = [];
+
+
+  /** @var array */
+  public $js_scripts = [];
+
+
+  public static function instance($context = null)
+  {
+    return new View(['context' => $context]);
+  }
 
 
 
@@ -35,32 +50,19 @@ class View
     $this->title = $title;
   }
 
-
-  public static function instance($context = null)
-  {
-    return Helper::createObject(['context' => $context], self::class);
-  }
-
-
-  public function render(string $__file__, array $params = [], $render = false)
-  {
-    if (!strpos($__file__, '.php'))
-      $__file__ .= '.php';
-
-    $content = $this->generateContent($__file__, $params);
-    if ($render) {
-      $this->renderContent($content);
-    } else {
-      return $this->renderContent($content);
-    }
-  }
-
-
   public function renderContent($content)
   {
     echo $content;
   }
 
+  public function render(string $__file__, array $params = [])
+  {
+    if (!strpos($__file__, '.php'))
+      $__file__ .= '.php';
+
+    $content = $this->generateContent($__file__, $params);
+    $this->renderContent($content);
+  }
 
   public function generateContent($__file__, $__params__ = [])
   {
@@ -70,7 +72,10 @@ class View
     ob_clean();
     extract($__params__, EXTR_OVERWRITE);
 
-    if (!is_file($__file__)) return false;
+    if (!is_file($__file__)) {
+      echo ("View file was not found: $__file__");
+      return false;
+    }
 
     try {
       require $__file__;
@@ -87,13 +92,18 @@ class View
 
   public function registerJsFile($__file__, $pos = self::POS_END)
   {
-    $this->jsFiles[$pos][] = $__file__;
+    $this->js_scripts[$pos][] = $__file__;
   }
 
 
   public function registerCssFile($__file__)
   {
-    $this->stylesheets[] = $__file__;
+    $this->css_styles[] = $__file__;
+  }
+
+  public function registerSCSSFile($__file__)
+  {
+    $this->scss_styles[] = $__file__;
   }
 
 
@@ -104,36 +114,87 @@ class View
 
   public function registerFile($filename, $type = 'js')
   {
-    $base_directory = $this->context ? $this->context->getAssetDirectory() : Helper::getAlias('@common/views/assets', "/");
-    $__file__ =  strpos($filename, "@") ? Helper::getAlias($filename) : $base_directory . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $filename;
+
+    $base_directory = Helper::getAlias('@common/views/assets', "/");
+
+    if (isset($this->context))
+      $base_directory = $this->context->getAssetDirectory();
+
+
+
+    $__file__ =  $base_directory . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $filename;
+
+    if (strpos($filename, '@') === 0)
+      $__file__ =  Helper::getAlias($filename);
+
 
     if (!strpos($__file__, ".$type"))
       $__file__ .= ".$type";
 
-    if (!file_exists($__file__)) return null;
 
+
+    if (!file_exists($__file__)) {
+      echo "File doesn't exist: $__file__ <br>";
+      return null;
+    }
 
     $content = file_get_contents($__file__);
     $hash = hash('md5', $content);
 
-    $generated_path = "web/source/$type/$hash.$type";
-    $path = Helper::getAlias("@$generated_path", "/");
 
-    $success = copy($__file__, $path);
-    return $success ? Helper::getURL($generated_path, "/")  : null;
+    if ($type == 'scss') {
+
+      $generated_path = "web/source/css/$hash.css";
+      $path = Helper::getAlias("@$generated_path", "/");
+
+
+      if (file_exists($path)) {
+        return null;
+      }
+
+      $compiler = new Compiler();
+      $compliedCss = $compiler->compileString($content)->getCss();
+      $file = fopen($path, "w");
+
+      fwrite($file, $compliedCss);
+      fclose($file);
+
+      return Helper::getURL($generated_path, "/");
+    } else {
+      $generated_path = "web/source/" . $type . "/$hash.$type";
+      $path = Helper::getAlias("@$generated_path", "/");
+
+      if (file_exists($path)) {
+        return null;
+      }
+
+      $success = copy($__file__, $path);
+
+      if (!$success) {
+        echo "Failed to copy file $__file__ to $path";
+        return null;
+      }
+
+
+      return Helper::getURL($generated_path, "/");
+    }
   }
 
   public function renderPosition($pos)
   {
-
     if ($pos == self::POS_HEAD) {
-      foreach ($this->stylesheets as $styles) {
+      foreach ($this->css_styles as $styles) {
         $path = $this->registerFile($styles, 'css');
         if (!isset($path)) continue;
         echo HtmlHelper::linkTag($path);
       }
+      foreach ($this->scss_styles as $styles) {
+        $path = $this->registerFile($styles, 'scss');
+        if (!isset($path)) continue;
+        echo HtmlHelper::linkTag($path);
+      }
     }
-    $js_files = Helper::getValue($pos, $this->jsFiles, []);
+    $js_files = Helper::getValue($pos, $this->js_scripts, []);
 
     foreach ($js_files as $file) {
       $path = $this->registerFile($file, 'js');
@@ -145,5 +206,28 @@ class View
     foreach ($scripts as $script) {
       echo HtmlHelper::tag('script', $script);
     }
+  }
+
+
+  public static function reset()
+  {
+    $js_dir = Helper::getAlias("@web\source\css");
+    $css_dir = Helper::getAlias("@web\source\js");
+
+    self::delete($js_dir);
+    self::delete($css_dir);
+  }
+
+
+  private static function delete($dir)
+  {
+    $dir_handle = opendir($dir);
+    while ($file = readdir($dir_handle)) {
+      $file = $dir . '\\' . $file;
+      if (is_dir($file)) continue;
+      if (file_exists($file))
+        unlink($file);
+    }
+    closedir($dir_handle);
   }
 }

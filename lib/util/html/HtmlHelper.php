@@ -3,6 +3,7 @@
 
 namespace lib\util\html;
 
+use components\Components;
 use lib\util\BaseObject;
 
 class HtmlHelper extends BaseObject
@@ -44,5 +45,17 @@ class HtmlHelper extends BaseObject
   public static function textarea($value, $name, $options = [])
   {
     return self::tag('textarea', $value, array_merge($options, ['name' => $name]));
+  }
+
+
+  public static function form_begin($action, $method = "post")
+  {
+    (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method]);
+  }
+
+
+  public static function form_end()
+  {
+    (new Components())->render("form-components/index");
   }
 }

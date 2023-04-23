@@ -37,6 +37,10 @@ class Helper
         $path =  $basePath . $separator . 'web';
         break;
 
+      case '@components':
+        $path =  $basePath . $separator . 'components';
+        break;
+
       default:
         $path =  $basePath;
         break;

@@ -1,29 +1,58 @@
 <?php
 
+use components\Components;
+use lib\app\view\View;
 use lib\util\html\HtmlHelper;
+
+/** @var View $this */
+
+
+$this->registerSCSSFile("login.scss");
+
+$component = new Components();
+
+
+
+
 ?>
 
-<div class="my-10">
-  <div class="card w-50">
-    <form action="/academy/login" method="post">
-      <div class="card-header">
-        <h4>Login</h4>
-      </div>
-      <div class="card-body">
-        <div class="form-group my-2">
-          <div class="form-label">Email</div>
-          <?= HtmlHelper::input('', 'email', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
-        </div>
 
 
-        <div class="form-group my-2">
-          <div class="form-label">Password</div>
-          <?= HtmlHelper::input('', 'password', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
+
+<div class="row login-container">
+  <div class="col-md-12 col-lg-5">
+    <div class="vstack justify-items-center my-5">
+      <div class="px-5">
+        <div class="vstack px-md-5 px-sm-2 my-5">
+          <div class="text-center">
+            <h3>Sign In to Export Academy</h3>
+            <div class="fw-semibold">New here? <a href="/academy/sign_up">Create an Account</a> </div>
+          </div>
+
+          <div class="px-5">
+            <hr class="my-5">
+          </div>
+
+          <?= HtmlHelper::form_begin("/academy/login") ?>
+
+          <?php $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "email"]) ?>
+          <?php $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "password"]) ?>
+
+
+          <div class="container mt-5">
+            <button type="submit" class="w-100 btn btn-light btn-lg">Continue</button>
+          </div>
+
+
+          <?= HtmlHelper::form_end() ?>
+
         </div>
+
       </div>
-      <div class="card-footer">
-        <?= HtmlHelper::tag('button', 'Login', ['class' => 'btn btn-secondary', 'type' => 'submit']) ?>
-      </div>
-    </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7 p-1 bg-secondary-subtle">
+
   </div>
 </div>

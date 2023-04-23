@@ -10,6 +10,7 @@ use lib\app\auth\Secure;
 use lib\app\database\Database;
 use lib\app\http\Request;
 use lib\app\router\Router;
+use lib\app\view\View;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -68,8 +69,9 @@ class App extends BaseObject
 
   public function run()
   {
-    $session = session_start();
+    $session = $this->request->startSession();
     if (!$session) return;
+    View::reset();
 
 
     $router = $this->router;
@@ -81,6 +83,11 @@ class App extends BaseObject
 
     if (!$controller) {
       $router->route($action);
+      return;
+    }
+
+    if (!class_exists($controller)) {
+      Router::redirect('/academy/_404');
       return;
     }
 

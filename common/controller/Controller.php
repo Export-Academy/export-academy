@@ -5,6 +5,7 @@ namespace common\controller;
 use Exception;
 use lib\app\auth\interface\IAuthController;
 use lib\app\http\request\Request;
+use lib\app\view\interface\IViewable;
 use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -14,7 +15,7 @@ require_once Helper::getAlias("@lib\app\auth\interface\IAuthController.php");
 /**
  * @property View $view
  */
-class Controller extends BaseObject implements IAuthController
+class Controller extends BaseObject implements IAuthController, IViewable
 {
 
   /** @var View */
@@ -47,9 +48,9 @@ class Controller extends BaseObject implements IAuthController
 
     $layoutFilePath = $this->getLayoutFile($layout_file_name);
 
-    $content = $this->getView()->generateContent($layoutFilePath, [
+    $content = $this->getView()->generateContent($layoutFilePath, array_merge([
       'content' => $body
-    ]);
+    ], $params));
 
     $content ? $this->getView()->renderContent($content) :  $this->getView()->renderContent($body);
   }
@@ -139,5 +140,11 @@ class Controller extends BaseObject implements IAuthController
   {
     $base =  Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1])) . DIRECTORY_SEPARATOR . "assets";
     return $base;
+  }
+
+
+  public function getViewsDirectory()
+  {
+    return $this->getViewPath();
   }
 }

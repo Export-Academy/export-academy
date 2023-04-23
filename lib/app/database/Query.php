@@ -9,6 +9,8 @@ use lib\app\database\query\IExpression;
 use lib\app\database\query\OnCondition;
 use lib\app\database\query\Select;
 use common\models\base\BaseModel;
+use DateTime;
+use DateTimeZone;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use Exception;
@@ -42,6 +44,9 @@ class Query extends BaseObject implements IExpression
 
   /** @var Database */
   private $database;
+
+
+  private $query;
 
 
   public $model;
@@ -160,6 +165,65 @@ class Query extends BaseObject implements IExpression
     return $this;
   }
 
+  private function serverTZ()
+  {
+    return new DateTimeZone("UTC");
+  }
+
+
+  public function query($sql)
+  {
+    $this->query = $sql;
+    return $this;
+  }
+
+
+  public function update($conditions, $data = [])
+  {
+    $setters = [];
+
+    foreach ($data as $key => $value) {
+
+      if (in_array($key, ["updated_at"])) {
+        $now = new DateTime("now", $this->serverTZ());
+        $setters[] = "`$key` = '" . $now->format("Y-m-d H:i:s") . "'";
+        continue;
+      }
+
+      $setters[] = "`$key` = " . (isset($value) ? (is_int($value) ? $value : "'$value'") : "NULL");
+    }
+    $condition_statement = $this->where($conditions)->generateWhereCondition();
+    $sql = "UPDATE `$this->tableName` SET " . implode(", ", $setters) . " $condition_statement";
+    return $this->query($sql);
+  }
+
+
+  public function insert($data)
+  {
+    $keys = [];
+    $values = [];
+
+    foreach ($data as $key => $value) {
+      if (!isset($value)) continue;
+
+      $keys[] = "`$key`";
+      $values[] = (is_int($value) ? $value : "'$value'");
+    }
+
+    $sql = "INSERT INTO `$this->tableName` (" . implode(", ", $keys) . ") VALUES (" . implode(", ", $values) . ")";
+    return $this->query($sql);
+  }
+
+
+  public function exists($conditions)
+  {
+    $clause_statement = $this->where($conditions)->createCommand();
+    $sql = "EXISTS ( $clause_statement )";
+
+    return $this->query($sql);
+  }
+
+
 
   private function generateWhereCondition()
   {
@@ -240,6 +304,8 @@ class Query extends BaseObject implements IExpression
 
   public function createCommand()
   {
+
+    if (isset($this->query)) return $this->query;
     $statements = [$this->generateSelectCondition()];
 
 
@@ -294,7 +360,6 @@ class Query extends BaseObject implements IExpression
     $params = [];
 
     $db = $this->database->handler();
-
     $db->beginTransaction();
     $query = $db->prepare($sql, $params);
 

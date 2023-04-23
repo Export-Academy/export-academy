@@ -11,8 +11,6 @@ use lib\app\router\Router;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-require_once Helper::getAlias('@common\models\User.php');
-
 class AuthHandler extends BaseObject implements IAuthHandler
 {
 

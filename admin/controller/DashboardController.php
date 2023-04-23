@@ -12,15 +12,12 @@ class DashboardController extends Controller
   public function secure()
   {
     return [
-      "base" => [
-        "auth" => true,
-        "policy" => []
-      ],
+      "requiresAuth" => ["*"]
     ];
   }
 
   public function actionIndex()
   {
-    $this->render('index', [], 'dashboard');
+    $this->render('index', ["title" => "Dashboard"], 'dashboard');
   }
 }

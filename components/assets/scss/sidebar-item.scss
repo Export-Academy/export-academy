@@ -1,0 +1,36 @@
+.academy-nav-item {
+  padding: 2px 0;
+
+  &.active {
+    background: rgba(16, 145, 96, 0.863);
+    .item {
+      color: white;
+
+      &:hover {
+        color: white !important;
+      }
+    }
+  }
+
+  &.sub-item.active {
+    background: white !important;
+
+    .item {
+      color: rgba(16, 145, 96, 0.863) !important;
+    }
+  }
+
+  .item {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+
+    &:hover {
+      color: rgba(16, 145, 96, 0.863) !important;
+    }
+
+    .hstack {
+      padding: 2px 20px;
+    }
+  }
+}

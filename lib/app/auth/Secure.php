@@ -8,18 +8,24 @@ use lib\util\Helper;
 
 class Secure extends BaseObject
 {
-  public $base = [];
   public $methods = [];
   public $controller;
   public $action;
 
+
+  public $requiresAuth = [];
+  public $strictNoAuth = [];
+
+
   public static function instance($config = [])
   {
     return new Secure([
-      "base" => Helper::getValue("base", $config, []),
-      "methods" => Helper::getValue("methods", $config, []),
       "controller" => Helper::getValue("controller", $config, null),
-      "action" => Helper::getValue("action", $config, null)
+      "action" => Helper::getValue("action", $config, null),
+
+      "requiresAuth" => Helper::getValue("requiresAuth", $config, []),
+      "strictNoAuth" => Helper::getValue("strictNoAuth", $config, []),
+      "methods" => Helper::getValue("methods", $config, []),
     ]);
   }
 
@@ -27,20 +33,18 @@ class Secure extends BaseObject
 
   public function requiresAuth()
   {
-    $baseAuthRequired = Helper::getValue("auth", $this->base, false);
+    $baseAuthRequired = in_array("*", $this->requiresAuth);
     if ($baseAuthRequired) return true;
-    $methodSettings = Helper::getValue($this->action, $this->methods, []);
-    $methodAuthRequired = Helper::getValue("auth", $methodSettings, false);
+    $methodAuthRequired = in_array($this->action, $this->requiresAuth);
     return $methodAuthRequired;
   }
 
   public function requiresNoAuth()
   {
-    $baseNoAuthRequired = Helper::getValue("no_auth", $this->base, false);
+    $baseNoAuthRequired = in_array("*", $this->strictNoAuth);
     if ($baseNoAuthRequired) return true;
-    $methodSettings = Helper::getValue($this->action, $this->methods, []);
-    $methodAuthRequired = Helper::getValue("no_auth", $methodSettings, false);
-    return $methodAuthRequired;
+    $methodNoAuthRequired = in_array($this->action, $this->strictNoAuth);
+    return $methodNoAuthRequired;
   }
 
 

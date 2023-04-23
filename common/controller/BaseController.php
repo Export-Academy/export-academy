@@ -12,17 +12,8 @@ class BaseController extends Controller
   public function secure()
   {
     return [
-      "methods" => [
-        "actionLogin" => [
-          "no_auth" => true
-        ],
-        "actionSignOut" => [
-          "auth" => true,
-        ],
-        "actionSignUp" => [
-          "no_auth" => true
-        ]
-      ]
+      "requiresAuth" => ["actionSignOut"],
+      "strictNoAuth" => ["actionLogin", "actionSignUp"]
     ];
   }
 
@@ -37,10 +28,7 @@ class BaseController extends Controller
       case 'POST':
         $email = $this->request->data("email", "");
         $password = $this->request->data("password", "");
-
-
         $result = $this->request->auth->handleLogin($email, $password);
-
         if ($result) {
           Router::redirect("/academy/admin/dashboard/");
         }
@@ -76,16 +64,19 @@ class BaseController extends Controller
 
   public function action404()
   {
+    http_response_code(404);
     $this->render('_404');
   }
 
   public function action401()
   {
+    http_response_code(401);
     $this->render('_401');
   }
 
   public function action500()
   {
+    http_response_code(500);
     $this->render('_500');
   }
 }

@@ -6,6 +6,7 @@ namespace lib\app\http;
 use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\interface\IAuthIdentity;
 use lib\util\BaseObject;
+use lib\util\Helper;
 
 class Request extends BaseObject
 {
@@ -14,6 +15,9 @@ class Request extends BaseObject
 
   /** @var IAuthHandler */
   public $auth;
+
+
+  const CSRF = "csrf_token";
 
   static function instance($auth)
   {
@@ -68,5 +72,20 @@ class Request extends BaseObject
   public function method()
   {
     return $_SERVER['REQUEST_METHOD'];
+  }
+
+  public static function startSession()
+  {
+    $session = session_start();
+    if ($session) {
+      $_SESSION['token'] = md5(uniqid(mt_rand(), true));
+    }
+    return $session;
+  }
+
+
+  public static function sessionToken()
+  {
+    return Helper::getValue("token", $_SESSION, "");
   }
 }

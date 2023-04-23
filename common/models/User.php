@@ -39,6 +39,12 @@ class User extends BaseModel implements IAuthIdentity
   public $authenticated = false;
 
 
+  public static function excludeProperty()
+  {
+    return array_merge(parent::excludeProperty(), ['authenticated', 'token']);
+  }
+
+
   /**
    * Undocumented function
    *
