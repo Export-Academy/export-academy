@@ -17,16 +17,15 @@ class Select implements IExpression
     if (is_array($this->select)) {
       return empty($this->select) ? '*' : implode(', ', array_map(function ($selection) {
         if (is_array($selection)) {
-
-
           return implode('.', array_map(
             function ($name) {
               return "`$name`";
             },
             $selection
           ));
+        } else if (strpos($selection, "@") === 0) {
+          return substr($selection, 1);
         } else if (isset($this->alias)) {
-
           return "`$this->alias`.`$selection`";
         } else {
 

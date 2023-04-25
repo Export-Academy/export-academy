@@ -9,23 +9,24 @@ require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
 
 
 
+
+
+
+
+
 require_once Helper::getAlias("@lib\app\\view\interface\IViewable.php");
-
-
 require_once Helper::getAlias('@vendor/scssphp/scssphp/scss.inc.php', "/");
-
-
 require_once Helper::getAlias('@lib\util\BaseObject.php');
+require_once Helper::getAlias("@lib\app\log\Logger.php");
 
 
+require_once Helper::getAlias("@lib\app\database\Transaction.php");
 require_once Helper::getAlias('@lib\app\App.php');
-
-
 require_once Helper::getAlias("@components/Component.php", "/");
 
 
 // Utility Classes
-require_once Helper::getAlias('@lib\util\html\HtmlHelper.php');
+require_once Helper::getAlias('@lib\util\html\Html.php');
 
 
 // Models

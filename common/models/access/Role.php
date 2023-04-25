@@ -4,6 +4,8 @@
 namespace common\models\access;
 
 use common\models\base\BaseModel;
+use common\models\User;
+use lib\app\database\Query;
 
 /**
  * Role Entity
@@ -23,9 +25,29 @@ class Role extends BaseModel
   public $description;
 
 
+  /**
+   * Get all grants related to a role
+   *
+   * @param boolean $result
+   * @return Grants|Query
+   */
   public function getGrants($result = true)
   {
-    $query = $this->hasMany(Grant::class, ['role_id' => $this->id]);
+    $query = $this->hasMany(Grants::class, ['role_id' => $this->id]);
+    return $result ? $query->all() : $query;
+  }
+
+  public function getPermissions($result = true)
+  {
+    $query = $this->hasMany(Permission::class, ["id" => "@" . Grants::tableName() . ".permission_id"])->viaTable(Grants::tableName(), ["role_id" => $this->id]);
+    return $result ? $query->all() : $query;
+  }
+
+
+  public function getAssignedUsers($result = true)
+  {
+    $userRoleTableName = UserRole::tableName();
+    $query = $this->hasMany(User::class, ["id" => "@$userRoleTableName.user_id"])->viaTable($userRoleTableName, ["role_id" => $this->id]);
     return $result ? $query->all() : $query;
   }
 }

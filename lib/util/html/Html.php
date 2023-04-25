@@ -6,10 +6,10 @@ namespace lib\util\html;
 use components\Components;
 use lib\util\BaseObject;
 
-class HtmlHelper extends BaseObject
+class Html extends BaseObject
 {
 
-  private static function renderAttributes($attributes = [])
+  static function renderAttributes($attributes = [])
   {
     $html = "";
     foreach ($attributes as $key => $attr) {
@@ -48,14 +48,46 @@ class HtmlHelper extends BaseObject
   }
 
 
-  public static function form_begin($action, $method = "post")
+  public static function form_begin($action, $method = "post", $options = [])
   {
-    (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method]);
+    (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method, "options" => $options]);
   }
 
 
   public static function form_end()
   {
     (new Components())->render("form-components/index");
+  }
+
+
+  public static function list(
+    $list,
+    $render = null,
+    $max = null,
+    $component = null,
+    $container_options = [],
+    $container = "ul",
+    $item_container_options = [],
+    $item_container = "li"
+  ) {
+    $content = "";
+    $count = -1;
+
+    foreach ($list as $item) {
+      $count += 1;
+
+      if ($count == $max) {
+        $content .= $component ?? "";
+        break;
+      }
+
+      if (is_callable($render)) {
+        $content .= call_user_func_array($render, [$item]);
+        continue;
+      }
+      $content .= self::tag($item_container, $item, $item_container_options);
+    }
+
+    return self::tag($container, $content, $container_options);
   }
 }

@@ -3,10 +3,14 @@
 
 namespace lib\app\database;
 
+use Exception;
+use lib\app\log\Logger;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use PDO;
 use PDOException;
+
+
 
 class Database extends BaseObject
 {
@@ -43,15 +47,58 @@ class Database extends BaseObject
     }
   }
 
-
-  /**
-   * Instance of PDO
-   *
-   * @return PDO
-   */
-  public function handler()
+  public function execute(Query $query)
   {
-    if (isset($this->_handler)) return  $this->_handler;
-    return $this->_handler;
+    $db = $this->_handler;
+    $db->beginTransaction();
+
+    try {
+      $command = $db->prepare($query->createCommand());
+      $db->commit();
+      $command->execute();
+      Logger::log("Executed: $command->queryString", "info");
+    } catch (Exception $ex) {
+      Logger::log($ex->getMessage(), "error");
+      $db->rollBack();
+    }
+
+    return $command;
+  }
+
+
+  public function transaction($transaction)
+  {
+    /** @var Query[] $queries */
+    $queries = call_user_func_array($transaction, [new Transaction()]);
+
+    $db = $this->_handler;
+
+
+
+    try {
+      $db->beginTransaction();
+      Logger::log("STARTING TRANSACTION", "info");
+
+      $query = implode("; ", array_map(function (Query $query) {
+        return $query->createCommand();
+      }, $queries));
+
+      $command = $db->prepare($query);
+      $db->commit();
+
+
+      $command->execute();
+
+
+      Logger::log("Executed: $command->queryString", "info");
+    } catch (Exception $ex) {
+
+      Logger::log("ROLLBACK TRANSACTION", "info");
+      $db->rollBack();
+
+      Logger::log($ex->getMessage(), "error");
+    }
+
+    return $command;
   }
 }

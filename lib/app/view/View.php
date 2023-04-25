@@ -5,7 +5,7 @@ namespace lib\app\view;
 use lib\app\view\interface\IViewable;
 use lib\util\BaseObject;
 use lib\util\Helper;
-use lib\util\html\HtmlHelper;
+use lib\util\html\Html;
 use ScssPhp\ScssPhp\Compiler;
 
 require_once Helper::getAlias('@common\controller\Controller.php');
@@ -107,9 +107,9 @@ class View extends BaseObject
   }
 
 
-  public function registerJs($__file__, $pos = self::POS_END)
+  public function registerJs($script, $pos = self::POS_END)
   {
-    $this->scripts[$pos][] = $__file__;
+    $this->scripts[$pos][] = $script;
   }
 
   public function registerFile($filename, $type = 'js')
@@ -186,12 +186,12 @@ class View extends BaseObject
       foreach ($this->css_styles as $styles) {
         $path = $this->registerFile($styles, 'css');
         if (!isset($path)) continue;
-        echo HtmlHelper::linkTag($path);
+        echo Html::linkTag($path);
       }
       foreach ($this->scss_styles as $styles) {
         $path = $this->registerFile($styles, 'scss');
         if (!isset($path)) continue;
-        echo HtmlHelper::linkTag($path);
+        echo Html::linkTag($path);
       }
     }
     $js_files = Helper::getValue($pos, $this->js_scripts, []);
@@ -199,12 +199,12 @@ class View extends BaseObject
     foreach ($js_files as $file) {
       $path = $this->registerFile($file, 'js');
       if (!isset($path)) continue;
-      echo HtmlHelper::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
+      echo Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
 
     $scripts = Helper::getValue($pos, $this->scripts, []);
     foreach ($scripts as $script) {
-      echo HtmlHelper::tag('script', $script);
+      echo Html::tag('script', $script);
     }
   }
 

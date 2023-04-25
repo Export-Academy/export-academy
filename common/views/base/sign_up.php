@@ -1,6 +1,6 @@
 <?php
 
-use lib\util\html\HtmlHelper;
+use lib\util\html\Html;
 ?>
 
 <div class="my-10">
@@ -14,34 +14,34 @@ use lib\util\html\HtmlHelper;
           <div class="col-6">
             <div class="form-group my-2">
               <div class="form-label">First Name</div>
-              <?= HtmlHelper::input('', 'user[first_name]', ['class' => 'form-control', 'placeholder' => 'Your First Name']) ?>
+              <?= Html::input('', 'user[first_name]', ['class' => 'form-control', 'placeholder' => 'Your First Name']) ?>
             </div>
           </div>
           <div class="col-6">
             <div class="form-group my-2">
               <div class="form-label">Last Name</div>
-              <?= HtmlHelper::input('', 'user[last_name]', ['class' => 'form-control', 'placeholder' => 'Your Last Name']) ?>
+              <?= Html::input('', 'user[last_name]', ['class' => 'form-control', 'placeholder' => 'Your Last Name']) ?>
             </div>
           </div>
         </div>
         <div class="form-group my-2">
           <div class="form-label">Email</div>
-          <?= HtmlHelper::input('', 'user[email]', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
+          <?= Html::input('', 'user[email]', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
         </div>
 
 
         <div class="form-group my-2">
           <div class="form-label">Password</div>
-          <?= HtmlHelper::input('', 'user[password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
+          <?= Html::input('', 'user[password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
         </div>
 
         <div class="form-group my-2">
           <div class="form-label">Confirm Password</div>
-          <?= HtmlHelper::input('', 'user[confirm_password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
+          <?= Html::input('', 'user[confirm_password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
         </div>
       </div>
       <div class="card-footer">
-        <?= HtmlHelper::tag('button', 'Sign Up', ['class' => 'btn btn-secondary', 'type' => 'submit']) ?>
+        <?= Html::tag('button', 'Sign Up', ['class' => 'btn btn-secondary', 'type' => 'submit']) ?>
       </div>
     </form>
   </div>

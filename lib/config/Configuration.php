@@ -22,7 +22,10 @@ class Configuration extends BaseObject
         "challengePath" => "/academy/login",
         "forbiddenPath" => "/academy/_401",
         "redirectPath" => "/academy/admin/dashboard/"
-      ]
+      ],
+      'logger' => [
+        "filename" => "app.log"
+      ],
     ];
     return isset($params[$key]) ? $params[$key] : $default;
   }

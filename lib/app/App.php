@@ -4,11 +4,13 @@
 namespace lib\app;
 
 use common\controller\Controller;
+use Exception;
 use lib\app\auth\AuthHandler;
 use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\Secure;
 use lib\app\database\Database;
 use lib\app\http\Request;
+use lib\app\log\Logger;
 use lib\app\router\Router;
 use lib\app\view\View;
 use lib\config\Configuration;
@@ -69,51 +71,56 @@ class App extends BaseObject
 
   public function run()
   {
-    $session = $this->request->startSession();
-    if (!$session) return;
-    View::reset();
+
+    try {
+      $session = $this->request->startSession();
+      if (!$session) return;
+      View::reset();
 
 
-    $router = $this->router;
-    $action = $this->router->getAction();
-    $user = $this->authHandler->authenticate($this->request);
+      $router = $this->router;
+      $action = $this->router->getAction();
+      $user = $this->authHandler->authenticate($this->request);
 
 
-    $controller = Helper::getValue("controller", $action, false);
+      $controller = Helper::getValue("controller", $action, false);
 
-    if (!$controller) {
-      $router->route($action);
-      return;
-    }
-
-    if (!class_exists($controller)) {
-      Router::redirect('/academy/_404');
-      return;
-    }
-
-    $instance = new $controller;
-
-    if (!$instance instanceof Controller) {
-      $router->route($action);
-      return;
-    }
-
-    $secureConfig = array_merge($instance->secure(), $action);
-    $secure = Secure::instance($secureConfig);
-
-
-    if ($secure->requiresAuth()) {
-      if ($user->isAuthenticated()) {
-        if (!$secure->requirePermission($user))
-          $this->authHandler->forbid();
-        $this->router->route($action);
-      } else {
-        $this->authHandler->challenge($user);
+      if (!$controller) {
+        $router->route($action);
+        return;
       }
-    } else if ($secure->requiresNoAuth() && $user->isAuthenticated()) {
-      $this->authHandler->handleAuthenticatedRedirect($user);
-    } else {
-      $this->router->route($action);
+
+      if (!class_exists($controller)) {
+        Router::redirect('/academy/_404');
+        return;
+      }
+
+      $instance = new $controller;
+
+      if (!$instance instanceof Controller) {
+        $router->route($action);
+        return;
+      }
+
+      $secureConfig = array_merge($instance->secure(), $action);
+      $secure = Secure::instance($secureConfig);
+
+
+      if ($secure->requiresAuth()) {
+        if ($user->isAuthenticated()) {
+          if (!$secure->requirePermission($user))
+            $this->authHandler->forbid();
+          $this->router->route($action);
+        } else {
+          $this->authHandler->challenge($user);
+        }
+      } else if ($secure->requiresNoAuth() && $user->isAuthenticated()) {
+        $this->authHandler->handleAuthenticatedRedirect($user);
+      } else {
+        $this->router->route($action);
+      }
+    } catch (Exception $ex) {
+      Logger::log($ex->getMessage(), "ERROR");
     }
   }
 }

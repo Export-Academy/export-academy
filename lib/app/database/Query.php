@@ -70,6 +70,12 @@ class Query extends BaseObject implements IExpression
     }
   }
 
+  public function count()
+  {
+    $arr = $this->all();
+    return count($arr);
+  }
+
   public function select($select)
   {
     $this->selectOptions = is_array($select) ? $select : explode(',', $select);
@@ -197,6 +203,12 @@ class Query extends BaseObject implements IExpression
     return $this->query($sql);
   }
 
+  public function delete($condition)
+  {
+    $sql = "DELETE FROM `" . $this->tableName . "` " . $this->where($condition)->generateWhereCondition();
+    return $this->query($sql);
+  }
+
 
   public function insert($data)
   {
@@ -269,9 +281,9 @@ class Query extends BaseObject implements IExpression
     foreach ($this->onConditions as $key => $condition) {
       foreach ($condition as $cond) {
         if (is_array($cond)) {
-          $joins[] = OnCondition::instance($cond['conditions'], $cond['tableName'], $this->alias ?? $this->tableName, $key);
+          $joins[] = OnCondition::instance($cond['conditions'], $cond['tableName'], $cond['tableName'], $key);
         } else {
-          $joins[] = OnCondition::instance([$cond['conditions']], $cond['tableName'], $this->alias ?? $this->tableName, $key);
+          $joins[] = OnCondition::instance([$cond['conditions']], $cond['tableName'], $cond['tableName'], $key);
         }
       }
     }
@@ -335,39 +347,27 @@ class Query extends BaseObject implements IExpression
 
   public function all()
   {
-    $all = $this->execute()->fetchAll(PDO::FETCH_ASSOC);
+    $all = $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
     if ($all)
       return isset($this->model) ? array_map(function ($data) {
         return Helper::createObject($data, $this->model);
       }, $all) : $all;
 
-    return null;
+    return [];
   }
 
 
   public function one()
   {
-    $one = $this->execute()->fetch(PDO::FETCH_ASSOC);
+    $one = $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
     if ($one)
       return isset($this->model) ? Helper::createObject($one, $this->model) : $one;
     return null;
   }
 
-  public function execute()
+  public function run()
   {
-
-    $sql = $this->createCommand();
-    $params = [];
-
-    $db = $this->database->handler();
-    $db->beginTransaction();
-    $query = $db->prepare($sql, $params);
-
-    if (!$query) return null;
-
-    $db->commit();
-    $query->execute();
-
-    return $query;
+    $response = $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
+    return $response;
   }
 }

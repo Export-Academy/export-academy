@@ -30,7 +30,8 @@ class BaseController extends Controller
         $password = $this->request->data("password", "");
         $result = $this->request->auth->handleLogin($email, $password);
         if ($result) {
-          Router::redirect("/academy/admin/dashboard/");
+          $redirectPath = $this->request->params("r", null);
+          Router::redirect($redirectPath ?? "/academy/admin/dashboard/");
         }
         Router::redirect("/academy/login");
         return;

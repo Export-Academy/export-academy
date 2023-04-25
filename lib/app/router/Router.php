@@ -4,6 +4,7 @@ namespace lib\app\router;
 
 use lib\app\http\Request;
 use common\controller\BaseController;
+use lib\app\log\Logger;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
@@ -130,8 +131,7 @@ class Router extends BaseObject
         'controller' => BaseController::class,
         'action' => self::_500
       ]);
-
-      echo $ex->getMessage();
+      Logger::log($ex->getMessage(), "error");
     }
   }
 

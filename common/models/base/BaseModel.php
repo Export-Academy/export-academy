@@ -4,12 +4,17 @@
 namespace common\models\base;
 
 use common\models\base\interface\IActiveModel;
+use lib\app\database\Database;
 use lib\app\database\Query;
+use lib\app\database\RelationalQuery;
+use lib\app\database\Transaction;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
 require_once Helper::getAlias("@common\models\base\interface\IActiveModel.php", "\\");
 require_once Helper::getAlias("@lib\app\database\Query.php");
+require_once Helper::getAlias("@lib\app\database\RelationalQuery.php");
+
 
 class BaseModel extends BaseObject implements IActiveModel
 {
@@ -29,7 +34,7 @@ class BaseModel extends BaseObject implements IActiveModel
     $keys = explode(",", $this->getPrimaryKey());
     $condition = [];
     foreach ($keys as $key) {
-      $condition[$key] = is_int($this->{$key}) ? $this->{$key} : "*$this->{$key}";
+      $condition[$key] = is_int($this->{$key}) ? $this->{$key} : "*" . $this->{$key};
     }
     return $condition;
   }
@@ -51,7 +56,7 @@ class BaseModel extends BaseObject implements IActiveModel
    * Returns a single instance of BaseModel matching the condition
    *
    * @param boolean $condition
-   * @return void
+   * @return Role
    */
   public static function findOne($condition = false)
   {
@@ -61,7 +66,7 @@ class BaseModel extends BaseObject implements IActiveModel
 
   public function hasMany($className, $condition)
   {
-    return Query::create($className)->where($condition);
+    return RelationalQuery::instance($className, $condition);
   }
 
 
@@ -95,15 +100,18 @@ class BaseModel extends BaseObject implements IActiveModel
     return $database_properties;
   }
 
-
-  public function update()
+  public function update(Transaction &$transaction = null)
   {
     $query = Query::create(get_called_class())->update($this->getPrimaryCondition(), $this->getDatabaseProperties());
-    return $query->execute();
+
+    if ($transaction) {
+      $transaction->runQuery($query);
+      return;
+    }
+    return $query->run();
   }
 
-
-  public function save()
+  public function save(Transaction &$transaction = null)
   {
     $condition = $this->getPrimaryCondition();
     $sql = "IF " . Query::create(get_called_class())->exists($condition)->createCommand() . " THEN " .
@@ -114,6 +122,113 @@ class BaseModel extends BaseObject implements IActiveModel
       Query::create(get_called_class())
       ->insert($this->getDatabaseProperties(false))
       ->createCommand() . "; END IF;";
-    return Query::create(get_called_class())->query($sql)->execute();
+
+    $query =  Query::create(get_called_class())->query($sql);
+
+    if ($transaction) {
+      $transaction->runQuery($query);
+      return;
+    }
+    return $query->run();
+  }
+
+  public function delete(Transaction &$transaction = null)
+  {
+    $condition = $this->getPrimaryCondition();
+    $query = Query::create(get_called_class())->delete($condition);
+
+    if ($transaction) {
+      $transaction->runQuery($query);
+      return;
+    }
+    return $query->run();
+  }
+
+  public static function deleteByCondition($condition, Transaction &$transaction = null)
+  {
+    $query = Query::create(get_called_class())->delete($condition);
+    if ($transaction) {
+      $transaction->runQuery($query);
+      return;
+    }
+    return $query->run();
+  }
+
+  /**
+   * Delete all entries provided
+   *
+   * @param BaseModel[] $models
+   * @return \PDOStatement|false  
+   */
+  public static function deleteAll($models = [], Transaction &$transaction = null)
+  {
+    if ($transaction) {
+      foreach ($models as $model) {
+        $model->delete($transaction);
+      }
+
+      return;
+    }
+    $db = Database::instance();
+    $response = $db->transaction(function (Transaction $tr) use ($models) {
+      foreach ($models as $model) {
+        $model->delete($tr);
+      }
+      $tr->execute();
+    });
+    return $response;
+  }
+
+  /**
+   * Update all entries provided
+   *
+   * @param BaseModel[] $models
+   * @return \PDOStatement|false  
+   */
+  public static function updateAll($models, Transaction &$transaction = null)
+  {
+
+    if ($transaction) {
+      foreach ($models as $model) {
+        $model->update($transaction);
+      }
+
+      return;
+    }
+    $db = Database::instance();
+
+    $response = $db->transaction(function (Transaction $tr) use ($models) {
+      foreach ($models as $model) {
+        $model->update($tr);
+      }
+      $tr->execute();
+    });
+    return $response;
+  }
+
+  /**
+   * Inserts or Updates provided
+   *
+   * @param BaseModel[] $models
+   * @return \PDOStatement|false 
+   */
+  public static function saveAll($models, Transaction &$transaction = null)
+  {
+    if ($transaction) {
+      foreach ($models as $model) {
+        $model->save($transaction);
+      }
+
+      return;
+    }
+    $db = Database::instance();
+
+    $response = $db->transaction(function (Transaction $tr) use ($models) {
+      foreach ($models as $model) {
+        $model->save($tr);
+      }
+      return $tr->execute();
+    });
+    return $response;
   }
 }

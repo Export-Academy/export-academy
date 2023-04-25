@@ -8,22 +8,24 @@ use common\models\base\BaseModel;
 
 
 /**
- * Grant Entity
+ * Grants Entity
  * 
  * 
  * @property int $role_id
  * @property int $permission_id
- * @property bool $enabled
  * 
  * 
  */
-class Grant extends BaseModel
+class Grants extends BaseModel
 {
 
   public $role_id;
   public $permission_id;
-  public $enabled;
 
+  public static function getPrimaryKey()
+  {
+    return "role_id,permission_id";
+  }
 
   public function getRole($result = true)
   {

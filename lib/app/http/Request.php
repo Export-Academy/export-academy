@@ -27,7 +27,7 @@ class Request extends BaseObject
 
 
 
-  public function params($name, $default = null)
+  public static function params($name, $default = null)
   {
     if (isset($_GET[$name])) return $_GET[$name];
     return $default;
@@ -50,7 +50,7 @@ class Request extends BaseObject
   }
 
 
-  public function data($name = null, $default = null)
+  public static function data($name = null, $default = null)
   {
     if (isset($name)) {
       if (isset($_POST[$name])) return $_POST[$name];

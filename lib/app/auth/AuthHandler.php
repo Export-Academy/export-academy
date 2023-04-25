@@ -41,7 +41,8 @@ class AuthHandler extends BaseObject implements IAuthHandler
   public function challenge(IAuthIdentity $user = null)
   {
     setcookie(self::COOKIE_KEY, "", time() - 1800);
-    Router::redirect($this->challengePath);
+    $current_path = Request::url();
+    Router::redirect("$this->challengePath?r=$current_path");
   }
 
 
