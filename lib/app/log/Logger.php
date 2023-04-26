@@ -32,7 +32,7 @@ class Logger extends BaseObject
     if (is_array($content) || is_object($content)) {
       $content = print_r($content, true);
     }
-    $message = "[" . (new DateTime())->format("D, d M Y H:i:s") . "] [" . strtoupper($state) . "] -- $content \n";
+    $message = "[" . (new DateTime())->format("D, d M Y H:i:s. u") . "] [" . strtoupper($state) . "] -- $content \n";
     fwrite($file, $message);
     fclose($file);
   }

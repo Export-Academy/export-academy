@@ -25,7 +25,8 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
       <div class="gap-2 d-block my-4">
         <button data-bs-toggle="modal" data-bs-target="#update-role-modal" class="btn btn-primary">Update Role
           Information</button>
-        <button data-role="<?= $role->name ?> Role" data-id="<?= $role->id ?>" id="delete-role" class="btn ">Delete</button>
+        <button data-role="<?= $role->name ?> Role" data-id="<?= $role->id ?>" id="delete-role"
+          class="btn ">Delete</button>
       </div>
       <div class="d-lg-block d-md-none d-sm-none">
         <?= $components->render("role-components/card", ["role" => $role, "hideUpdateButton" => true]) ?>
@@ -50,7 +51,7 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
       <div class="row my-4">
         <?php foreach ($permissions as $permission) : ?>
 
-          <?php
+        <?php
 
           $granted = array_filter($granted_permissions, function ($_permission) use ($permission) {
             return $_permission->id === $permission->id;
@@ -60,20 +61,23 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
 
           ?>
 
-          <div class="col-md-4 col-sm-6 p-2">
-            <div class="bg-light h-100 hstack justify-content-between p-3">
-              <div class="form-check p-3">
-                <div class="form-check-label display-6 fw-semibold fs-6">
-                  <?= $permission->name ?>
-                  <div class="text-secondary fw-light"><?= $permission->description ?? "No Description" ?></div>
-                </div>
-              </div>
-              <div class="form-check form-switch">
-                <input name="Grants[<?= $permission->id ?>]" class="form-check-input check-permission" data-permission="<?= $permission->id ?>" <?= $selected ? "checked" : "" ?> type="checkbox" role="switch" id="permission-<?= $permission->id ?>">
-                <label class="form-check-label" for="permission-<?= $permission->id ?>"><?= $selected ? "Enabled" : "Disabled" ?></label>
+        <div class="col-md-4 col-sm-6 p-2">
+          <div class="bg-light h-100 hstack justify-content-between p-3">
+            <div class="form-check p-3">
+              <div class="form-check-label display-6 fw-semibold fs-6">
+                <?= $permission->name ?>
+                <div class="text-secondary fw-light"><?= $permission->description ?? "No Description" ?></div>
               </div>
             </div>
+            <div class="form-check form-switch">
+              <input name="Grants[<?= $permission->id ?>]" class="form-check-input check-permission"
+                data-permission="<?= $permission->id ?>" <?= $selected ? "checked" : "" ?> type="checkbox" role="switch"
+                id="permission-<?= $permission->id ?>">
+              <label class="form-check-label"
+                for="permission-<?= $permission->id ?>"><?= $selected ? "Enabled" : "Disabled" ?></label>
+            </div>
           </div>
+        </div>
 
         <?php endforeach; ?>
       </div>
@@ -97,13 +101,13 @@ $nameInput = $components->render("form-components/input-field", [
   "type" => "text",
   "label" => "Role Name",
   "name" => "Role[name]",
-  "placeholder" => $role->name
+  "value" => $role->name
 ]);
 $descriptionInput = $components->render("form-components/input-field", [
   "type" => "textarea",
   "label" => "Role Description",
   "name" => "Role[description]",
-  "placeholder" => $role->description
+  "value" => $role->description
 ]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
 $endForm = Html::form_end();

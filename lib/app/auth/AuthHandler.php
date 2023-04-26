@@ -38,9 +38,15 @@ class AuthHandler extends BaseObject implements IAuthHandler
     return $user;
   }
 
-  public function challenge(IAuthIdentity $user = null)
+  public function challenge(IAuthIdentity $user = null, $signOut = false)
   {
     setcookie(self::COOKIE_KEY, "", time() - 1800);
+
+
+    if ($signOut)
+      Router::redirect("$this->challengePath");
+
+
     $current_path = Request::url();
     Router::redirect("$this->challengePath?r=$current_path");
   }
@@ -68,7 +74,7 @@ class AuthHandler extends BaseObject implements IAuthHandler
 
   public function handleSignOut()
   {
-    $this->challenge();
+    $this->challenge(null, true);
   }
 
 

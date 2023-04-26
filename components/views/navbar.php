@@ -5,6 +5,7 @@
  */
 
 use components\Components;
+use lib\app\http\Request;
 
 $components = new Components();
 
@@ -23,10 +24,12 @@ $components = new Components();
     <div class="btn-group border-0">
       <button type="button" data-bs-toggle="dropdown" class="btn border-0">
         <div class="text-start">
-          <div class="fw-bold">Joel Joshua Henry <br><small class="fw-semibold">Administrator</small></div>
+          <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?> <br><small
+              class="fw-semibold">Administrator</small></div>
         </div>
       </button>
-      <button type="button" class="btn border-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn border-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+        aria-expanded="false">
         <span class="visually-hidden">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu rounded-0">
@@ -49,9 +52,9 @@ $components = new Components();
 
 
     <?= $components->render("sidebar-item", ["title" => "Dashboard", "link" => "/academy/admin/dashboard"]) ?>
-
-
-    <?= $components->render("sidebar-item", ["title" => "Users", "link" => "/academy/admin/user", "items" => [
+    <?= $components->render("sidebar-item", ["title" => "Assessment Manager", "link" => "/academy/admin/assessment"]) ?>
+    <?= $components->render("sidebar-item", ["title" => "Resource Manager", "link" => "/academy/admin/resource"]) ?>
+    <?= $components->render("sidebar-item", ["title" => "User Manager", "link" => "/academy/admin/user", "items" => [
       "Manage Users" => "/academy/admin/user",
       "User Roles" => "/academy/admin/user/role",
       "Permissions" => "/academy/admin/user/permission"

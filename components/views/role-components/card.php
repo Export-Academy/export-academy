@@ -20,7 +20,7 @@ $hideViewButton = $hideViewButton ?? false;
   <div class="card-body bg-body-secondary vstack justify-content-between">
     <div class="container-fluid">
       <h4><?= $role->name ?></h4>
-      <small><?= $role->description ?? "No Description" ?></small>
+      <small><?= (empty($role->description) ? "No Description" : $role->description) ?></small>
 
       <hr class="my-2">
 

@@ -6,6 +6,7 @@ namespace lib\app\auth\interface;
 
 interface IAuthIdentity
 {
+  public function getDisplayName();
   public function userId();
   public function isAuthenticated();
   public function userRoles();

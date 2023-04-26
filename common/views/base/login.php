@@ -34,14 +34,14 @@ if (isset($redirect_link))
         <div class="vstack px-md-5 px-sm-2 my-5">
           <div class="text-center">
             <h3>Sign In to Export Academy</h3>
-            <div class="fw-semibold">New here? <a href="<?= $actionLink ?>">Create an Account</a> </div>
+            <div class="fw-semibold">New here? <a href="/academy/sign_up">Create an Account</a> </div>
           </div>
 
           <div class="px-5">
             <hr class="my-5">
           </div>
 
-          <?= Html::form_begin("/academy/login") ?>
+          <?= Html::form_begin($actionLink) ?>
 
           <?= $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "email", "required" => true]) ?>
           <?= $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "password", "required" => true]) ?>

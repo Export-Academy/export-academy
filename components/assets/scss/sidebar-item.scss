@@ -2,12 +2,12 @@
   padding: 2px 0;
 
   &.active {
-    background: rgba(16, 145, 96, 0.863);
+    background: rgba(14, 127, 140, 0.421);
     .item {
-      color: white;
+      color: black;
 
       &:hover {
-        color: white !important;
+        color: black !important;
       }
     }
   }
@@ -16,7 +16,7 @@
     background: white !important;
 
     .item {
-      color: rgba(16, 145, 96, 0.863) !important;
+      color: rgb(31, 74, 79) !important;
     }
   }
 
@@ -26,7 +26,7 @@
     font-weight: 600;
 
     &:hover {
-      color: rgba(16, 145, 96, 0.863) !important;
+      color: rgb(31, 74, 79) !important;
     }
 
     .hstack {

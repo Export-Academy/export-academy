@@ -4,7 +4,6 @@
 namespace lib\util\html;
 
 use components\Components;
-use lib\app\log\Logger;
 use lib\util\BaseObject;
 
 class Html extends BaseObject
@@ -21,7 +20,6 @@ class Html extends BaseObject
 
   public static function tag($container, $content, $options = [])
   {
-    Logger::log($content);
     $html = "<$container" . self::renderAttributes($options) . " >";
     $html .= $content . "</$container>";
     return $html;

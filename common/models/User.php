@@ -94,6 +94,17 @@ class User extends BaseModel implements IAuthIdentity
   {
   }
 
+  public function getDisplayName()
+  {
+    return "$this->firstName $this->lastName";
+  }
+
+
+  public static function createUser()
+  {
+  }
+
+
 
   public static function encryptPassword($password)
   {

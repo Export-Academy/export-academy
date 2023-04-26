@@ -39,7 +39,8 @@ require_once Helper::getAlias('@common\controller\BaseController.php');
 require_once Helper::getAlias('@web\controller\SourceController.php');
 require_once Helper::getAlias("@admin\controller\DashboardController.php");
 require_once Helper::getAlias("@admin\controller\UserController.php");
-
+require_once Helper::getAlias("@admin\controller\ResourceController.php");
+require_once Helper::getAlias("@admin\controller\AssessmentController.php");
 
 $app = App::instance(['site', 'admin', 'web']);
 $app->run();

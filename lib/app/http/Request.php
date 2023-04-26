@@ -10,9 +10,6 @@ use lib\util\Helper;
 
 class Request extends BaseObject
 {
-  /** @var IAuthIdentity */
-  private $__identity;
-
   /** @var IAuthHandler */
   public $auth;
 
@@ -38,15 +35,15 @@ class Request extends BaseObject
    *
    * @return IAuthIdentity|false Returns user, false if no user exist
    */
-  public function getIdentity()
+  public static function getIdentity()
   {
-    return isset($this->__identity) ? $this->__identity : false;
+    return Helper::getValue("AUTH_IDENTITY", $_SESSION);
   }
 
 
-  public function setIdentity(IAuthIdentity $identity)
+  public static function setIdentity(IAuthIdentity $identity)
   {
-    $this->__identity = $identity;
+    $_SESSION["AUTH_IDENTITY"] = $identity;
   }
 
 
@@ -69,7 +66,7 @@ class Request extends BaseObject
     return $_SERVER['REQUEST_URI'];
   }
 
-  public function method()
+  public static function method()
   {
     return $_SERVER['REQUEST_METHOD'];
   }

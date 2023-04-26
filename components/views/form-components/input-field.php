@@ -36,7 +36,7 @@ $id = $id ?? false;
 
   <div class="mb-3">
     <label class="fw-semibold" <?php if (isset($id)) : ?> for="<?= $id ?>" <?php endif ?>><?= $label ?? "" ?></label>
-    <textarea <?= $required ? "required" : "" ?> <?= Html::renderAttributes($options) ?> class="form-control form-control-lg" <?= $id ? "id='$id'" : "" ?> <?= isset($name) ? "name='$name'" : "" ?>></textarea>
+    <textarea <?= $required ? "required" : "" ?> <?= Html::renderAttributes($options) ?> class="form-control form-control-lg" <?= $id ? "id='$id'" : "" ?> <?= isset($name) ? "name='$name'" : "" ?>><?= $value ?? "" ?></textarea>
   </div>
 
 <?php else : ?>

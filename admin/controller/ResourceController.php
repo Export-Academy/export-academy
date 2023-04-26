@@ -5,10 +5,8 @@ namespace admin\controller;
 
 use common\controller\Controller;
 
-class DashboardController extends Controller
+class ResourceController extends Controller
 {
-
-
   public function secure()
   {
     return [
@@ -18,6 +16,6 @@ class DashboardController extends Controller
 
   public function actionIndex()
   {
-    $this->render('index', ["title" => "Dashboard"]);
+    $this->render('index', ["title" => "Manage Resources"]);
   }
 }

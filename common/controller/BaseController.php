@@ -3,6 +3,7 @@
 namespace common\controller;
 
 use common\controller\Controller;
+use lib\app\log\Logger;
 use lib\app\router\Router;
 
 
@@ -29,9 +30,11 @@ class BaseController extends Controller
         $email = $this->request->data("email", "");
         $password = $this->request->data("password", "");
         $result = $this->request->auth->handleLogin($email, $password);
+        Logger::log($result);
         if ($result) {
           $redirectPath = $this->request->params("r", null);
-          Router::redirect($redirectPath ?? "/academy/admin/dashboard/");
+          Logger::log($redirectPath);
+          Router::redirect($redirectPath ?? "/academy/admin/dashboard");
         }
         Router::redirect("/academy/login");
         return;
