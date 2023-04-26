@@ -28,7 +28,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
           <div class="hstack justify-content-between">
             <div class="p-2"><?= $title ?? "Title" ?></div>
             <div class="p-2">
-              <i class="fa-light fa-arrow-right"></i>
+              <i data-feather="arrow-right-circle"></i>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
             <div class="hstack justify-content-between">
               <div class="p-2"><?= $title ?? "Title" ?></div>
               <div class="p-2">
-                <i class="fa-light fa-arrow-right"></i>
+                <i data-feather="plus"></i>
               </div>
             </div>
           </a>
@@ -70,7 +70,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
     <div class="hstack justify-content-between">
       <div class="p-2"><?= $title ?? "Title" ?></div>
       <div class="p-2">
-        <i class="fa-light fa-arrow-right"></i>
+        <i data-feather="arrow-right-circle"></i>
       </div>
     </div>
   </a>

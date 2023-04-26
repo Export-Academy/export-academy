@@ -18,6 +18,6 @@ class DashboardController extends Controller
 
   public function actionIndex()
   {
-    $this->render('index', ["title" => "Dashboard"], 'dashboard');
+    $this->render('index', ["title" => "Dashboard"]);
   }
 }

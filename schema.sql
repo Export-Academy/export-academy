@@ -258,3 +258,11 @@ INSERT INTO
   `permission` (`id`, `name`)
 VALUES
   (13, 'Update Permission');
+INSERT INTO
+  `role` (`name`)
+VALUES
+  ('Administrator');
+INSERT INTO
+  `role` (`name`)
+VALUES
+  ('Developer');

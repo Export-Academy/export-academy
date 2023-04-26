@@ -23,17 +23,18 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
   <div class="row">
     <div class="col-lg-3 col-md-12">
       <div class="gap-2 d-block my-4">
-
-        <button id="delete-role" data-role="<?= $role->id ?>" class="btn btn-danger-outline">Delete</button>
+        <button data-bs-toggle="modal" data-bs-target="#update-role-modal" class="btn btn-primary">Update Role
+          Information</button>
+        <button data-role="<?= $role->name ?> Role" data-id="<?= $role->id ?>" id="delete-role" class="btn ">Delete</button>
       </div>
       <div class="d-lg-block d-md-none d-sm-none">
-        <?= $components->render("role/card", ["role" => $role, "hideUpdateButton" => true]) ?>
+        <?= $components->render("role-components/card", ["role" => $role, "hideUpdateButton" => true]) ?>
       </div>
     </div>
     <div class="col-lg-9 col-md-12">
 
       <div class="display-6 fw-bold fs-5 text-dark my-4">Role Permissions</div>
-      <?= Html::form_begin("/academy/admin/user/update_role", "post", ["id" => "permissions-form"]) ?>
+      <?= Html::form_begin("/academy/admin/user/update_role", "post", ["id" => "permissions-form", "data-role" => "$role->name Role"]) ?>
 
       <div class="hstack justify-content-between align-items-center p-3">
         <div class="form-check">
@@ -55,7 +56,7 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
             return $_permission->id === $permission->id;
           });
 
-          $isSelected = !empty($granted);
+          $selected = !empty($granted);
 
           ?>
 
@@ -68,12 +69,11 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
                 </div>
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input check-permission" data-role="<?= $role->id ?>" <?= $isSelected ? "checked" : "" ?> type="checkbox" role="switch" id="permission-<?= $permission->id ?>">
-                <label class="form-check-label" for="permission-<?= $permission->id ?>"><?= $isSelected ? "Enabled" : "Disabled" ?></label>
+                <input name="Grants[<?= $permission->id ?>]" class="form-check-input check-permission" data-permission="<?= $permission->id ?>" <?= $selected ? "checked" : "" ?> type="checkbox" role="switch" id="permission-<?= $permission->id ?>">
+                <label class="form-check-label" for="permission-<?= $permission->id ?>"><?= $selected ? "Enabled" : "Disabled" ?></label>
               </div>
             </div>
           </div>
-
 
         <?php endforeach; ?>
       </div>
@@ -86,11 +86,59 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
 </div>
 
 
+
+
 <?php
 
-$scripts = <<< JS
+$header = "<h5 class='modal-title'>Update $role->name Role</h5>";
 
-$()
-JS;
+$beginForm = Html::form_begin("/academy/admin/user/role", "post");
+$nameInput = $components->render("form-components/input-field", [
+  "type" => "text",
+  "label" => "Role Name",
+  "name" => "Role[name]",
+  "placeholder" => $role->name
+]);
+$descriptionInput = $components->render("form-components/input-field", [
+  "type" => "textarea",
+  "label" => "Role Description",
+  "name" => "Role[description]",
+  "placeholder" => $role->description
+]);
+$hiddenInput = Html::hiddenInput($role->id, "Role[id]");
+$endForm = Html::form_end();
 
-$this->registerJs($scripts);
+
+
+$content = <<< HTML
+$beginForm
+<div class="mb-5">
+
+  <div class="py-2">
+  $nameInput
+  </div>
+  <div class="py-2">
+  $descriptionInput
+  </div>
+  $hiddenInput
+ 
+</div>
+
+
+<div class="mt-3 d-block gap-2">
+<button type="submit" class="btn btn-secondary">Update</button>
+</div>
+$endForm
+HTML;
+
+
+?>
+
+
+<?= $components->render("modal-component/modal", [
+  "header" => $header,
+  "id" => "update-role-modal",
+  "content" => $content,
+  "size" => "lg",
+  "showFooter" => false
+]) ?>

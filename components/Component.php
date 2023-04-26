@@ -26,7 +26,7 @@ class Components extends BaseObject implements IViewable
 
   public function render($name, $params = [])
   {
-    $this->view->render($this->getViewsDirectory() . "/$name", $params);
+    return $this->view->generateContent($this->getViewsDirectory() . "/$name", $params);
   }
 
   public function getAssetDirectory()

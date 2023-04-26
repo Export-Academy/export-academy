@@ -50,11 +50,9 @@ class Database extends BaseObject
   public function execute(Query $query)
   {
     $db = $this->_handler;
-    $db->beginTransaction();
 
     try {
       $command = $db->prepare($query->createCommand());
-      $db->commit();
       $command->execute();
       Logger::log("Executed: $command->queryString", "info");
     } catch (Exception $ex) {
@@ -77,20 +75,18 @@ class Database extends BaseObject
 
     try {
       $db->beginTransaction();
+
       Logger::log("STARTING TRANSACTION", "info");
 
-      $query = implode("; ", array_map(function (Query $query) {
-        return $query->createCommand();
-      }, $queries));
+      foreach ($queries as $query) {
+        $command = $db->prepare($query->createCommand());
+        $command->execute();
+        Logger::log("Executed: $command->queryString", "info");
+      }
 
-      $command = $db->prepare($query);
+
       $db->commit();
-
-
-      $command->execute();
-
-
-      Logger::log("Executed: $command->queryString", "info");
+      Logger::log("COMMITTING TRANSACTION", "info");
     } catch (Exception $ex) {
 
       Logger::log("ROLLBACK TRANSACTION", "info");

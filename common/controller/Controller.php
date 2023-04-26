@@ -138,7 +138,10 @@ class Controller extends BaseObject implements IAuthController, IViewable
    */
   public function getAssetDirectory()
   {
-    $base =  Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1])) . DIRECTORY_SEPARATOR . "assets";
+    /*
+    strtolower(preg_split('/(?=[A-Z])/', basename(get_called_class()))[1]))
+    */
+    $base =  Helper::getAlias("$this->module" . DIRECTORY_SEPARATOR . "views"  . DIRECTORY_SEPARATOR . 'assets');
     return $base;
   }
 

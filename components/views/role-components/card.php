@@ -38,7 +38,7 @@ $hideViewButton = $hideViewButton ?? false;
             "li",
             "
                   <div class='fw-semibold'>$permission->name</div>
-                  <p class='fw-light fs-6'>" . $permission->description ?? "No Description" . "</p>
+                  <p class='fw-light fs-6'>" . (empty($permission->description) ? "No Description" : $permission->description) . "</p>
                 ",
             ["class" => "list-group-item rounded-0 vstack justify-content-center fw-bold"]
           );

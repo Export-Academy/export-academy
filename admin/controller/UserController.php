@@ -7,9 +7,8 @@ use common\controller\Controller;
 use common\models\access\Grants;
 use common\models\access\Role;
 use lib\app\database\Database;
-use lib\app\database\Transaction;
-use lib\app\log\Logger;
 use lib\app\router\Router;
+use lib\util\Helper;
 
 class UserController extends Controller
 {
@@ -24,37 +23,53 @@ class UserController extends Controller
 
   public function actionIndex()
   {
-    $this->render('index', ["title" => "User Management"], 'dashboard');
+    $this->render('index', ["title" => "User Management"]);
   }
 
 
   public function actionRole()
   {
-    $role_id = $this->request->params("role", false);
-    $role = null;
-
-    if ($role_id)
-      $role = Role::findOne(["id" => $role_id]);
+    $method = $this->request->method();
 
 
-    $params = [
-      "title" => "Manage User Roles",
-    ];
-    $view = "role";
+    switch ($method) {
+      case "POST":
+        $data = $this->request->data("Role", []);
+        $role = new Role($data);
+
+        $role->save();
+        Router::redirect("/academy/admin/user/role");
+        return;
+
+
+      default:
+        $role_id = $this->request->params("role", false);
+        $role = null;
+
+        if ($role_id)
+          $role = Role::findOne(["id" => $role_id]);
+
+
+        $params = [
+          "title" => "Manage User Roles",
+        ];
+        $view = "role";
 
 
 
-    if ($role) {
-      $params = [
-        "title" => "$role->name Role",
-        "role" => $role
-      ];
-      $view = "role-view";
-    } else {
-      $params["roles"] = Role::find()->all();
+        if ($role) {
+          $params = [
+            "title" => "$role->name Role",
+            "role" => $role
+          ];
+          $view = "role-view";
+        } else {
+          $params["roles"] = Role::find()->all();
+        }
+
+        $this->render($view, $params);
+        return;
     }
-
-    $this->render($view, $params, 'dashboard');
   }
 
 
@@ -73,21 +88,36 @@ class UserController extends Controller
         $db = Database::instance();
 
         $db->transaction(function ($tr) use ($roleId, $data) {
-          foreach ($data as $key => $value) {
-            $grant = new Grants(["role_id" => +$roleId, "permission_id" => +$key]);
+          $grants = Grants::find(["role_id" => +$roleId])->all();
+          $updated = [];
+          $removed = [];
 
-            if ($value) {
-              $grant->save($tr);
+          foreach ($grants as $grant) {
+            $enabled = Helper::getValue($grant->permission_id, $data, null);
+
+            if (!isset($enabled)) {
+              $removed[] = $grant->permission_id;
             } else {
-              $grant->delete($tr);
+              $updated[$grant->permission_id] = $enabled;
             }
-
-            return $tr->execute();
           }
+
+          if (!empty($removed))
+            Grants::deleteByCondition(["role_id" => +$roleId, "permission_id" => $removed], $tr);
+
+
+          $toUpdate = array_diff_key($data, $updated);
+
+          foreach ($toUpdate as $permission_id => $_) {
+            $grant = new Grants(["role_id" => +$roleId, "permission_id" => +$permission_id]);
+            $grant->save($tr);
+          }
+
+          return $tr->execute();
         });
 
 
-        $this->jsonResponse($this->request->data());
+        Router::redirect("/academy/admin/user/update_role?role=$roleId");
         return;
 
 
@@ -96,36 +126,35 @@ class UserController extends Controller
         $role = Role::findOne(["id" => $role_id]);
 
         if (!$role) {
-          Router::redirect("/academy/user/role");
+          Router::redirect("/academy/admin/user/role");
           return;
         }
 
         /** @var Permission[] $permissions */
         $permissions = $role->permissions;
-        $this->render('role-update', ["title" => "$role->name Role", "role" => $role, "granted_permissions" => $permissions], "dashboard");
+        $this->render('role-update', ["title" => "$role->name Role", "role" => $role, "granted_permissions" => $permissions]);
         return;
     }
   }
 
 
 
-
-
-
-
-
   public function actionDeleteRole()
   {
-    $roleId = $this->request->data("role", null);
-    if (!isset($roleId)) $this->jsonResponse("Failed to delete role");
+    $roleId = $this->request->params("role", null);
+    if (!isset($roleId)) Router::redirect("/academy/admin/user/role");
 
-    Role::deleteByCondition(["id" => +$roleId]);
+    $role = Role::findOne(["id" => +$roleId]);
+
+    if ($role)
+      $role->delete();
+
     Router::redirect("/academy/admin/user/role");
   }
 
 
   public function actionPermission()
   {
-    $this->render('permission', ['title' => "Permission Management"], 'dashboard');
+    $this->render('permission', ['title' => "Permission Management"]);
   }
 }

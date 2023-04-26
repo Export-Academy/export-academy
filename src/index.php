@@ -7,15 +7,12 @@ use lib\util\Helper;
 
 require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
 
-
-
-
-
-
-
-
 require_once Helper::getAlias("@lib\app\\view\interface\IViewable.php");
-require_once Helper::getAlias('@vendor/scssphp/scssphp/scss.inc.php', "/");
+
+// Load External components
+require_once Helper::getAlias('@vendor/autoload.php', "/");
+
+
 require_once Helper::getAlias('@lib\util\BaseObject.php');
 require_once Helper::getAlias("@lib\app\log\Logger.php");
 

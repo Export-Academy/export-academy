@@ -14,7 +14,9 @@ $components = new Components();
 
 <div class="hstack container-fluid align-items-center justify-content-between w-100 py-2 bg-light ">
   <div class="p-2">
-    <button class="btn icon-btn" data-bs-toggle="offcanvas" data-bs-target="#sidebar-canvas"><i class="fa-light fa-bars"></i></button>
+    <button class="btn icon-btn" data-bs-toggle="offcanvas" data-bs-target="#sidebar-canvas">
+      <i data-feather="menu"></i>
+    </button>
   </div>
   <div class="hstack">
 

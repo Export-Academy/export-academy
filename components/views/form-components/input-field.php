@@ -2,9 +2,20 @@
 
 
 use lib\app\view\View;
+use lib\util\html\Html;
 
 /** @var View $this */
 
+/** @var string[] $options */
+
+
+$options = array_merge([
+  "value" => $value ?? "",
+  "placeholder" => $placeholder ?? ""
+], $options ?? []);
+
+$required = $required ?? false;
+$id = $id ?? false;
 ?>
 
 
@@ -14,23 +25,25 @@ use lib\app\view\View;
   <?php
   $this->registerJsFile('input-field', View::POS_END);
   ?>
-  <div class="mb-5">
+  <div class="mb-3">
     <label class="fw-semibold" <?php if (isset($id)) : ?> for="<?= $id ?>" <?php endif ?>><?= $label ?? "" ?></label>
     <div class="input-group">
-      <input required type="<?= $type ?? "text" ?>" class="form-control form-control-lg" <?php if (isset($id)) : ?> id="<?= $id ?>" <?php endif ?> <?php if (isset($name)) : ?> name="<?= $name ?>" <?php endif ?> placeholder="<?= $placeholder ?? "" ?>">
+      <input <?= Html::renderAttributes($options) ?> class="form-control form-control-lg" <?= $required ? "required" : "" ?> <?= $id ? "id='$id'" : "" ?> <?= isset($name) ? "name='$name'" : "" ?>>
       <button type="button" class="btn password-visibility-btn">Show</button>
     </div>
   </div>
-<?php else : ?>
+<?php elseif ($type == "textarea") : ?>
 
-
-  <div class="mb-5">
+  <div class="mb-3">
     <label class="fw-semibold" <?php if (isset($id)) : ?> for="<?= $id ?>" <?php endif ?>><?= $label ?? "" ?></label>
-
-
-    <input required type="<?= $type ?? "text" ?>" class="form-control form-control-lg" <?php if (isset($id)) : ?> id="<?= $id ?>" <?php endif ?> <?php if (isset($name)) : ?> name="<?= $name ?>" <?php endif ?> placeholder="<?= $placeholder ?? "" ?>">
+    <textarea <?= $required ? "required" : "" ?> <?= Html::renderAttributes($options) ?> class="form-control form-control-lg" <?= $id ? "id='$id'" : "" ?> <?= isset($name) ? "name='$name'" : "" ?>></textarea>
   </div>
 
+<?php else : ?>
 
+  <div class="mb-3">
+    <label class="fw-semibold" <?php if (isset($id)) : ?> for="<?= $id ?>" <?php endif ?>><?= $label ?? "" ?></label>
+    <input <?= $required ? "required" : "" ?> <?= Html::renderAttributes($options) ?> class="form-control form-control-lg" <?= $id ? "id='$id'" : "" ?> <?= isset($name) ? "name='$name'" : "" ?>>
+  </div>
 
 <?php endif; ?>

@@ -43,8 +43,8 @@ if (isset($redirect_link))
 
           <?= Html::form_begin("/academy/login") ?>
 
-          <?php $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "email"]) ?>
-          <?php $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "password"]) ?>
+          <?= $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "email", "required" => true]) ?>
+          <?= $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "password", "required" => true]) ?>
 
 
 

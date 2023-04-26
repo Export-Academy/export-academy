@@ -4,6 +4,7 @@
 namespace lib\util\html;
 
 use components\Components;
+use lib\app\log\Logger;
 use lib\util\BaseObject;
 
 class Html extends BaseObject
@@ -20,6 +21,7 @@ class Html extends BaseObject
 
   public static function tag($container, $content, $options = [])
   {
+    Logger::log($content);
     $html = "<$container" . self::renderAttributes($options) . " >";
     $html .= $content . "</$container>";
     return $html;
@@ -50,13 +52,13 @@ class Html extends BaseObject
 
   public static function form_begin($action, $method = "post", $options = [])
   {
-    (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method, "options" => $options]);
+    return (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method, "options" => $options]);
   }
 
 
   public static function form_end()
   {
-    (new Components())->render("form-components/index");
+    return (new Components())->render("form-components/index");
   }
 
 
