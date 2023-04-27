@@ -34,7 +34,8 @@ $columns = $columns ?? [];
             <?php $content = Helper::getValue("content", $column); ?>
 
             <?php if (isset($content)) : ?>
-              <td class="py-3"><?= is_callable($content) ? call_user_func_array($content, [$model]) : $model->{$content}  ?></td>
+              <td class="py-3"><?= is_callable($content) ? call_user_func_array($content, [$model]) : $model->{$content}  ?>
+              </td>
             <?php else : ?>
               <td><?= $model->{$property} ?></td>
             <?php endif; ?>

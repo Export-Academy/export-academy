@@ -3,9 +3,10 @@
 namespace common\controller;
 
 use common\controller\Controller;
+use common\models\user\User;
 use lib\app\log\Logger;
 use lib\app\router\Router;
-
+use lib\util\Helper;
 
 class BaseController extends Controller
 {
@@ -50,7 +51,16 @@ class BaseController extends Controller
   {
     switch ($this->request->method()) {
       case 'POST':
-        $this->jsonResponse($this->request->data());
+        $data = $this->request->data("User", []);
+
+        $password = Helper::getValue("password", $data, null);
+
+        if ($password) {
+          $data["password"] = User::encryptPassword($password);
+        }
+        $user = new User($data);
+        $user->save();
+        Router::redirect("/academy/login");
         break;
 
       case 'GET':

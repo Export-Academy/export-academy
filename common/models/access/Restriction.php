@@ -4,7 +4,7 @@
 namespace common\models\access;
 
 use common\models\base\BaseModel;
-use common\models\User;
+use common\models\user\User;
 
 /**
  * Restriction Entity

@@ -1,48 +1,63 @@
 <?php
 
+use components\Components;
+use lib\app\view\View;
 use lib\util\html\Html;
+
+
+$this->registerSCSSFile("login.scss");
+
+/** @var View $this */
+
+
+$component = new Components();
+
+
 ?>
 
-<div class="my-10">
-  <div class="card w-50">
-    <form action="/academy/sign_up" method="post">
-      <div class="card-header">
-        <h4>Sign Up</h4>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group my-2">
-              <div class="form-label">First Name</div>
-              <?= Html::input('', 'user[first_name]', ['class' => 'form-control', 'placeholder' => 'Your First Name']) ?>
-            </div>
+<div class="row login-container">
+
+  <div class="col-md-12 col-lg-7 px-5">
+    <div class="vstack px-5 justify-items-center my-5">
+      <div class="px-5">
+        <div class="vstack px-md-5 px-sm-2 my-5">
+          <div class="text-center">
+            <h3>Sign Up for Export Academy</h3>
+            <div class="fw-semibold">Already Registered? <a href="/academy/login">Sign In</a> </div>
           </div>
-          <div class="col-6">
-            <div class="form-group my-2">
-              <div class="form-label">Last Name</div>
-              <?= Html::input('', 'user[last_name]', ['class' => 'form-control', 'placeholder' => 'Your Last Name']) ?>
-            </div>
+
+          <div class="px-5">
+            <hr class="my-5">
           </div>
-        </div>
-        <div class="form-group my-2">
-          <div class="form-label">Email</div>
-          <?= Html::input('', 'user[email]', ['class' => 'form-control', 'placeholder' => 'Your Email']) ?>
-        </div>
+
+          <?= Html::form_begin("/academy/sign_up") ?>
 
 
-        <div class="form-group my-2">
-          <div class="form-label">Password</div>
-          <?= Html::input('', 'user[password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
+          <div class="hstack gap-2 justify-content-between">
+            <?= $component->render("form-components/input-field", ["type" => "text", "label" => "First Name", "id" => "first-name-input", "name" => "User[firstName]", "required" => true]) ?>
+            <?= $component->render("form-components/input-field", ["type" => "text", "label" => "Last Name", "id" => "last-name-input", "name" => "User[lastName]", "required" => true]) ?>
+          </div>
+
+
+
+
+          <?= $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "User[email]", "required" => true]) ?>
+          <?= $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "User[password]", "required" => true]) ?>
+
+
+          <div class="container mt-5">
+            <button type="submit" class="w-100 btn btn-light btn-lg">Sign Up</button>
+          </div>
+
+
+          <?= Html::form_end() ?>
+          <?php $component->view->renderPosition(View::POS_END) ?>
         </div>
 
-        <div class="form-group my-2">
-          <div class="form-label">Confirm Password</div>
-          <?= Html::input('', 'user[confirm_password]', ['class' => 'form-control', 'placeholder' => 'Your Password', 'type' => 'password']) ?>
-        </div>
       </div>
-      <div class="card-footer">
-        <?= Html::tag('button', 'Sign Up', ['class' => 'btn btn-secondary', 'type' => 'submit']) ?>
-      </div>
-    </form>
+    </div>
+  </div>
+  <div class="col-lg-5 p-1 bg-secondary-subtle">
+
   </div>
 </div>

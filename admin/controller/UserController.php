@@ -112,8 +112,6 @@ class UserController extends Controller
             $grant = new Grants(["role_id" => +$roleId, "permission_id" => +$permission_id]);
             $grant->save($tr);
           }
-
-          return $tr->execute();
         });
 
 

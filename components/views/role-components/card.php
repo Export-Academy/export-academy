@@ -53,7 +53,7 @@ $hideViewButton = $hideViewButton ?? false;
 
     <div class="d-block gap-2 mt-5">
       <?php if (!$hideUpdateButton) : ?>
-        <a href="/academy/admin/user/update_role?role=<?= $role->id ?>" class="btn btn-secondary">Update Role</a>
+        <a href="/academy/admin/user/update_role?role=<?= $role->id ?>" class="btn btn-secondary">Update Permissions</a>
       <?php endif ?>
       <?php if (!$hideViewButton) : ?>
         <a href="/academy/admin/user/role?role=<?= $role->id ?>" class="btn btn-secondary">View Role</a>

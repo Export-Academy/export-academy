@@ -56,7 +56,7 @@ class BaseModel extends BaseObject implements IActiveModel
    * Returns a single instance of BaseModel matching the condition
    *
    * @param boolean $condition
-   * @return Role
+   * @return BaseModel
    */
   public static function findOne($condition = false)
   {
@@ -100,12 +100,12 @@ class BaseModel extends BaseObject implements IActiveModel
     return $database_properties;
   }
 
-  public function update(Transaction &$transaction = null)
+  public function update($update = true, Transaction &$transaction = null)
   {
-    $query = Query::create(get_called_class())->update($this->getPrimaryCondition(), $this->getDatabaseProperties());
+    $query = Query::create(get_called_class())->update($this->getPrimaryCondition(), $this->getDatabaseProperties(), $update);
 
     if ($transaction) {
-      $transaction->runQuery($query);
+      $transaction->execute($query);
       return;
     }
     return $query->run();
@@ -124,34 +124,20 @@ class BaseModel extends BaseObject implements IActiveModel
       ->createCommand() . "; END IF;";
 
     $query =  Query::create(get_called_class())->query($sql);
-
-    if ($transaction) {
-      $transaction->runQuery($query);
-      return;
-    }
-    return $query->run();
+    return $query->run($transaction);
   }
 
   public function delete(Transaction &$transaction = null)
   {
     $condition = $this->getPrimaryCondition();
     $query = Query::create(get_called_class())->delete($condition);
-
-    if ($transaction) {
-      $transaction->runQuery($query);
-      return;
-    }
-    return $query->run();
+    return $query->run($transaction);
   }
 
   public static function deleteByCondition($condition, Transaction &$transaction = null)
   {
     $query = Query::create(get_called_class())->delete($condition);
-    if ($transaction) {
-      $transaction->runQuery($query);
-      return;
-    }
-    return $query->run();
+    return $query->run($transaction);
   }
 
   /**
@@ -174,7 +160,6 @@ class BaseModel extends BaseObject implements IActiveModel
       foreach ($models as $model) {
         $model->delete($tr);
       }
-      $tr->execute();
     });
     return $response;
   }
@@ -190,7 +175,7 @@ class BaseModel extends BaseObject implements IActiveModel
 
     if ($transaction) {
       foreach ($models as $model) {
-        $model->update($transaction);
+        $model->update(true, $transaction);
       }
 
       return;
@@ -199,9 +184,8 @@ class BaseModel extends BaseObject implements IActiveModel
 
     $response = $db->transaction(function (Transaction $tr) use ($models) {
       foreach ($models as $model) {
-        $model->update($tr);
+        $model->update(true, $tr);
       }
-      $tr->execute();
     });
     return $response;
   }
@@ -218,7 +202,6 @@ class BaseModel extends BaseObject implements IActiveModel
       foreach ($models as $model) {
         $model->save($transaction);
       }
-
       return;
     }
     $db = Database::instance();
@@ -227,7 +210,6 @@ class BaseModel extends BaseObject implements IActiveModel
       foreach ($models as $model) {
         $model->save($tr);
       }
-      return $tr->execute();
     });
     return $response;
   }

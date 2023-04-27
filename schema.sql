@@ -6,23 +6,19 @@ CREATE TABLE `user_type` (
   `name` varchar(255) NOT NULL,
   `description` text
 );
-CREATE TABLE `user_meta` (
-  `id` int PRIMARY KEY,
-  `verified` boolean DEFAULT false,
-  `email_verified` boolean DEFAULT false,
-  `disabled` boolean DEFAULT false,
-  `requires_verification` boolean DEFAULT false
-);
 CREATE TABLE `user` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `firstName` varchar(255) NOT NULL,
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) UNIQUE NOT NULL,
   `password` text NOT NULL,
-  `password_token` text,
-  `email_token` text,
+  `token` text,
+  `verified` boolean DEFAULT false,
+  `email_verified` boolean DEFAULT false,
+  `disabled` boolean DEFAULT false,
+  `requires_verification` boolean DEFAULT false,
   `type_id` int,
-  `meta_id` int NOT NULL,
+  `last_logged_in` timestamp,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
@@ -118,26 +114,24 @@ CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
 CREATE INDEX `user_index_1` ON `user` (`firstName`);
 CREATE INDEX `user_index_2` ON `user` (`lastName`);
 CREATE INDEX `user_index_3` ON `user` (`email`);
-CREATE INDEX `user_index_4` ON `user` (`meta_id`);
-CREATE INDEX `user_index_5` ON `user` (`created_at`);
-CREATE INDEX `permission_index_6` ON `permission` (`name`);
-CREATE INDEX `role_index_7` ON `role` (`name`);
-CREATE INDEX `grants_index_8` ON `grants` (`role_id`);
-CREATE INDEX `grants_index_9` ON `grants` (`permission_id`);
-CREATE INDEX `response_index_10` ON `response` (`created_at`);
-CREATE INDEX `question_type_index_11` ON `question_type` (`name`);
-CREATE INDEX `question_index_12` ON `question` (`type`);
-CREATE INDEX `question_index_13` ON `question` (`answer`);
-CREATE INDEX `format_index_14` ON `format` (`name`);
-CREATE INDEX `resource_index_15` ON `resource` (`title`);
+CREATE INDEX `user_index_4` ON `user` (`verified`);
+CREATE INDEX `user_index_5` ON `user` (`email_verified`);
+CREATE INDEX `user_index_6` ON `user` (`requires_verification`);
+CREATE INDEX `user_index_7` ON `user` (`created_at`);
+CREATE INDEX `permission_index_8` ON `permission` (`name`);
+CREATE INDEX `role_index_9` ON `role` (`name`);
+CREATE INDEX `grants_index_10` ON `grants` (`role_id`);
+CREATE INDEX `grants_index_11` ON `grants` (`permission_id`);
+CREATE INDEX `response_index_12` ON `response` (`created_at`);
+CREATE INDEX `question_type_index_13` ON `question_type` (`name`);
+CREATE INDEX `question_index_14` ON `question` (`type`);
+CREATE INDEX `question_index_15` ON `question` (`answer`);
+CREATE INDEX `format_index_16` ON `format` (`name`);
+CREATE INDEX `resource_index_17` ON `resource` (`title`);
 ALTER TABLE
   `user`
 ADD
   FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`);
-ALTER TABLE
-  `user`
-ADD
-  FOREIGN KEY (`meta_id`) REFERENCES `user_meta` (`id`);
 ALTER TABLE
   `grants`
 ADD

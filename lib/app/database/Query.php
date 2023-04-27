@@ -14,6 +14,7 @@ use DateTimeZone;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use Exception;
+use lib\app\log\Logger;
 use PDO;
 
 require_once Helper::getAlias('@lib\app\database\query\IExpression.php');
@@ -171,11 +172,6 @@ class Query extends BaseObject implements IExpression
     return $this;
   }
 
-  private function serverTZ()
-  {
-    return new DateTimeZone("UTC");
-  }
-
 
   public function query($sql)
   {
@@ -184,14 +180,14 @@ class Query extends BaseObject implements IExpression
   }
 
 
-  public function update($conditions, $data = [])
+  public function update($conditions, $data = [], $update = true)
   {
     $setters = [];
 
     foreach ($data as $key => $value) {
 
-      if (in_array($key, ["updated_at"])) {
-        $now = new DateTime("now", $this->serverTZ());
+      if (in_array($key, ["updated_at"])  && $update) {
+        $now = new DateTime("now", Database::timezone());
         $setters[] = "`$key` = '" . $now->format("Y-m-d H:i:s") . "'";
         continue;
       }
@@ -345,9 +341,9 @@ class Query extends BaseObject implements IExpression
   }
 
 
-  public function all()
+  public function all(Transaction $tr = null)
   {
-    $all = $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
+    $all = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
     if ($all)
       return isset($this->model) ? array_map(function ($data) {
         return Helper::createObject($data, $this->model);
@@ -357,17 +353,17 @@ class Query extends BaseObject implements IExpression
   }
 
 
-  public function one()
+  public function one(Transaction $tr = null)
   {
-    $one = $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
+    $one = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
     if ($one)
       return isset($this->model) ? Helper::createObject($one, $this->model) : $one;
     return null;
   }
 
-  public function run()
+  public function run(Transaction $tr = null)
   {
-    $response = $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
+    $response = isset($tr) ? $tr->execute($this) : $this->database->execute($this);
     return $response;
   }
 }

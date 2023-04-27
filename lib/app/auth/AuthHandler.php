@@ -3,9 +3,11 @@
 
 namespace lib\app\auth;
 
-use common\models\User;
+use common\models\user\User;
+use DateTime;
 use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\interface\IAuthIdentity;
+use lib\app\database\Database;
 use lib\app\http\Request;
 use lib\app\router\Router;
 use lib\util\BaseObject;
@@ -60,11 +62,17 @@ class AuthHandler extends BaseObject implements IAuthHandler
 
   public function handleLogin($email, $password, $remember_me = false)
   {
+    /** @var User $user */
     $user = User::findOne([
       "email" => "*$email",
-      "password" => "*" . $password
+      "password" => "*" . User::encryptPassword($password)
     ]);
     if (!$user) return false;
+
+    $user->last_logged_in = (new DateTime("now", Database::timezone()))->format("Y-m-d H:i:s");
+    $user->update(false);
+
+
     $userData = json_decode(json_encode($user), true);
     $encrypted = $this->encrypt($userData);
     setcookie(self::COOKIE_KEY, $encrypted, time() + 1800);

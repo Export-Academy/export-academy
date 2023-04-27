@@ -3,6 +3,7 @@
 
 namespace lib\app\database;
 
+use DateTimeZone;
 use Exception;
 use lib\app\log\Logger;
 use lib\config\Configuration;
@@ -47,6 +48,11 @@ class Database extends BaseObject
     }
   }
 
+  public static function timezone()
+  {
+    return new DateTimeZone("UTC");
+  }
+
   public function execute(Query $query)
   {
     $db = $this->_handler;
@@ -66,35 +72,11 @@ class Database extends BaseObject
 
   public function transaction($transaction)
   {
-    /** @var Query[] $queries */
-    $queries = call_user_func_array($transaction, [new Transaction()]);
-
-    $db = $this->_handler;
-
-
-
-    try {
-      $db->beginTransaction();
-
-      Logger::log("STARTING TRANSACTION", "info");
-
-      foreach ($queries as $query) {
-        $command = $db->prepare($query->createCommand());
-        $command->execute();
-        Logger::log("Executed: $command->queryString", "info");
-      }
-
-
-      $db->commit();
-      Logger::log("COMMITTING TRANSACTION", "info");
-    } catch (Exception $ex) {
-
-      Logger::log("ROLLBACK TRANSACTION", "info");
-      $db->rollBack();
-
-      Logger::log($ex->getMessage(), "error");
-    }
-
-    return $command;
+    $tr = new Transaction($this->_handler);
+    /** @var mixed $results */
+    $results = call_user_func_array($transaction, [$tr]);
+    $this->_handler->commit();
+    Logger::log("COMMIT TRANSACTION", "info");
+    return $results;
   }
 }
