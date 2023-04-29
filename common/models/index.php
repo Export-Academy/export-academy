@@ -8,3 +8,8 @@ require_once Helper::getAlias('@common\models\access\Role.php');
 require_once Helper::getAlias('@common\models\access\Restriction.php');
 require_once Helper::getAlias('@common\models\access\UserRole.php');
 require_once Helper::getAlias('@common\models\user\User.php');
+
+
+require_once Helper::getAlias('@common\models\assessment\Question.php');
+require_once Helper::getAlias('@common\models\assessment\QuestionType.php');
+require_once Helper::getAlias("@common\models\assessment\MultipleChoice.php");

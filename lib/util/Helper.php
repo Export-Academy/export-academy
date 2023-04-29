@@ -5,6 +5,11 @@ namespace lib\util;
 
 use stdClass;
 
+/**
+ * Helper functions that are used throughout the code
+ * 
+ * @author Joel Henry <joel.henry.023@gmail.com>
+ */
 class Helper
 {
 
@@ -50,7 +55,13 @@ class Helper
   }
 
 
-
+  /**
+   * Use the provided alias to return the respective pathname in the system
+   *
+   * @param string $alias The alias pathname of the file
+   * @param string $separator The separator being used in the provided alias pathname
+   * @return string Returns the path for the alias provided
+   */
   static function getAlias($alias, $separator = DIRECTORY_SEPARATOR)
   {
     if (strpos($alias, '@') !== 0) {
@@ -71,7 +82,13 @@ class Helper
     return false;
   }
 
-
+  /**
+   * Creates a new object with provided associative array if a class name is provided will return an instance of the provided class
+   *
+   * @param array $values Associative array of the attributes of the object
+   * @param string $class The class name of the object that should be created
+   * @return object
+   */
   public static function createObject(array $values, $class = null)
   {
     $object = isset($class) ? new $class : new stdClass();
@@ -82,7 +99,13 @@ class Helper
     return $object;
   }
 
-
+  /**
+   * Configures the provided object with the provided properties
+   *
+   * @param object $object The object that should be configured
+   * @param array $properties An associative array of all the values to be added to the object
+   * @return object
+   */
   public static function configure(object $object, $properties)
   {
     foreach ($properties as $name => $value) {
@@ -92,7 +115,14 @@ class Helper
     return $object;
   }
 
-
+  /**
+   * Return the element in the array specified by key, it first checks if the element exist
+   *
+   * @param mixed $key The key to search for in the array
+   * @param array $array The array to search
+   * @param mixed $default The default value returned if the element was'nt found
+   * @return mixed
+   */
   public static function getValue($key, $array, $default = null)
   {
     if (isset($array[$key])) return $array[$key];

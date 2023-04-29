@@ -62,7 +62,7 @@ class Query extends BaseObject implements IExpression
   public static function create($className, $alias = null)
   {
     try {
-      $instance = Helper::createObject([], $className);
+      $instance = new $className;
       if ($instance instanceof BaseModel) {
         return (new Query(['model' => $className]))->from($instance->tableName(), $alias);
       }
@@ -310,6 +310,13 @@ class Query extends BaseObject implements IExpression
     )) . " $this->order";
   }
 
+  private function getModelInstance($data = [])
+  {
+    if (isset($this->model))
+      return $this->model::instance($data);
+    return $data;
+  }
+
   public function createCommand()
   {
 
@@ -345,9 +352,9 @@ class Query extends BaseObject implements IExpression
   {
     $all = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
     if ($all)
-      return isset($this->model) ? array_map(function ($data) {
-        return Helper::createObject($data, $this->model);
-      }, $all) : $all;
+      return array_map(function ($data) {
+        return $this->getModelInstance($data);
+      }, $all);
 
     return [];
   }
@@ -357,7 +364,7 @@ class Query extends BaseObject implements IExpression
   {
     $one = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
     if ($one)
-      return isset($this->model) ? Helper::createObject($one, $this->model) : $one;
+      return $this->getModelInstance($one);
     return null;
   }
 

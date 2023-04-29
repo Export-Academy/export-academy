@@ -90,7 +90,7 @@ class View extends BaseObject
   }
 
 
-  public function registerJsFile($__file__, $pos = self::POS_END)
+  public function registerJsFile($__file__, $pos = self::POS_LOAD)
   {
     $this->js_scripts[$pos][] = $__file__;
   }
@@ -107,7 +107,7 @@ class View extends BaseObject
   }
 
 
-  public function registerJs($script, $pos = self::POS_END)
+  public function registerJs($script, $pos = self::POS_LOAD)
   {
     $this->scripts[$pos][] = $script;
   }
@@ -182,16 +182,17 @@ class View extends BaseObject
 
   public function renderPosition($pos)
   {
+    $renders = [];
     if ($pos == self::POS_HEAD) {
       foreach ($this->css_styles as $styles) {
         $path = $this->registerFile($styles, 'css');
         if (!isset($path)) continue;
-        echo Html::linkTag($path);
+        $renders[] = Html::linkTag($path);
       }
       foreach ($this->scss_styles as $styles) {
         $path = $this->registerFile($styles, 'scss');
         if (!isset($path)) continue;
-        echo Html::linkTag($path);
+        $renders[] = Html::linkTag($path);
       }
     }
     $js_files = Helper::getValue($pos, $this->js_scripts, []);
@@ -199,12 +200,19 @@ class View extends BaseObject
     foreach ($js_files as $file) {
       $path = $this->registerFile($file, 'js');
       if (!isset($path)) continue;
-      echo Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
+      $renders[] = $pos == self::POS_LOAD ? $path :  Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
 
     $scripts = Helper::getValue($pos, $this->scripts, []);
     foreach ($scripts as $script) {
-      echo Html::tag('script', $script);
+      $renders[] = $pos == self::POS_LOAD ? ["content" => $script] : Html::tag('script', $script);
+    }
+
+
+    if ($pos === View::POS_LOAD) {
+      return $renders;
+    } else {
+      echo implode("\n", $renders);
     }
   }
 

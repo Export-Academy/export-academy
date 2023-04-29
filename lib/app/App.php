@@ -108,7 +108,7 @@ class App extends BaseObject
 
       if ($secure->requiresAuth()) {
         if ($user->isAuthenticated()) {
-          if (!$secure->requirePermission($user))
+          if ($secure->requirePermission($user))
             $this->authHandler->forbid();
           $this->router->route($action);
         } else {

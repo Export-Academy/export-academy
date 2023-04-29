@@ -55,7 +55,7 @@ CREATE TABLE `answer` (
 CREATE TABLE `response` (
   `user_id` int NOT NULL,
   `question_id` int NOT NULL,
-  `content` json NOT NULL,
+  `content` blob NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   PRIMARY KEY (`user_id`, `question_id`)
@@ -73,7 +73,7 @@ CREATE TABLE `context` (
 CREATE TABLE `question` (
   `id` int PRIMARY KEY,
   `prompt` text NOT NULL,
-  `content` json NOT NULL,
+  `content` blob NOT NULL,
   `type` int NOT NULL,
   `answer` int NOT NULL,
   `enabled` boolean DEFAULT false,
@@ -94,7 +94,7 @@ CREATE TABLE `resource` (
   `id` int PRIMARY KEY,
   `title` text NOT NULL,
   `description` text,
-  `content` json NOT NULL,
+  `content` blob NOT NULL,
   `enabled` boolean DEFAULT false,
   `format_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),

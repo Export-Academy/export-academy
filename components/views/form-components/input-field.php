@@ -23,7 +23,7 @@ $id = $id ?? false;
 <?php if ($type == "password") : ?>
 
   <?php
-  $this->registerJsFile('input-field', View::POS_END);
+  $this->registerJsFile('input-field', View::POS_LOAD);
   ?>
   <div class="mb-3 w-100">
     <label class="fw-semibold" <?php if (isset($id)) : ?> for="<?= $id ?>" <?php endif ?>><?= $label ?? "" ?></label>

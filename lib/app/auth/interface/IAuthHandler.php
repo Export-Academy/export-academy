@@ -27,7 +27,7 @@ interface IAuthHandler
   public function challenge(IAuthIdentity $user);
 
   /**
-   * Forbid action is called by Authorization when an authenticated user attempts to access a resource they're not permitted to access.
+   * Forbid action is called when an authenticated or unauthorized user attempts to access a resource they're not permitted to access.
    *
    * @return void
    */

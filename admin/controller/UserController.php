@@ -5,6 +5,7 @@ namespace admin\controller;
 
 use common\controller\Controller;
 use common\models\access\Grants;
+use common\models\access\Permission;
 use common\models\access\Role;
 use lib\app\database\Database;
 use lib\app\router\Router;
@@ -12,8 +13,6 @@ use lib\util\Helper;
 
 class UserController extends Controller
 {
-
-
   public function secure()
   {
     return [
@@ -153,6 +152,7 @@ class UserController extends Controller
 
   public function actionPermission()
   {
-    $this->render('permission', ['title' => "Permission Management"]);
+    $permissions = Permission::find()->all();
+    $this->render('permission', ['title' => "Permission Management", "permissions" => $permissions]);
   }
 }

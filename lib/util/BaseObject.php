@@ -4,9 +4,17 @@ namespace lib\util;
 
 use Exception;
 
+/**
+ * @author Joel Henry <joel.henry.023@gmail.com>
+ */
 class BaseObject
 {
 
+  /**
+   * Configures model using the provided associative array
+   *
+   * @param array $config
+   */
   public function __construct($config = [])
   {
     if (!empty($config)) {
@@ -27,7 +35,21 @@ class BaseObject
     throw new Exception('Getting unknown property: ' . get_class($this) . '::' . $name);
   }
 
+  /** 
+   * This method is ran whenever a base object has been created 
+   * 
+   */
   public function init()
   {
+  }
+
+  /**
+   * Converts the object to an associative array
+   *
+   * @return array
+   */
+  public function toArray()
+  {
+    return json_decode(json_encode($this), true);
   }
 }

@@ -50,6 +50,6 @@ class Secure extends BaseObject
 
   public function requirePermission(IAuthIdentity $identity)
   {
-    return true;
+    return false;
   }
 }

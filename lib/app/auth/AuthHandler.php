@@ -9,6 +9,7 @@ use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\interface\IAuthIdentity;
 use lib\app\database\Database;
 use lib\app\http\Request;
+use lib\app\log\Logger;
 use lib\app\router\Router;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -73,7 +74,7 @@ class AuthHandler extends BaseObject implements IAuthHandler
     $user->update(false);
 
 
-    $userData = json_decode(json_encode($user), true);
+    $userData = $user->toArray();
     $encrypted = $this->encrypt($userData);
     setcookie(self::COOKIE_KEY, $encrypted, time() + 1800);
     return $user;

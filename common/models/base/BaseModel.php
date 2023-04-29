@@ -16,19 +16,52 @@ require_once Helper::getAlias("@lib\app\database\Query.php");
 require_once Helper::getAlias("@lib\app\database\RelationalQuery.php");
 
 
-class BaseModel extends BaseObject implements IActiveModel
+/**
+ * Base models are used to reference tables in the database
+ * 
+ * @author Joel Henry <joel.henry.023@gmail.com>
+ */
+abstract class BaseModel extends BaseObject implements IActiveModel
 {
+  /**
+   * Returns instance of the model using properties provided in `config`
+   *
+   * @param array $config
+   * @return static
+   */
+  public static function instance($config = [])
+  {
+    $className = get_called_class();
+    $model = new $className;
+    Helper::configure($model, $config);
+    return $model;
+  }
+
+  /**
+   * Returns the name of the referenced table
+   *
+   * @return string
+   */
   public static function tableName()
   {
     return strtolower(basename(get_called_class()));
   }
 
-
+  /**
+   * Returns the primary key/keys the referenced table
+   *
+   * @return string
+   */
   public static function getPrimaryKey()
   {
     return "id";
   }
 
+  /**
+   * Returns the primary conditions as an associative array of the referenced table
+   *
+   * @return array
+   */
   public function getPrimaryCondition()
   {
     $keys = explode(",", $this->getPrimaryKey());
@@ -39,13 +72,23 @@ class BaseModel extends BaseObject implements IActiveModel
     return $condition;
   }
 
-
+  /**
+   * Returns an array of all the abject properties that are not columns in the referenced table
+   *
+   * @return string[]
+   */
   protected static function excludeProperty()
   {
     return array_merge(["created_at"], explode(",", self::getPrimaryKey()));
   }
 
-
+  /**
+   * Return a Query instance based on provided condition if condition is provided returns 
+   * a query to get all instance in the referenced table
+   *
+   * @param boolean|array $condition
+   * @return Query
+   */
   public static function find($condition = false)
   {
     $query = Query::create(get_called_class());
@@ -53,10 +96,10 @@ class BaseModel extends BaseObject implements IActiveModel
   }
 
   /**
-   * Returns a single instance of BaseModel matching the condition
+   * Returns a single instance of the referenced table matching the provided condition
    *
    * @param boolean $condition
-   * @return BaseModel
+   * @return static
    */
   public static function findOne($condition = false)
   {
@@ -75,10 +118,15 @@ class BaseModel extends BaseObject implements IActiveModel
     return $this->hasMany($className, $condition)->limit(1);
   }
 
-
+  /**
+   * Gets the properties that are columns in the referenced table
+   *
+   * @param boolean $isUpdate 
+   * @return void
+   */
   protected function getDatabaseProperties($isUpdate = true)
   {
-    $properties = json_decode(json_encode($this), true);
+    $properties = $this->toArray();
 
 
     $excludedProperties = $this->excludeProperty();
@@ -100,6 +148,13 @@ class BaseModel extends BaseObject implements IActiveModel
     return $database_properties;
   }
 
+  /**
+   * Executes query to update the referenced row in the table
+   *
+   * @param boolean $update Will update  `updated_at` column if `true`, will ignore otherwise
+   * @param Transaction|null $transaction
+   * @return void
+   */
   public function update($update = true, Transaction &$transaction = null)
   {
     $query = Query::create(get_called_class())->update($this->getPrimaryCondition(), $this->getDatabaseProperties(), $update);
