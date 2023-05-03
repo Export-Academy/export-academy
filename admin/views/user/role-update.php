@@ -97,18 +97,10 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
 $header = "<h5 class='modal-title'>Update $role->name Role</h5>";
 
 $beginForm = Html::form_begin("/academy/admin/user/role", "post");
-$nameInput = $components->render("form-components/input-field", [
-  "type" => "text",
-  "label" => "Role Name",
-  "name" => "Role[name]",
-  "value" => $role->name
-]);
-$descriptionInput = $components->render("form-components/input-field", [
-  "type" => "textarea",
-  "label" => "Role Description",
-  "name" => "Role[description]",
-  "value" => $role->description
-]);
+
+
+$nameInput = Components::input("Role[name]", $role->name, ["label" => "Role Name", "type" => "text"]);
+$descriptionInput = Components::textarea("Role[description]", $role->description, ["label" => "Role Description"]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
 $endForm = Html::form_end();
 
@@ -119,10 +111,10 @@ $beginForm
 <div class="mb-5">
 
   <div class="py-2">
-  $nameInput
+  $nameInput->content
   </div>
   <div class="py-2">
-  $descriptionInput
+  $descriptionInput->content
   </div>
   $hiddenInput
  

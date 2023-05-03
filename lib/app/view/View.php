@@ -2,6 +2,7 @@
 
 namespace lib\app\view;
 
+use lib\app\log\Logger;
 use lib\app\view\interface\IViewable;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -38,16 +39,20 @@ class View extends BaseObject
   public $js_scripts = [];
 
 
-  public static function instance($context = null)
+  public static function instance($context)
   {
     return new View(['context' => $context]);
   }
 
-
-
   public function setTitle($title)
   {
     $this->title = $title;
+  }
+
+  public function render(string $filename, array $params = [])
+  {
+    $content = $this->generateContent($filename, $params);
+    $this->renderContent($content);
   }
 
   public function renderContent($content)
@@ -55,19 +60,13 @@ class View extends BaseObject
     echo $content;
   }
 
-  public function render(string $__file__, array $params = [])
+  public function generateContent($filename, $__params__ = [], $base_path = true)
   {
+    $__file__ = $base_path ? $this->context->getViewsDirectory() . $filename : $filename;
     if (!strpos($__file__, '.php'))
       $__file__ .= '.php';
 
-    $content = $this->generateContent($__file__, $params);
-    $this->renderContent($content);
-  }
 
-  public function generateContent($__file__, $__params__ = [])
-  {
-    if (!strpos($__file__, '.php'))
-      $__file__ .= '.php';
     ob_start();
     ob_clean();
     extract($__params__, EXTR_OVERWRITE);
@@ -205,12 +204,12 @@ class View extends BaseObject
 
     $scripts = Helper::getValue($pos, $this->scripts, []);
     foreach ($scripts as $script) {
-      $renders[] = $pos == self::POS_LOAD ? ["content" => $script] : Html::tag('script', $script);
+      $renders[] = $pos == self::POS_LOAD ? $script : Html::tag('script', $script);
     }
 
 
     if ($pos === View::POS_LOAD) {
-      return $renders;
+      return $this->renderOnload($renders);
     } else {
       echo implode("\n", $renders);
     }
@@ -237,5 +236,36 @@ class View extends BaseObject
         unlink($file);
     }
     closedir($dir_handle);
+  }
+
+
+  private function renderOnload($scripts)
+  {
+    $content = implode("\n", array_filter($scripts, function ($script) {
+      return strpos($script, "/") !== 0;
+    }));
+
+
+    $files = implode(", ", array_map(function ($s) {
+      return "`$s`";
+    }, array_filter($scripts, function ($script) {
+      return strpos($script, "/") === 0;
+    })));
+
+
+    $content = <<<JS
+      $(document).ready(function(e) {
+        const target = e.target;
+        const scripts = [$files];
+        scripts.forEach(function (script) {
+          let loaded = document.createElement("script");
+          loaded.setAttribute("src", script);
+          document.body.appendChild(loaded);
+        });
+        $content;
+      })
+    JS;
+    $script = Html::tag("script", $content);
+    return $script;
   }
 }

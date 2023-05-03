@@ -59,7 +59,8 @@ class Permission extends BaseModel
 
   public function getAssignedRoles($result = true)
   {
-    $query = $this->hasMany(Role::class, ['id' => Grants::tableName() . ".role_id"])->viaTable(Grants::tableName(), ["permission_id" => $this->id]);
+    $grantsTableName = Grants::tableName();
+    $query = $this->hasMany(Role::class, ['id' => "@$grantsTableName.role_id"])->viaTable(Grants::tableName(), ["permission_id" => $this->id]);
     return $result ? $query->all() : $query;
   }
 }

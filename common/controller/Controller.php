@@ -51,15 +51,11 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
    */
   protected function render($filename, $params = [], $layout_file_name = 'main')
   {
-    $view_path = $this->getViewPath();
-    $body = $this->getView()->generateContent($view_path . $filename, $params);
-
+    $body = $this->getView()->generateContent($filename, $params);
     $layoutFilePath = $this->getLayoutFile($layout_file_name);
-
     $content = $this->getView()->generateContent($layoutFilePath, array_merge([
       'content' => $body
-    ], $params));
-
+    ], $params), false);
     $content ? $this->getView()->renderContent($content) :  $this->getView()->renderContent($body);
   }
 

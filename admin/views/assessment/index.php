@@ -1,9 +1,11 @@
 <?php
 
+use common\models\assessment\components\QuestionComponents;
+use common\models\assessment\MultipleChoice;
+use lib\app\log\Logger;
 
-
-
-
+$builder = new QuestionComponents();
+Logger::log($builder);
 
 ?>
 
@@ -20,6 +22,6 @@
 
 
 
-
+  <?= $builder->render("index", []) ?>
 
 </div>

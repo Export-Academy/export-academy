@@ -21,6 +21,19 @@ if (isset($redirect_link))
   $actionLink .= "?r=" . $redirect_link;
 
 
+$emailComponent = Components::input("email", "", [
+  "type" => "email",
+  "label" => "Email",
+  "id" => "email-input",
+  "required" => true
+]);
+$passwordComponent = Components::passwordInput("password", "", [
+  "type" => "password",
+  "label" => "Password",
+  "id" => "password-input",
+  "required" => true
+]);
+
 ?>
 
 
@@ -43,18 +56,17 @@ if (isset($redirect_link))
 
           <?= Html::form_begin($actionLink) ?>
 
-          <?= $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "email", "required" => true]) ?>
-          <?= $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "password", "required" => true]) ?>
+          <?= $emailComponent->content  ?>
 
-
+          <?= $passwordComponent->content  ?>
+          <?= $passwordComponent->getView()->renderPosition(View::POS_LOAD) ?>
 
           <div class="container mt-5">
             <button type="submit" class="w-100 btn btn-light btn-lg">Continue</button>
           </div>
 
-
           <?= Html::form_end() ?>
-          <?php $component->view->renderPosition(View::POS_END) ?>
+
         </div>
 
       </div>

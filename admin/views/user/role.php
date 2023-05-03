@@ -11,9 +11,9 @@
 
 
   foreach ($roles as $role) : ?>
-    <div class="col-lg-4 col-md-6 col-sm-12 px-sm-4 px-md-2 py-3 ">
-      <?= $components->render("role-components/card", ["role" => $role]) ?>
-    </div>
+  <div class="col-lg-4 col-md-6 col-sm-12 px-sm-4 px-md-2 py-3 ">
+    <?= $components->render("role-components/card", ["role" => $role]) ?>
+  </div>
   <?php endforeach; ?>
 
 
@@ -37,17 +37,11 @@
 $header = "<h5 class='modal-title'>Add New Role</h5>";
 
 $beginForm = Html::form_begin("/academy/admin/user/role", "post");
-$nameInput = $components->render("form-components/input-field", [
-  "type" => "text",
-  "label" => "Role Name",
-  "name" => "Role[name]"
-]);
-$descriptionInput = $components->render("form-components/input-field", [
-  "type" => "textarea",
-  "label" => "Role Description",
-  "placeholder" => "Description here...",
-  "name" => "Role[description]"
-]);
+
+
+$nameInput = Components::input("Role[name]", "", ["label" => "Role Name", "type" => "text"]);
+$descriptionInput = Components::textarea("Role[description]", "", ["label" => "Role Description"]);
+$hiddenInput = Html::hiddenInput($role->id, "Role[id]");
 $endForm = Html::form_end();
 
 
@@ -56,10 +50,10 @@ $content = <<< HTML
 $beginForm
 <div class="mb-5">
   <div class="py-2">
-  $nameInput
+  $nameInput->content
   </div>
   <div class="py-2">
-  $descriptionInput
+  $descriptionInput->content
   </div>
 </div>
 

@@ -20,6 +20,4 @@ class Option extends BaseObject
 class MultipleChoice extends Question
 {
   public $options;
-  public $multiple;
-  public $max;
 }

@@ -11,9 +11,7 @@ use lib\app\database\Transaction;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-require_once Helper::getAlias("@common\models\base\interface\IActiveModel.php", "\\");
-require_once Helper::getAlias("@lib\app\database\Query.php");
-require_once Helper::getAlias("@lib\app\database\RelationalQuery.php");
+
 
 
 /**
@@ -67,7 +65,7 @@ abstract class BaseModel extends BaseObject implements IActiveModel
     $keys = explode(",", $this->getPrimaryKey());
     $condition = [];
     foreach ($keys as $key) {
-      $condition[$key] = is_int($this->{$key}) ? $this->{$key} : "*" . $this->{$key};
+      $condition[$key] = is_int($this->{$key}) ? $this->{$key} : $this->{$key};
     }
     return $condition;
   }
@@ -201,7 +199,7 @@ abstract class BaseModel extends BaseObject implements IActiveModel
    * @param BaseModel[] $models
    * @return \PDOStatement|false  
    */
-  public static function deleteAll($models = [], Transaction &$transaction = null)
+  public static function deleteAll($models, Transaction &$transaction = null)
   {
     if ($transaction) {
       foreach ($models as $model) {

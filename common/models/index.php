@@ -2,6 +2,17 @@
 
 use lib\util\Helper;
 
+
+require_once Helper::getAlias('@lib\app\database\query\IExpression.php');
+require_once Helper::getAlias('@lib\app\database\query\Expressions.php');
+
+require_once Helper::getAlias("@common\models\base\interface\IActiveModel.php");
+require_once Helper::getAlias("@lib\app\database\Query.php");
+require_once Helper::getAlias("@lib\app\database\RelationalQuery.php");
+
+
+require_once Helper::getAlias('@common\models\base\BaseModel.php');
+
 require_once Helper::getAlias('@common\models\access\Permission.php');
 require_once Helper::getAlias('@common\models\access\Grants.php');
 require_once Helper::getAlias('@common\models\access\Role.php');

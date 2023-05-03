@@ -28,7 +28,7 @@ class RelationalQuery extends Query
 
   public function limit($limit)
   {
-    $this->limit($limit);
+    parent::limit($limit);
     return $this;
   }
 }

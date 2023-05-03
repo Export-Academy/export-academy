@@ -115,7 +115,7 @@ class Expression implements IExpression
         } else if ($clause instanceof IExpression) {
           $conditions[] = Expression::instance(self::format($key, $this->alias) . " IN ( " . $clause->createCommand() . " )", $this->alias);
         } else {
-          $conditions[] = Expression::instance(self::format($key, $this->alias) . " = " . Expression::instance($clause, $this->alias)->createCommand(), $this->alias);
+          $conditions[] = Expression::instance(self::format($key, $this->alias) . " = " . Expression::instance((is_int($clause) ? $clause : (substr($clause, 0, 1) === "@" ? $clause : "'$clause'")), $this->alias)->createCommand(), $this->alias);
         }
       }
       return Condition::instance($conditions, $this->alias)->createCommand();
@@ -127,7 +127,8 @@ class Expression implements IExpression
       if (substr($this->condition, 0, 1) == '@') {
         return self::format(substr($this->condition, 1), $this->alias);
       }
-      return (substr($this->condition, 0, 1) == '*' ? "\"" . substr($this->condition, 1) . "\"" : (empty($this->condition) ? 0 : $this->condition));
+      // return (substr($this->condition, 0, 1) == '*' ? "\"" . substr($this->condition, 1) . "\"" : (empty($this->condition) ? 0 : $this->condition));
+      return $this->condition;
     } else {
       return empty($this->condition) ? 0 : $this->condition;
     }

@@ -37,7 +37,6 @@ $components = new Components();
         </li>
       </ul>
     </div>
-
   </div>
 </div>
 

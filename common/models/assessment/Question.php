@@ -4,13 +4,12 @@
 
 namespace common\models\assessment;
 
-use common\models\assessment\interface\IQuestion;
 use common\models\base\BaseModel;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use ReflectionClass;
 
-require_once Helper::getAlias("@common\models\assessment\interface\IQuestion.php");
+
 
 
 
@@ -23,7 +22,7 @@ require_once Helper::getAlias("@common\models\assessment\interface\IQuestion.php
  * @property date $created_at
  * @property data $updated_at
  */
-abstract class Question extends BaseModel implements IQuestion
+abstract class Question extends BaseModel
 {
 
   public $prompt;

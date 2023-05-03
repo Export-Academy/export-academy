@@ -9,7 +9,6 @@ use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\interface\IAuthIdentity;
 use lib\app\database\Database;
 use lib\app\http\Request;
-use lib\app\log\Logger;
 use lib\app\router\Router;
 use lib\util\BaseObject;
 use lib\util\Helper;
