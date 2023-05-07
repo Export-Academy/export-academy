@@ -4,13 +4,12 @@
 
 namespace common\models\assessment;
 
-use common\models\base\BaseModel;
+use components\ModelComponent;
+use Exception;
+use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use ReflectionClass;
-
-
-
 
 
 /**
@@ -21,8 +20,9 @@ use ReflectionClass;
  * @property bool $enabled
  * @property date $created_at
  * @property data $updated_at
+ * 
  */
-abstract class Question extends BaseModel
+class Question extends ModelComponent
 {
 
   public $prompt;
@@ -94,5 +94,21 @@ abstract class Question extends BaseModel
       }
     }
     $this->content = serialize($content);
+  }
+
+  public function getViewsDirectory()
+  {
+    return Helper::getAlias("@common\models\assessment\\views\\");
+  }
+
+  public function getAssetDirectory()
+  {
+    return Helper::getAlias("@common\models\assessment\\assets\\");
+  }
+
+
+  public static function renderBuild(View $view)
+  {
+    throw new Exception("Please implement this method");
   }
 }

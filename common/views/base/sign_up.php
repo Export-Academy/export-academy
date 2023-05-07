@@ -1,6 +1,6 @@
 <?php
 
-use components\Components;
+use components\HtmlComponent;
 use lib\app\view\View;
 use lib\util\html\Html;
 
@@ -8,9 +8,6 @@ use lib\util\html\Html;
 $this->registerSCSSFile("login.scss");
 
 /** @var View $this */
-
-
-$component = new Components();
 
 
 ?>
@@ -34,15 +31,15 @@ $component = new Components();
 
 
           <div class="hstack gap-2 justify-content-between">
-            <?= $component->render("form-components/input-field", ["type" => "text", "label" => "First Name", "id" => "first-name-input", "name" => "User[firstName]", "required" => true]) ?>
-            <?= $component->render("form-components/input-field", ["type" => "text", "label" => "Last Name", "id" => "last-name-input", "name" => "User[lastName]", "required" => true]) ?>
+            <?= HtmlComponent::input($this, "User[firstName]", "", ["label" => "First Name", "id" => "first-name-input", "required" => true]) ?>
+            <?= HtmlComponent::input($this, "User[lastName]", "", ["label" => "Last Name", "id" => "last-name-input", "required" => true])  ?>
           </div>
 
 
 
 
-          <?= $component->render("form-components/input-field", ["type" => "email", "label" => "Email", "id" => "email-input", "name" => "User[email]", "required" => true]) ?>
-          <?= $component->render("form-components/input-field", ["type" => "password", "label" => "Password", "id" => "password-input", "name" => "User[password]", "required" => true]) ?>
+          <?= HtmlComponent::input($this, "User[email]", "", ["label" => "Email", "id" => "email-input", "required" => true, "type" => "email"]) ?>
+          <?= HtmlComponent::passwordInput($this, "User[password]", "", ["label" => "Password", "id" => "password-input", "required" => true]) ?>
 
 
           <div class="container mt-5">
@@ -51,9 +48,7 @@ $component = new Components();
 
 
           <?= Html::form_end() ?>
-          <?php $component->view->renderPosition(View::POS_END) ?>
         </div>
-
       </div>
     </div>
   </div>

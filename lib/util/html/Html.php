@@ -3,7 +3,7 @@
 
 namespace lib\util\html;
 
-use components\Components;
+use components\HtmlComponent;
 use lib\util\BaseObject;
 
 class Html extends BaseObject
@@ -50,13 +50,13 @@ class Html extends BaseObject
 
   public static function form_begin($action, $method = "post", $options = [])
   {
-    return (new Components())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method, "options" => $options]);
+    return (new HtmlComponent())->render("form-components/index", ["state" => "begin", "action" => $action, "method" => $method, "options" => $options]);
   }
 
 
   public static function form_end()
   {
-    return (new Components())->render("form-components/index");
+    return (new HtmlComponent())->render("form-components/index");
   }
 
 

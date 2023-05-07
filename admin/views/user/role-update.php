@@ -1,13 +1,13 @@
 <?php
 
 use common\models\access\Permission;
-use components\Components;
+use components\HtmlComponent;
 use lib\app\view\View;
 use lib\util\html\Html;
 
 /** @var View $this */
 
-$components = new Components();
+$components = HtmlComponent::instance($this);
 $granted_permissions = $granted_permissions ?? [];
 $permissions = Permission::find()->all();
 
@@ -99,8 +99,8 @@ $header = "<h5 class='modal-title'>Update $role->name Role</h5>";
 $beginForm = Html::form_begin("/academy/admin/user/role", "post");
 
 
-$nameInput = Components::input("Role[name]", $role->name, ["label" => "Role Name", "type" => "text"]);
-$descriptionInput = Components::textarea("Role[description]", $role->description, ["label" => "Role Description"]);
+$nameInput = HtmlComponent::input($this, "Role[name]", $role->name, ["label" => "Role Name", "type" => "text"]);
+$descriptionInput = HtmlComponent::textarea($this, "Role[description]", $role->description, ["label" => "Role Description"]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
 $endForm = Html::form_end();
 
@@ -111,10 +111,10 @@ $beginForm
 <div class="mb-5">
 
   <div class="py-2">
-  $nameInput->content
+  $nameInput
   </div>
   <div class="py-2">
-  $descriptionInput->content
+  $descriptionInput
   </div>
   $hiddenInput
  

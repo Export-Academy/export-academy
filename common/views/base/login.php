@@ -1,6 +1,6 @@
 <?php
 
-use components\Components;
+use components\HtmlComponent;
 use lib\app\http\Request;
 use lib\app\view\View;
 use lib\util\html\Html;
@@ -10,8 +10,6 @@ use lib\util\html\Html;
 
 $this->registerSCSSFile("login.scss");
 
-$component = new Components();
-
 
 $actionLink = "/academy/login";
 $redirect_link = Request::params("r");
@@ -20,14 +18,13 @@ $redirect_link = Request::params("r");
 if (isset($redirect_link))
   $actionLink .= "?r=" . $redirect_link;
 
-
-$emailComponent = Components::input("email", "", [
+$emailComponent = HtmlComponent::input($this, "email", "", [
   "type" => "email",
   "label" => "Email",
   "id" => "email-input",
   "required" => true
 ]);
-$passwordComponent = Components::passwordInput("password", "", [
+$passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
   "type" => "password",
   "label" => "Password",
   "id" => "password-input",
@@ -56,10 +53,9 @@ $passwordComponent = Components::passwordInput("password", "", [
 
           <?= Html::form_begin($actionLink) ?>
 
-          <?= $emailComponent->content  ?>
+          <?= $emailComponent  ?>
 
-          <?= $passwordComponent->content  ?>
-          <?= $passwordComponent->getView()->renderPosition(View::POS_LOAD) ?>
+          <?= $passwordComponent  ?>
 
           <div class="container mt-5">
             <button type="submit" class="w-100 btn btn-light btn-lg">Continue</button>

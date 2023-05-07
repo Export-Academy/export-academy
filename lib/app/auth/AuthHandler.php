@@ -64,8 +64,8 @@ class AuthHandler extends BaseObject implements IAuthHandler
   {
     /** @var User $user */
     $user = User::findOne([
-      "email" => "*$email",
-      "password" => "*" . User::encryptPassword($password)
+      "email" => $email,
+      "password" => User::encryptPassword($password)
     ]);
     if (!$user) return false;
 

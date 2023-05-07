@@ -1,0 +1,37 @@
+.form-control,
+.input-group {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.25s;
+
+  border-radius: 0;
+
+  & .btn {
+    border: stroke 1px;
+    &:active,
+    &:focus {
+      border: none;
+    }
+  }
+
+  &.flushed {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+
+    &:hover,
+    &:active,
+    &:focus {
+      box-shadow: none;
+      border-width: 2px;
+      background: whitesmoke;
+    }
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    box-shadow: none;
+    border-width: 2px;
+  }
+}

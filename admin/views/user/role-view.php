@@ -5,11 +5,9 @@ use common\models\user\User;
 
 /** @var Role $role */
 
+use components\HtmlComponent;
 
-
-use components\Components;
-
-$components = new Components();
+$components = HtmlComponent::instance($this);
 ?>
 
 
@@ -53,5 +51,3 @@ $components = new Components();
 
   </div>
 </div>
-
-<div class="badge">psdl</div>

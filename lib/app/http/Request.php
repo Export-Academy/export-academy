@@ -29,8 +29,9 @@ class Request extends BaseObject
 
 
 
-  public static function params($name, $default = null)
+  public static function params($name = null, $default = null)
   {
+    if (!isset($name)) return $_GET;
     if (isset($_GET[$name])) return $_GET[$name];
     return $default;
   }

@@ -1,7 +1,7 @@
 <?php
 
 use common\models\access\Permission;
-use components\Components;
+use components\HtmlComponent;
 use lib\util\html\Html;
 
 /**
@@ -10,7 +10,7 @@ use lib\util\html\Html;
 
 
 
-$components = new Components();
+$components = HtmlComponent::instance($this);
 
 
 

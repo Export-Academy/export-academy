@@ -22,7 +22,11 @@ require_once Helper::getAlias("@lib\app\log\Logger.php");
 
 require_once Helper::getAlias("@lib\app\database\Transaction.php");
 require_once Helper::getAlias('@lib\app\App.php');
-require_once Helper::getAlias("@components/Component.php", "/");
+
+
+require_once Helper::getAlias("@components\BaseComponent.php");
+require_once Helper::getAlias("@components\HtmlComponent.php");
+
 
 
 // Utility Classes
@@ -43,9 +47,9 @@ require_once Helper::getAlias("@admin\controller\DashboardController.php");
 require_once Helper::getAlias("@admin\controller\UserController.php");
 require_once Helper::getAlias("@admin\controller\ResourceController.php");
 require_once Helper::getAlias("@admin\controller\AssessmentController.php");
+require_once Helper::getAlias("@admin\controller\ComponentController.php");
 
 
-require_once Helper::getAlias("@common\models\assessment\components\QuestionComponents.php");
 
 $app = App::instance(['site', 'admin', 'web']);
 $app->run();

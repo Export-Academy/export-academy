@@ -1,13 +1,16 @@
 $(".password-visibility-btn").on('click', function (event) {
-  const target = event.target;
+  let target = $(".password-visibility-btn");
   const input = $(target).prev();
 
   const current_type = $(input).attr('type');
   if (current_type === "password") {
-    $(target).html("Hide");
+    $(target).html(`<i data-feather="eye-off"></i>`);
     $(input).attr("type", "text");
   } else {
-    $(target).html("Show");
+    $(target).html(`<i data-feather="eye"></i>`);
     $(input).attr("type", "password");
   }
+
+
+  feather.replace();
 })

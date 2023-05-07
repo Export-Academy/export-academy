@@ -39,6 +39,11 @@ class View extends BaseObject
   public $js_scripts = [];
 
 
+
+  /** @var View[] */
+  public $registeredViews = [];
+
+
   public static function instance($context)
   {
     return new View(['context' => $context]);
@@ -111,7 +116,7 @@ class View extends BaseObject
     $this->scripts[$pos][] = $script;
   }
 
-  public function registerFile($filename, $type = 'js')
+  public function registerFile($filename = null, $type = 'js', $content = "")
   {
 
     $base_directory = Helper::getAlias('@common/views/assets', "/");
@@ -120,24 +125,25 @@ class View extends BaseObject
       $base_directory = $this->context->getAssetDirectory();
 
 
+    if ($filename) {
+      $__file__ =  $base_directory . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $filename;
 
-    $__file__ =  $base_directory . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $filename;
-
-    if (strpos($filename, '@') === 0)
-      $__file__ =  Helper::getAlias($filename);
-
-
-    if (!strpos($__file__, ".$type"))
-      $__file__ .= ".$type";
+      if (strpos($filename, '@') === 0)
+        $__file__ =  Helper::getAlias($filename);
 
 
+      if (!strpos($__file__, ".$type"))
+        $__file__ .= ".$type";
 
-    if (!file_exists($__file__)) {
-      echo "File doesn't exist: $__file__ <br>";
-      return null;
+
+
+      if (!file_exists($__file__)) {
+        echo "File doesn't exist: $__file__ <br>";
+        return null;
+      }
     }
 
-    $content = file_get_contents($__file__);
+    $content = isset($__file__) ?  file_get_contents($__file__) : $content;
     $hash = hash('md5', $content);
 
 
@@ -167,7 +173,16 @@ class View extends BaseObject
         return null;
       }
 
-      $success = copy($__file__, $path);
+      if (isset($__file__)) {
+        $success = copy($__file__, $path);
+      } else {
+        $file = fopen($path, "w");
+        fwrite($file, $content);
+        fclose($file);
+
+        $success = true;
+      }
+
 
       if (!$success) {
         echo "Failed to copy file $__file__ to $path";
@@ -199,20 +214,44 @@ class View extends BaseObject
     foreach ($js_files as $file) {
       $path = $this->registerFile($file, 'js');
       if (!isset($path)) continue;
-      $renders[] = $pos == self::POS_LOAD ? $path :  Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
+      $renders[] = $pos === self::POS_LOAD ? $path : Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
 
     $scripts = Helper::getValue($pos, $this->scripts, []);
     foreach ($scripts as $script) {
-      $renders[] = $pos == self::POS_LOAD ? $script : Html::tag('script', $script);
+      $path = $this->registerFile(null, 'js', $script);
+      $renders[] = $pos === self::POS_LOAD ? $path : Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
+    return $renders;
+  }
 
-
-    if ($pos === View::POS_LOAD) {
-      return $this->renderOnload($renders);
+  public function registerView($views)
+  {
+    if (is_array($views)) {
+      $this->registeredViews = array_merge($this->registeredViews, $views);
     } else {
-      echo implode("\n", $renders);
+      $this->registeredViews[] = $views;
     }
+  }
+
+  public function renderAssets($pos)
+  {
+    $views = [$this];
+    $assets = [];
+
+    while (count($views) > 0) {
+      $view = array_shift($views);
+
+      $views = array_merge($views, $view->registeredViews);
+      $renders = $view->renderPosition($pos);
+      $assets = array_merge($assets, $renders);
+    }
+
+    if ($pos === self::POS_LOAD) {
+      return $this->renderOnload($assets);
+    }
+
+    return implode("\n", $assets);
   }
 
 
@@ -241,11 +280,6 @@ class View extends BaseObject
 
   private function renderOnload($scripts)
   {
-    $content = implode("\n", array_filter($scripts, function ($script) {
-      return strpos($script, "/") !== 0;
-    }));
-
-
     $files = implode(", ", array_map(function ($s) {
       return "`$s`";
     }, array_filter($scripts, function ($script) {
@@ -255,17 +289,17 @@ class View extends BaseObject
 
     $content = <<<JS
       $(document).ready(function(e) {
-        const target = e.target;
         const scripts = [$files];
         scripts.forEach(function (script) {
           let loaded = document.createElement("script");
           loaded.setAttribute("src", script);
           document.body.appendChild(loaded);
         });
-        $content;
       })
     JS;
-    $script = Html::tag("script", $content);
-    return $script;
+
+
+    $path = $this->registerFile(null, 'js', $content);
+    return Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
   }
 }

@@ -12,6 +12,7 @@ require_once Helper::getAlias("@lib\app\database\RelationalQuery.php");
 
 
 require_once Helper::getAlias('@common\models\base\BaseModel.php');
+require_once Helper::getAlias("@components\ModelComponent.php");
 
 require_once Helper::getAlias('@common\models\access\Permission.php');
 require_once Helper::getAlias('@common\models\access\Grants.php');
@@ -23,4 +24,9 @@ require_once Helper::getAlias('@common\models\user\User.php');
 
 require_once Helper::getAlias('@common\models\assessment\Question.php');
 require_once Helper::getAlias('@common\models\assessment\QuestionType.php');
+
+
 require_once Helper::getAlias("@common\models\assessment\MultipleChoice.php");
+require_once Helper::getAlias("@common\models\assessment\Checkboxes.php");
+require_once Helper::getAlias("@common\models\assessment\Dropdown.php");
+require_once Helper::getAlias("@common\models\assessment\Ranking.php");

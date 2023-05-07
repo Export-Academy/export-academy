@@ -1,13 +1,16 @@
 <?php
 
+use lib\app\view\View;
+use components\HtmlComponent;
+use lib\app\http\Request;
+
 /**
  * @var View $this
  */
 
-use components\Components;
-use lib\app\http\Request;
 
-$components = new Components();
+
+$components = HtmlComponent::instance($this);
 
 ?>
 
@@ -24,10 +27,12 @@ $components = new Components();
     <div class="btn-group border-0">
       <button type="button" data-bs-toggle="dropdown" class="btn border-0">
         <div class="text-start">
-          <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?> <br><small class="fw-semibold">Administrator</small></div>
+          <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?> <br><small
+              class="fw-semibold">Administrator</small></div>
         </div>
       </button>
-      <button type="button" class="btn border-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn border-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+        aria-expanded="false">
         <span class="visually-hidden">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu rounded-0">

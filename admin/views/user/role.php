@@ -2,12 +2,12 @@
   <?php
 
   use common\models\access\Role;
-  use components\Components;
+  use components\HtmlComponent;
   use lib\util\html\Html;
 
   /** @var Role[] $roles */
 
-  $components = new Components();
+  $components = HtmlComponent::instance($this);
 
 
   foreach ($roles as $role) : ?>
@@ -39,8 +39,8 @@ $header = "<h5 class='modal-title'>Add New Role</h5>";
 $beginForm = Html::form_begin("/academy/admin/user/role", "post");
 
 
-$nameInput = Components::input("Role[name]", "", ["label" => "Role Name", "type" => "text"]);
-$descriptionInput = Components::textarea("Role[description]", "", ["label" => "Role Description"]);
+$nameInput = HtmlComponent::input($this, "Role[name]", "", ["label" => "Role Name", "type" => "text"]);
+$descriptionInput = HtmlComponent::textarea($this, "Role[description]", "", ["label" => "Role Description"]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
 $endForm = Html::form_end();
 
@@ -50,10 +50,10 @@ $content = <<< HTML
 $beginForm
 <div class="mb-5">
   <div class="py-2">
-  $nameInput->content
+  $nameInput
   </div>
   <div class="py-2">
-  $descriptionInput->content
+  $descriptionInput
   </div>
 </div>
 

@@ -3,7 +3,6 @@
 
 
 use lib\app\view\View;
-use lib\util\Helper;
 
 /**
  * @var View $this
@@ -32,7 +31,7 @@ use lib\util\Helper;
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"
     integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 
-  <?= $this->renderPosition(View::POS_HEAD) ?>
+  <?= $this->renderAssets(View::POS_HEAD) ?>
 
 </head>
 
@@ -44,9 +43,9 @@ use lib\util\Helper;
     integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
   </script>
 
-  <?= $this->renderPosition(View::POS_END) ?>
+  <?= $this->renderAssets(View::POS_END) ?>
 
-  <?= $this->renderPosition(View::POS_LOAD) ?>
+  <?= $this->renderAssets(View::POS_LOAD) ?>
 
 
 </body>

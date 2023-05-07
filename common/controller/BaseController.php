@@ -31,7 +31,6 @@ class BaseController extends Controller
         $email = $this->request->data("email", "");
         $password = $this->request->data("password", "");
         $result = $this->request->auth->handleLogin($email, $password);
-        Logger::log($result);
         if ($result) {
           $redirectPath = $this->request->params("r", null);
           Logger::log($redirectPath);

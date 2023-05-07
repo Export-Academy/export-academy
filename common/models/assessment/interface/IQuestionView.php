@@ -3,9 +3,7 @@
 
 namespace common\models\assessment\interface;
 
-use lib\app\view\interface\IViewable;
-
-interface IQuestionView extends IViewable
+interface IQuestionView
 {
   public function render($filename, $params);
 }
