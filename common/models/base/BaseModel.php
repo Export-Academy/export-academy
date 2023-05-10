@@ -35,6 +35,14 @@ abstract class BaseModel extends BaseObject implements IActiveModel
     return $model;
   }
 
+  public function __get($name)
+  {
+    $result = parent::__get($name);
+    if ($result instanceof RelationalQuery)
+      return $result->getLimit() === 1 ? $result->one() : $result->all();
+    return $result;
+  }
+
   /**
    * Returns the name of the referenced table
    *
@@ -161,7 +169,7 @@ abstract class BaseModel extends BaseObject implements IActiveModel
       $transaction->execute($query);
       return;
     }
-    return $query->run();
+    $query->run();
   }
 
   public function save(Transaction &$transaction = null)
@@ -176,21 +184,21 @@ abstract class BaseModel extends BaseObject implements IActiveModel
       ->insert($this->getDatabaseProperties(false))
       ->createCommand() . "; END IF;";
 
-    $query =  Query::create(get_called_class())->query($sql);
-    return $query->run($transaction);
+    $query = Query::create(get_called_class())->query($sql);
+    $query->run($transaction);
   }
 
   public function delete(Transaction &$transaction = null)
   {
     $condition = $this->getPrimaryCondition();
     $query = Query::create(get_called_class())->delete($condition);
-    return $query->run($transaction);
+    $query->run($transaction);
   }
 
   public static function deleteByCondition($condition, Transaction &$transaction = null)
   {
     $query = Query::create(get_called_class())->delete($condition);
-    return $query->run($transaction);
+    $query->run($transaction);
   }
 
   /**

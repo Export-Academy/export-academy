@@ -1,6 +1,6 @@
 <?php
 
-use lib\app\http\Request;
+use lib\app\Request;
 use lib\util\html\Html;
 
 $state = $state ?? "end" ?>

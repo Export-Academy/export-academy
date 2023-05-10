@@ -3,11 +3,11 @@
 
 namespace lib\app\database;
 
-use lib\app\database\query\Condition;
-use lib\app\database\query\Expression;
-use lib\app\database\query\IExpression;
-use lib\app\database\query\OnCondition;
-use lib\app\database\query\Select;
+use lib\app\database\expression\Condition;
+use lib\app\database\expression\Expression;
+use lib\app\database\expression\IExpression;
+use lib\app\database\expression\OnCondition;
+use lib\app\database\expression\Select;
 use common\models\base\BaseModel;
 use DateTime;
 use lib\util\BaseObject;
@@ -53,6 +53,11 @@ class Query extends BaseObject implements IExpression
   public function init()
   {
     $this->database = Database::instance();
+  }
+
+  public function getLimit()
+  {
+    return $this->_limit;
   }
 
 

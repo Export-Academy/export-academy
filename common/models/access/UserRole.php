@@ -32,15 +32,13 @@ class UserRole extends BaseModel
     return "role_id,user_id";
   }
 
-  public function getUser($result = true)
+  public function getUser()
   {
-    $query = self::hasOne(User::class, ['id' => $this->user_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(User::class, ['id' => $this->user_id]);
   }
 
-  public function getRole($result = true)
+  public function getRole()
   {
-    $query = self::hasOne(Role::class, ['id' => $this->role_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(Role::class, ['id' => $this->role_id]);
   }
 }

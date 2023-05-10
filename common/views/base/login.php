@@ -1,7 +1,7 @@
 <?php
 
 use components\HtmlComponent;
-use lib\app\http\Request;
+use lib\app\Request;
 use lib\app\view\View;
 use lib\util\html\Html;
 

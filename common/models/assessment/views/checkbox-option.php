@@ -7,7 +7,7 @@ use components\HtmlComponent;
  * @var View $this
  */
 
-$input = HtmlComponent::input($this, "Checkbox[" . $option . "]", "", ["placeholder" => "Checkbox " . $option . "", "variant" => "flushed"]);
+$input = HtmlComponent::input($this, "option[" . $option . "]", "", ["placeholder" => "Checkbox " . $option . "", "variant" => "flushed"]);
 
 $component = HtmlComponent::instance($this);
 

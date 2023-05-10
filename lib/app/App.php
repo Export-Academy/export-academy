@@ -9,23 +9,14 @@ use lib\app\auth\AuthHandler;
 use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\Secure;
 use lib\app\database\Database;
-use lib\app\http\Request;
+use lib\app\Request;
 use lib\app\log\Logger;
-use lib\app\router\Router;
+use lib\app\route\Router;
+use lib\app\storage\Storage;
 use lib\app\view\View;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use lib\util\Helper;
-
-
-
-require_once Helper::getAlias('@lib\config\Configuration.php');
-require_once Helper::getAlias('@lib\app\http\Request.php');
-require_once Helper::getAlias('@lib\app\router\Router.php');
-require_once Helper::getAlias('@lib\app\database\Database.php');
-require_once Helper::getAlias('@lib\app\auth\interface\IAuthHandler.php');
-require_once Helper::getAlias('@lib\app\auth\AuthHandler.php');
-require_once Helper::getAlias('@lib\app\auth\Secure.php');
 
 
 class App extends BaseObject
@@ -48,6 +39,9 @@ class App extends BaseObject
   /** @var Database */
   public $database;
 
+  /** @var Storage */
+  public $storage;
+
   /**
    * Undocumented function
    *
@@ -64,7 +58,8 @@ class App extends BaseObject
       'authHandler' => $authHandler,
       'schema' => null,
       'router' => $router,
-      'database' => Database::instance()
+      'database' => Database::instance(),
+      'storage' => Storage::instance()
     ]);
   }
 

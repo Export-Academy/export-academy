@@ -5,7 +5,6 @@
 namespace common\models\assessment;
 
 use components\ModelComponent;
-use Exception;
 use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -60,10 +59,9 @@ class Question extends ModelComponent
   }
 
 
-  public function getQuestionType($result = true)
+  public function getQuestionType()
   {
-    $query = $this->hasOne(QuestionType::class, ["id" => $this->type]);
-    return $result ? $query->one() : $query;
+    return $this->hasOne(QuestionType::class, ["id" => $this->type]);
   }
 
 
@@ -109,6 +107,6 @@ class Question extends ModelComponent
 
   public static function renderBuild(View $view)
   {
-    throw new Exception("Please implement this method");
+    return "Builder Not Implemented";
   }
 }

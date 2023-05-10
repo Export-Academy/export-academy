@@ -11,9 +11,9 @@
 
 
   foreach ($roles as $role) : ?>
-  <div class="col-lg-4 col-md-6 col-sm-12 px-sm-4 px-md-2 py-3 ">
-    <?= $components->render("role-components/card", ["role" => $role]) ?>
-  </div>
+    <div class="col-lg-4 col-md-6 col-sm-12 px-sm-4 px-md-2 py-3 ">
+      <?= $components->render("role-components/card", ["role" => $role]) ?>
+    </div>
   <?php endforeach; ?>
 
 
@@ -58,7 +58,9 @@ $beginForm
 </div>
 
 <div class="mt-3 d-block gap-2">
-<button type="submit" class="btn btn-secondary">Save</button>
+  <div class="hstack justify-content-end">
+    <button type="submit" class="btn btn-lg">Save</button>
+  </div>
 </div>
 $endForm
 HTML;

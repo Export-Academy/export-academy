@@ -122,7 +122,9 @@ $beginForm
 
 
 <div class="mt-3 d-block gap-2">
-<button type="submit" class="btn btn-secondary">Update</button>
+  <div class="hstack justify-content-end">
+    <button type="submit" class="btn btn-lg">Update Role</button>
+  </div>
 </div>
 $endForm
 HTML;

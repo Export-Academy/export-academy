@@ -9,13 +9,8 @@ use components\HtmlComponent;
 
 
 
-$input = HtmlComponent::input($this, "Dropdown[" . $option . "]", "", ["placeholder" => "Dropdown Option " . $option . "", "variant" => "flushed"]);
+$input = HtmlComponent::input($this, "option[" . $option . "]", "", ["placeholder" => "Dropdown Option " . $option . "", "variant" => "flushed"]);
 $component = HtmlComponent::instance($this);
-
-$button = $component->render("media-components/insert-image-button", [
-  "container" => "12"
-])
-
 ?>
 
 <?= $this->renderAssets($this::POS_HEAD) ?>
@@ -23,7 +18,6 @@ $button = $component->render("media-components/insert-image-button", [
 <div class="hstack gap-2 option-container my-2">
   <div><?= $option ?>.</div>
   <?= $input ?>
-  <?= $button ?>
   <button type="button" class="btn remove-option">
     <i data-feather="x"></i>
   </button>

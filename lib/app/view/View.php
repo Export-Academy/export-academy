@@ -2,14 +2,11 @@
 
 namespace lib\app\view;
 
-use lib\app\log\Logger;
 use lib\app\view\interface\IViewable;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use lib\util\html\Html;
 use ScssPhp\ScssPhp\Compiler;
-
-require_once Helper::getAlias('@common\controller\Controller.php');
 
 class View extends BaseObject
 {

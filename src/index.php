@@ -1,55 +1,20 @@
 <?php
 
 use lib\app\App;
-use lib\util\Helper;
 
+$base = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['HTTP_BASE_PATH'];
+require_once str_replace('\\', DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR . 'vendor/autoload.php');
 
-
-require_once 'C:\xampp\htdocs\academy\lib\util\Helper.php';
-
-require_once Helper::getAlias("@lib\app\\view\interface\IViewable.php");
-
-
-
-
-// Load External components
-require_once Helper::getAlias('@vendor/autoload.php', "/");
-
-
-require_once Helper::getAlias('@lib\util\BaseObject.php');
-require_once Helper::getAlias("@lib\app\log\Logger.php");
-
-
-require_once Helper::getAlias("@lib\app\database\Transaction.php");
-require_once Helper::getAlias('@lib\app\App.php');
-
-
-require_once Helper::getAlias("@components\BaseComponent.php");
-require_once Helper::getAlias("@components\HtmlComponent.php");
-
-
-
-// Utility Classes
-require_once Helper::getAlias('@lib\util\html\Html.php');
-
-
-// Models
-require_once Helper::getAlias('@common\models\index.php');
-
-// View
-require_once Helper::getAlias("@lib\app\\view\View.php");
-
-// Controllers
-require_once Helper::getAlias('@common\controller\Controller.php');
-require_once Helper::getAlias('@common\controller\BaseController.php');
-require_once Helper::getAlias('@web\controller\SourceController.php');
-require_once Helper::getAlias("@admin\controller\DashboardController.php");
-require_once Helper::getAlias("@admin\controller\UserController.php");
-require_once Helper::getAlias("@admin\controller\ResourceController.php");
-require_once Helper::getAlias("@admin\controller\AssessmentController.php");
-require_once Helper::getAlias("@admin\controller\ComponentController.php");
-
-
+spl_autoload_register(
+  function ($className) use ($base) {
+    $filename = str_replace('\\', DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR . $className) . '.php';
+    if (file_exists($filename)) {
+      require_once $filename;
+      return true;
+    }
+    return false;
+  }
+);
 
 $app = App::instance(['site', 'admin', 'web']);
 $app->run();

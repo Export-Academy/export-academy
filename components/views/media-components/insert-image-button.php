@@ -9,6 +9,6 @@ $this->registerJs("InsertImageModal.initialize();", $this::POS_LOAD);
 ?>
 
 
-<button type="button" data-container="<?= $container ?>" class="btn btn-sm insert-image">
+<button type="button" data-hidden="<?= $input ?? "hidden" ?>" data-container="<?= $container ?>" class="btn btn-sm insert-image">
   <i data-feather="image"></i>
 </button>

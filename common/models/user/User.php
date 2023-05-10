@@ -7,9 +7,6 @@ use common\models\access\UserRole;
 use common\models\base\BaseModel;
 use lib\app\auth\interface\IAuthIdentity;
 use lib\app\database\Query;
-use lib\util\Helper;
-
-require_once Helper::getAlias('@common\models\base\BaseModel.php');
 
 /**
  * @property int $id
@@ -61,17 +58,15 @@ class User extends BaseModel implements IAuthIdentity
    * @param boolean $result
    * @return UserRole|Query
    */
-  public function getUserRoles($result = true)
+  public function getUserRoles()
   {
-    $query = $this->hasMany(UserRole::class, ['user_id' => $this->id]);
-    return $result ? $query->all() : $query;
+    return $this->hasMany(UserRole::class, ['user_id' => $this->id]);
   }
 
   public function getRoles($result = true)
   {
     $userRoleTableName = UserRole::tableName();
-    $query = $this->hasMany(Role::class, ["id" => "@$userRoleTableName.role_id"])->viaTable($userRoleTableName, ["user_id" => $this->id]);
-    return $result ? $query->all() : $query;
+    return $this->hasMany(Role::class, ["id" => "@$userRoleTableName.role_id"])->viaTable($userRoleTableName, ["user_id" => $this->id]);
   }
 
   public function getUserType()

@@ -23,7 +23,7 @@ CREATE TABLE `user` (
   `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
 );
 CREATE TABLE `permission` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) UNIQUE NOT NULL,
   `description` text
 );
@@ -49,31 +49,31 @@ CREATE TABLE `user_role` (
   PRIMARY KEY (`role_id`, `user_id`)
 );
 CREATE TABLE `answer` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `content` blob NOT NULL
 );
 CREATE TABLE `response` (
   `user_id` int NOT NULL,
   `question_id` int NOT NULL,
-  `content` blob NOT NULL,
+  `content` json NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   PRIMARY KEY (`user_id`, `question_id`)
 );
 CREATE TABLE `question_type` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` text UNIQUE NOT NULL,
   `handler` text NOT NULL
 );
 CREATE TABLE `context` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text
 );
 CREATE TABLE `question` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `prompt` text NOT NULL,
-  `content` blob NOT NULL,
+  `content` json NOT NULL,
   `type` int NOT NULL,
   `answer` int NOT NULL,
   `enabled` boolean DEFAULT false,
@@ -86,15 +86,15 @@ CREATE TABLE `question_context` (
   PRIMARY KEY (`question_id`, `context_id`)
 );
 CREATE TABLE `format` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `handler` text UNIQUE NOT NULL
 );
 CREATE TABLE `resource` (
-  `id` int PRIMARY KEY,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `title` text NOT NULL,
   `description` text,
-  `content` blob NOT NULL,
+  `content` json NOT NULL,
   `enabled` boolean DEFAULT false,
   `format_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
@@ -109,6 +109,12 @@ CREATE TABLE `user_context` (
   `user_type_id` int NOT NULL,
   `context_id` int NOT NULL,
   PRIMARY KEY (`user_type_id`, `context_id`)
+);
+CREATE TABLE `file` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `data` longblob NOT NULL
 );
 CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
 CREATE INDEX `user_index_1` ON `user` (`firstName`);
@@ -201,57 +207,57 @@ ALTER TABLE
 ADD
   FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (1, 'Create User');
+  ('Create User');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (2, 'Update User');
+  ('Update User');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (3, 'Access User Controller');
+  ('Access User Controller');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (4, 'Create Question');
+  ('Create Question');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (5, 'Update Question');
+  ('Update Question');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (6, 'Access Question Controller');
+  ('Access Question Controller');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (7, 'Access Resource Controller');
+  ('Access Resource Controller');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (8, 'Update Resource');
+  ('Update Resource');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (9, 'Create Resource');
+  ('Create Resource');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (10, 'Create User Role');
+  ('Create User Role');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (11, 'Update User Role');
+  ('Update User Role');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (12, 'Create Permission');
+  ('Create Permission');
 INSERT INTO
-  `permission` (`id`, `name`)
+  `permission` (`name`)
 VALUES
-  (13, 'Update Permission');
+  ('Update Permission');
 INSERT INTO
   `role` (`name`)
 VALUES
@@ -260,3 +266,24 @@ INSERT INTO
   `role` (`name`)
 VALUES
   ('Developer');
+INSERT INTO
+  `question_type` (`name`, `handler`)
+VALUES
+  (
+    'Multiple Choice',
+    'common\\models\\assessment\\MultipleChoice'
+  );
+INSERT INTO
+  `question_type` (`name`, `handler`)
+VALUES
+  (
+    'Dropdown',
+    'common\\models\\assessment\\Dropdown'
+  );
+INSERT INTO
+  `question_type` (`name`, `handler`)
+VALUES
+  (
+    'Checkbox',
+    'common\\models\\assessment\\Checkboxes'
+  );

@@ -5,7 +5,7 @@ namespace common\controller;
 use common\controller\Controller;
 use common\models\user\User;
 use lib\app\log\Logger;
-use lib\app\router\Router;
+use lib\app\route\Router;
 use lib\util\Helper;
 
 class BaseController extends Controller

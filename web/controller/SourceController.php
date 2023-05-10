@@ -19,4 +19,8 @@ class SourceController extends Controller
   {
     $this->returnStylesheet(Helper::getAlias("@web/source/css/$__filename__"));
   }
+
+  public function actionImage($__name__ = null)
+  {
+  }
 }

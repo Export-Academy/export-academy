@@ -27,16 +27,14 @@ class Grants extends BaseModel
     return "role_id,permission_id";
   }
 
-  public function getRole($result = true)
+  public function getRole()
   {
-    $query = self::hasOne(Role::class, ['id' => $this->role_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(Role::class, ['id' => $this->role_id]);
   }
 
 
-  public function getPermission($result = true)
+  public function getPermission()
   {
-    $query = self::hasOne(Role::class, ['id' => $this->permission_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(Role::class, ['id' => $this->permission_id]);
   }
 }

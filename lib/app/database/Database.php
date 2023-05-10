@@ -63,10 +63,14 @@ class Database extends BaseObject
       Logger::log("Executed: $command->queryString", "info");
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
-      $db->rollBack();
     }
 
     return $command;
+  }
+
+  public function getLastInsertId()
+  {
+    return $this->_handler->lastInsertId();
   }
 
 

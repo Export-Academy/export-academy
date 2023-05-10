@@ -30,9 +30,13 @@ $this->registerSCSSFile("login.scss");
           <?= Html::form_begin("/academy/sign_up") ?>
 
 
-          <div class="hstack gap-2 justify-content-between">
-            <?= HtmlComponent::input($this, "User[firstName]", "", ["label" => "First Name", "id" => "first-name-input", "required" => true]) ?>
-            <?= HtmlComponent::input($this, "User[lastName]", "", ["label" => "Last Name", "id" => "last-name-input", "required" => true])  ?>
+          <div class="hstack gap-2">
+            <div class="w-100">
+              <?= HtmlComponent::input($this, "User[firstName]", "", ["label" => "First Name", "id" => "first-name-input", "required" => true]) ?>
+            </div>
+            <div class="w-100">
+              <?= HtmlComponent::input($this, "User[lastName]", "", ["label" => "Last Name", "id" => "last-name-input", "required" => true])  ?>
+            </div>
           </div>
 
 

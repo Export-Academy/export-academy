@@ -1,6 +1,13 @@
 <?php
 
+
+use lib\app\view\View;
+
+use lib\util\html\Html;
+
 /**
+ * 
+ * @var View $this
  * 
  * @var string $id
  * 
@@ -21,7 +28,6 @@
  * 
  * */
 
-use lib\util\html\Html;
 
 
 $showHeader = $showHeader ?? true;
@@ -60,3 +66,38 @@ $footerOptions = $footerOptions ?? [];
       <?php endif; ?>
     </div>
   </div>
+
+
+  <?php
+
+
+  $script = <<< JS
+
+    class Modal {
+
+      static content;
+      static target;
+    
+      static initialize() {
+        $(".modal").on("show.bs.modal", Modal.handleModalShow);
+        $(".modal").on("hide.bs.modal", Modal.handleModalHide);
+      }
+
+      static handleModalShow(e) {
+        Modal.content = $(e.currentTarget).html();
+        Modal.target = $(e.currentTarget);
+      }
+
+      static handleModalHide(e) {
+        setTimeout(() => {
+          Modal.target.html(Modal.content);
+        }, 1000);
+      }
+  }
+
+
+  Modal.initialize();
+
+JS;
+
+  $this->registerJs($script);

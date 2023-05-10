@@ -22,6 +22,7 @@ class Question {
       $("#current-question-type").html(name);
 
       const type = $(target).data("type");
+      $("#question-type-input").val(type);
       const content = await AdminController.fetch("component", "question_build", {
         type
       });

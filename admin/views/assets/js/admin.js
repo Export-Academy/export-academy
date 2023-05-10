@@ -31,23 +31,23 @@ class AdminController {
     }
   }
 
-  static async fetch(controller, method = null, data = {}) {
+  static async fetch(controller, method = null, data = null, post = null, options = {}) {
     const url = new URL(`${this.base + controller}/${method ?? ""}`);
 
-    const post = new FormData();
+    if (!post) {
+      post = new FormData();
+      this.parseData(data ?? {}, post);
+    }
 
-    this.parseData(data, post);
 
     try {
-      const res = await fetch(url.href, { method: "POST", body: post });
+      const res = await fetch(url.href, { method: "POST", body: post, ...options });
       if (res.status === 200) {
 
-        const content = await res.text();
+        const type = res.headers.get("Content-Type");
 
-        if (content.length === 0) return await res.json();
-        return content;
-
-
+        if (type === "application/json") return await res.json();
+        return await res.text();
       }
       console.log("Something went wrong status " + res.status);
       return null;

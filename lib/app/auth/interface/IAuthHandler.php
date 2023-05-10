@@ -3,11 +3,8 @@
 
 namespace lib\app\auth\interface;
 
-use lib\util\Helper;
 use lib\app\auth\interface\IAuthIdentity;
-use lib\app\http\Request;
-
-require_once Helper::getAlias("@lib\app\auth\interface\IAuthIdentity.php");
+use lib\app\Request;
 
 
 interface IAuthHandler

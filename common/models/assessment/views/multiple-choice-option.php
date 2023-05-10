@@ -7,7 +7,7 @@ use components\HtmlComponent;
  * @var View $this
  */
 
-$input = HtmlComponent::input($this, "Option[" . $option . "]", "", ["placeholder" => "Option " . $option . "", "variant" => "flushed"]);
+$input = HtmlComponent::input($this, "option[" . $option . "]", "", ["placeholder" => "Option " . $option . "", "variant" => "flushed"]);
 $component = HtmlComponent::instance($this);
 
 $button = $component->render("media-components/insert-image-button", [

@@ -1,8 +1,6 @@
 <?php
 
-namespace lib\app\database\query;
-
-
+namespace lib\app\database\expression;
 
 interface IExpression
 {

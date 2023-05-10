@@ -31,23 +31,20 @@ class Role extends BaseModel
    * @param boolean $result
    * @return Grants|Query
    */
-  public function getGrants($result = true)
+  public function getGrants()
   {
-    $query = $this->hasMany(Grants::class, ['role_id' => $this->id]);
-    return $result ? $query->all() : $query;
+    return $this->hasMany(Grants::class, ['role_id' => $this->id]);
   }
 
-  public function getPermissions($result = true)
+  public function getPermissions()
   {
-    $query = $this->hasMany(Permission::class, ["id" => "@" . Grants::tableName() . ".permission_id"])->viaTable(Grants::tableName(), ["role_id" => $this->id]);
-    return $result ? $query->all() : $query;
+    return $this->hasMany(Permission::class, ["id" => "@" . Grants::tableName() . ".permission_id"])->viaTable(Grants::tableName(), ["role_id" => $this->id]);
   }
 
 
-  public function getAssignedUsers($result = true)
+  public function getAssignedUsers()
   {
     $userRoleTableName = UserRole::tableName();
-    $query = $this->hasMany(User::class, ["id" => "@$userRoleTableName.user_id"])->viaTable($userRoleTableName, ["role_id" => $this->id]);
-    return $result ? $query->all() : $query;
+    return $this->hasMany(User::class, ["id" => "@$userRoleTableName.user_id"])->viaTable($userRoleTableName, ["role_id" => $this->id]);
   }
 }

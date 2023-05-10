@@ -1,7 +1,7 @@
 <?php
 
 
-namespace lib\app\http;
+namespace lib\app;
 
 use lib\app\auth\interface\IAuthHandler;
 use lib\app\auth\interface\IAuthIdentity;
@@ -60,6 +60,15 @@ class Request extends BaseObject
       return $default;
     }
     return $_POST;
+  }
+
+  public static function file($name = null, $default = null)
+  {
+    if (isset($name)) {
+      if (isset($_FILES[$name])) return $_FILES[$name];
+      return $default;
+    }
+    return $_FILES;
   }
 
   public static function path()

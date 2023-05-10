@@ -22,7 +22,7 @@ $insertImageButton = $component->render("media-components/insert-image-button", 
 ?>
 
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<?= Html::form_begin("#") ?>
+<?= Html::form_begin("/academy/admin/assessment/build") ?>
 
 
 
@@ -41,15 +41,11 @@ $insertImageButton = $component->render("media-components/insert-image-button", 
 
     <div class="fw-bold fs-5 my-2">Create Question</div>
     <div class="row">
-      <div class="col-md-8 col-sm-12">
-
-        <div class="quill-container">
-          <div id="question-prompt-quill">
-          </div>
-        </div>
-
+      <div class="col-md-7 col-sm-12">
+        <?= HtmlComponent::textarea($this, "question[prompt]", "", ["placeholder" => "Enter Question Prompt here", "variant" => "flushed"]); ?>
       </div>
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-5 col-sm-12">
+        <?= Html::hiddenInput("", "type", ["id" => "question-type-input", "required" => true]) ?>
         <div class="btn-group w-100 border-0">
           <button type="button" data-bs-toggle="dropdown" class="btn rounded-0 border" id="current-question-type">
             Select Question Type
@@ -75,20 +71,11 @@ $insertImageButton = $component->render("media-components/insert-image-button", 
 
 <?= Html::form_end() ?>
 
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-
 <?= $imageModal ?>
 
 <?php
 
 $script = <<< JS
-  let quill = new Quill('#question-prompt-quill', {
-    debug: 'info',
-    theme: 'snow',
-    placeholder: "Question Prompt...",
-    bounds: '.quill-container'
-  });
   let MultipleChoice = Checkbox = Dropdown = null;
   Question.start();
 JS;

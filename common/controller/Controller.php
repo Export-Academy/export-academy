@@ -3,13 +3,11 @@
 namespace common\controller;
 
 use lib\app\auth\interface\IAuthController;
-use lib\app\http\request\Request;
+use lib\app\Request;
 use lib\app\view\interface\IViewable;
 use lib\app\view\View;
 use lib\util\BaseObject;
 use lib\util\Helper;
-
-require_once Helper::getAlias("@lib\app\auth\interface\IAuthController.php");
 
 /**
  * @property View $view

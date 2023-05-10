@@ -1,8 +1,8 @@
 <?php
 
-namespace lib\app\router;
+namespace lib\app\route;
 
-use lib\app\http\Request;
+use lib\app\Request;
 use common\controller\BaseController;
 use lib\app\log\Logger;
 use lib\util\BaseObject;

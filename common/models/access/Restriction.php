@@ -25,21 +25,18 @@ class Restriction extends BaseModel
 
 
 
-  public function getUser($result = true)
+  public function getUser()
   {
-    $query = self::hasOne(User::class, ['id' => $this->user_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(User::class, ['id' => $this->user_id]);
   }
 
-  public function getPermission($result = true)
+  public function getPermission()
   {
-    $query = self::hasOne(Permission::class, ['id' => $this->permission_id]);
-    return $result ? $query->one() : $query;
+    return self::hasOne(Permission::class, ['id' => $this->permission_id]);
   }
 
-  public function getRole($result = true)
+  public function getRole()
   {
-    $query = self::hasOne(Role::class, ['id' => $this->role_id]);
-    return $result ? $query->all() : $query;
+    return self::hasOne(Role::class, ['id' => $this->role_id]);
   }
 }

@@ -8,7 +8,7 @@ use common\models\access\Grants;
 use common\models\access\Permission;
 use common\models\access\Role;
 use lib\app\database\Database;
-use lib\app\router\Router;
+use lib\app\route\Router;
 use lib\util\Helper;
 
 class UserController extends Controller
