@@ -5,6 +5,9 @@ namespace admin\controller;
 
 use common\controller\Controller;
 use common\models\assessment\MultipleChoice;
+use lib\app\log\Logger;
+use lib\app\storage\Storage;
+use lib\util\Helper;
 
 class AssessmentController extends Controller
 {
@@ -31,7 +34,15 @@ class AssessmentController extends Controller
   public function actionImageUpload()
   {
     $image = $this->request->file("image");
-    $this->jsonResponse();
+    Logger::log($image);
+
+
+    $client = Storage::instance();
+    $object = $client->upload(Helper::getValue("tmp_name", $image, ""), basename(self::class) . "/" . Helper::getValue("name", $image, ""));
+
+    Logger::log($object);
+
+    $client->$client->$this->jsonResponse();
   }
 
 

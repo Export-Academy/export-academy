@@ -16,7 +16,7 @@ class Helper
   public static function aliases($alias, $separator = DIRECTORY_SEPARATOR)
   {
     $path  = false;
-    $basePath = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['HTTP_BASE_PATH'];
+    $basePath = self::getBasePath();
     switch ($alias) {
       case '@admin':
         $path =  $basePath . $separator . 'admin';
@@ -52,6 +52,11 @@ class Helper
     }
 
     return $path;
+  }
+
+  static function getBasePath()
+  {
+    return $_SERVER['DOCUMENT_ROOT'] . $_SERVER['HTTP_BASE_PATH'];
   }
 
 

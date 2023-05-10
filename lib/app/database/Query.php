@@ -50,7 +50,7 @@ class Query extends BaseObject implements IExpression
   public $model;
 
 
-  public function init()
+  protected function init()
   {
     $this->database = Database::instance();
   }

@@ -10,6 +10,9 @@ $this->registerSCSSFile("sidebar-item.scss");
 $path = Request::path();
 $active = is_int(strpos($path, $link)) ? true : false;
 
+
+$unique = str_replace(" ", "-", strtolower($title));
+
 ?>
 
 <?php if (isset($items)) : ?>
@@ -18,11 +21,11 @@ $active = is_int(strpos($path, $link)) ? true : false;
     <div class="accordion-item">
       <div class="accordion-header">
         <div class="academy-nav-item rounded-1 <?= $active ? "active" : "" ?>">
-          <div class="item collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#container">
+          <div class="item collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#container-<?= $unique ?>">
             <div class="hstack justify-content-between">
               <div class="p-2"><?= $title ?? "Title" ?></div>
               <div class="p-2">
-                <i data-feather="arrow-right-circle"></i>
+                <i data-feather="arrow-right-circle" width="16" height="16"></i>
               </div>
             </div>
           </div>
@@ -31,7 +34,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
       </div>
 
 
-      <div class="accordion-collapse collapse" id="container">
+      <div class="accordion-collapse collapse" id="container-<?= $unique ?>">
 
         <div class="accordion-body">
           <?php foreach ($items as $title => $link) : ?>
@@ -44,7 +47,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
                 <div class="hstack justify-content-between">
                   <div class="p-2"><?= $title ?? "Title" ?></div>
                   <div class="p-2">
-                    <i data-feather="plus"></i>
+                    <i data-feather="plus" width="16" height="16"></i>
                   </div>
                 </div>
               </a>
@@ -64,7 +67,7 @@ $active = is_int(strpos($path, $link)) ? true : false;
       <div class="hstack justify-content-between">
         <div class="p-2"><?= $title ?? "Title" ?></div>
         <div class="p-2">
-          <i data-feather="arrow-right-circle"></i>
+          <i data-feather="arrow-right-circle" width="16" height="16"></i>
         </div>
       </div>
     </a>

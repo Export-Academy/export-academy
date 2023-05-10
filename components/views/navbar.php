@@ -52,7 +52,9 @@ $components = HtmlComponent::instance($this);
 
 
     <?= $components->render("sidebar-item", ["title" => "Dashboard", "link" => "/academy/admin/dashboard"]) ?>
-    <?= $components->render("sidebar-item", ["title" => "Assessment Manager", "link" => "/academy/admin/assessment"]) ?>
+    <?= $components->render("sidebar-item", ["title" => "Assessment Manager", "link" => "/academy/admin/assessment", "items" => [
+      "Manage Assessment" => "/academy/admin/assessment"
+    ]]) ?>
     <?= $components->render("sidebar-item", ["title" => "Resource Manager", "link" => "/academy/admin/resource"]) ?>
     <?= $components->render("sidebar-item", ["title" => "User Manager", "link" => "/academy/admin/user", "items" => [
       "Manage Users" => "/academy/admin/user",

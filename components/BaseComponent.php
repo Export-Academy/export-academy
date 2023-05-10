@@ -13,7 +13,7 @@ abstract class BaseComponent extends BaseObject implements IViewable
    */
   public $view;
 
-  public function init()
+  protected function init()
   {
     $this->view = View::instance($this);
   }

@@ -120,6 +120,26 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
   }
 
   /**
+   * Returns a CSS stylesheet as response
+   *
+   * @param string $filename
+   * @return never
+   */
+  protected function returnImage($filename)
+  {
+    ob_clean();
+    header_remove();
+    header('Content-Type: text/css');
+    if (file_exists($filename)) {
+      http_response_code(200);
+      echo file_get_contents($filename);
+    } else {
+      http_response_code(404);
+    }
+    exit();
+  }
+
+  /**
    * Renders a PHP view file
    *
    * @param string $file

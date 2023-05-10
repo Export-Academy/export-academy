@@ -39,7 +39,7 @@ class BaseObject
    * This method is ran whenever a base object has been created 
    * 
    */
-  public function init()
+  protected function init()
   {
   }
 

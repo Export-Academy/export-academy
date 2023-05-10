@@ -14,7 +14,7 @@ abstract class ModelComponent extends BaseModel implements IViewable
    */
   public $view;
 
-  public function init()
+  protected function init()
   {
     $this->view = View::instance($this);
   }
