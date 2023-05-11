@@ -1,0 +1,23 @@
+.media-component {
+  position: relative;
+
+  &:hover,
+  &:active,
+  &:focus {
+    filter: drop-shadow(6px 5px 10px #0000005e);
+    & .media-toolbar {
+      opacity: 1;
+    }
+  }
+
+  & .media-toolbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #131313ab;
+    padding: 5px;
+    opacity: 0;
+    transition: 0.25s;
+  }
+}

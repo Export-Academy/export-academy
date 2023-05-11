@@ -10,7 +10,7 @@ use lib\app\view\View;
 
 $this->registerJsFile("media-assets/insert-image", $this::POS_END);
 $components = HtmlComponent::instance($this);
-$urlInputButton = HtmlComponent::input($this, "", "", ["variant" => "flushed", "placeholder" => "Paste URL of image"]);
+$urlInputButton = HtmlComponent::input($this, null, null, ["variant" => "flushed", "placeholder" => "Paste URL of image", "id" => "image-url-input"]);
 
 ?>
 
@@ -52,7 +52,7 @@ $body = <<< HTML
     </div>
     <div class="hstack justify-content-end gap-2">
       <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn btn-lg">Cancel</button>
-      <button class="btn btn-lg">Insert Image</button>
+      <button type="button" id="image-url-button" class="btn btn-lg">Insert Image</button>
     </div>
   </div>
 </div>

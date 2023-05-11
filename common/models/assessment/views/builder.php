@@ -15,7 +15,11 @@ $questionTypes = QuestionType::find()->all();
 $component = HtmlComponent::instance($this);
 $imageModal = $component->render("media-components/insert-image-modal");
 $insertImageButton = $component->render("media-components/insert-image-button", [
-  "container" => "12"
+  "container" => "#main-image-container"
+]);
+
+$mediaComponent = $component->render("media-components/image-card", [
+  "src" => "https://images.unsplash.com/photo-1683526976156-1a3f1a315049?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80"
 ])
 
 
@@ -45,6 +49,8 @@ $insertImageButton = $component->render("media-components/insert-image-button", 
         <?= HtmlComponent::textarea($this, "question[prompt]", "", ["placeholder" => "Enter Question Prompt here", "variant" => "flushed"]); ?>
       </div>
       <div class="col-md-5 col-sm-12">
+        <div class="row" id="main-image-container">
+        </div>
         <?= Html::hiddenInput("", "type", ["id" => "question-type-input", "required" => true]) ?>
         <div class="btn-group w-100 border-0">
           <button type="button" data-bs-toggle="dropdown" class="btn rounded-0 border" id="current-question-type">
@@ -52,10 +58,9 @@ $insertImageButton = $component->render("media-components/insert-image-button", 
           </button>
           <ul class="dropdown-menu rounded-0 w-100">
             <?php foreach ($questionTypes as $type) : ?>
-            <li>
-              <button type="button" class="dropdown-item question-type"
-                data-type="<?= $type->id ?>"><?= $type->name ?></button>
-            </li>
+              <li>
+                <button type="button" class="dropdown-item question-type" data-type="<?= $type->id ?>"><?= $type->name ?></button>
+              </li>
             <?php endforeach; ?>
           </ul>
         </div>

@@ -110,11 +110,10 @@ CREATE TABLE `user_context` (
   `context_id` int NOT NULL,
   PRIMARY KEY (`user_type_id`, `context_id`)
 );
-CREATE TABLE `file` (
+CREATE TABLE `File` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `data` longblob NOT NULL
+  `bucket` varchar(100) NOT NULL
 );
 CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
 CREATE INDEX `user_index_1` ON `user` (`firstName`);
@@ -134,6 +133,8 @@ CREATE INDEX `question_index_14` ON `question` (`type`);
 CREATE INDEX `question_index_15` ON `question` (`answer`);
 CREATE INDEX `format_index_16` ON `format` (`name`);
 CREATE INDEX `resource_index_17` ON `resource` (`title`);
+CREATE UNIQUE INDEX `File_index_18` ON `File` (`name`, `bucket`);
+CREATE INDEX `File_index_19` ON `File` (`bucket`);
 ALTER TABLE
   `user`
 ADD

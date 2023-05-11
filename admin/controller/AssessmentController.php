@@ -5,8 +5,8 @@ namespace admin\controller;
 
 use common\controller\Controller;
 use common\models\assessment\MultipleChoice;
-use lib\app\log\Logger;
-use lib\app\storage\Storage;
+use common\models\File;
+use components\HtmlComponent;
 use lib\util\Helper;
 
 class AssessmentController extends Controller
@@ -34,15 +34,41 @@ class AssessmentController extends Controller
   public function actionImageUpload()
   {
     $image = $this->request->file("image");
-    Logger::log($image);
+    $urlImage = $this->request->data("image");
+    $isComponent = $this->request->data("component", true);
+    $data = null;
 
 
-    $client = Storage::instance();
-    $object = $client->upload(Helper::getValue("tmp_name", $image, ""), basename(self::class) . "/" . Helper::getValue("name", $image, ""));
+    if ($urlImage) {
+      $imageURL = Helper::getValue("url", $urlImage, "");
+      $name = Helper::getValue("name", $urlImage, "");
+      $data = File::uploadByURL($imageURL, $name);
+    } elseif ($image) {
+      $data = File::uploadByFile($image);
+    }
 
-    Logger::log($object);
 
-    $client->$client->$this->jsonResponse();
+    if (isset($data)) {
+      $url = $data->getURL();
+
+      if (!$isComponent)
+        $this->jsonResponse([
+          "id" => $data->id,
+          "url" => $url
+        ]);
+      $component = HtmlComponent::instance($this->view);
+
+      $this->renderView($component->render("media-components/image-card", [
+        "src" => $url,
+        "alt" => "Image",
+        "id" => $data->id
+      ]));
+      return;
+    }
+
+
+    $this->jsonResponse(null);
+    return;
   }
 
 

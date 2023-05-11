@@ -30,8 +30,7 @@ abstract class BaseModel extends BaseObject implements IActiveModel
   public static function instance($config = [])
   {
     $className = get_called_class();
-    $model = new $className;
-    Helper::configure($model, $config);
+    $model = new $className($config);
     return $model;
   }
 

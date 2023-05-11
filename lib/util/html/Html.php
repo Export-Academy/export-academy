@@ -13,7 +13,8 @@ class Html extends BaseObject
   {
     $html = "";
     foreach ($attributes as $key => $attr) {
-      $html .= " $key=\"$attr\"";
+      if (isset($attr))
+        $html .= " $key=\"$attr\"";
     }
     return $html;
   }

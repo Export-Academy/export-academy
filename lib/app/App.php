@@ -12,7 +12,6 @@ use lib\app\database\Database;
 use lib\app\Request;
 use lib\app\log\Logger;
 use lib\app\route\Router;
-use lib\app\storage\Storage;
 use lib\app\view\View;
 use lib\config\Configuration;
 use lib\util\BaseObject;
@@ -39,9 +38,6 @@ class App extends BaseObject
   /** @var Database */
   public $database;
 
-  /** @var Storage */
-  public $storage;
-
   /**
    * Undocumented function
    *
@@ -58,8 +54,7 @@ class App extends BaseObject
       'authHandler' => $authHandler,
       'schema' => null,
       'router' => $router,
-      'database' => Database::instance(),
-      'storage' => Storage::instance()
+      'database' => Database::instance()
     ]);
   }
 
