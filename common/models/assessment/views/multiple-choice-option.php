@@ -1,31 +1,23 @@
 <?php
 
+use common\models\assessment\MultipleChoice;
 use lib\app\view\View;
 use components\HtmlComponent;
 
 /**
  * @var View $this
  */
-
-$input = HtmlComponent::input($this, "option[" . $option . "]", "", ["placeholder" => "Option " . $option . "", "variant" => "flushed"]);
-$component = HtmlComponent::instance($this);
-
-$button = $component->render("media-components/insert-image-button", [
-  "container" => "12"
-])
-
+if (!isset($option)) {
+  $input = HtmlComponent::textarea($this, MultipleChoice::class . "[" . $key . "]", $value, ["placeholder" => "Option " . $key . "", "variant" => "flushed"]);
+} else {
+  $input = HtmlComponent::textarea($this, MultipleChoice::class . "[" . $option . "]", null, ["placeholder" => "Option " . $option . "", "variant" => "flushed"]);
+}
 ?>
-
-<?= $this->renderAssets($this::POS_HEAD) ?>
 
 <div class="hstack gap-2 option-container my-2">
   <i data-feather="circle"></i>
   <?= $input ?>
-  <?= $button ?>
   <button type="button" class="btn btn-sm remove-option">
     <i data-feather="x"></i>
   </button>
 </div>
-
-<?= $this->renderAssets($this::POS_END) ?>
-<?= $this->renderAssets($this::POS_LOAD) ?>

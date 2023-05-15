@@ -1,5 +1,9 @@
 .media-component {
   position: relative;
+  width: 180px;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
 
   &:hover,
   &:active,

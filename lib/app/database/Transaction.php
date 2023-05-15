@@ -20,7 +20,7 @@ class Transaction extends BaseObject
     Logger::log("BEGIN TRANSACTION", "info");
   }
 
-  public function execute(Query $query)
+  public function execute(Query $query, $lastId = false)
   {
 
     try {
@@ -33,11 +33,11 @@ class Transaction extends BaseObject
       Logger::log("ROLLBACK", "info");
     }
 
-    return $command;
+    return $lastId ? $this->db->lastInsertId() : $command;
   }
 
 
-  private function rollback()
+  public function rollback()
   {
     $this->db->rollBack();
   }

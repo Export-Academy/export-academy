@@ -16,6 +16,7 @@ abstract class ModelComponent extends BaseModel implements IViewable
 
   protected function init()
   {
+    parent::init();
     $this->view = View::instance($this);
   }
 
@@ -31,5 +32,10 @@ abstract class ModelComponent extends BaseModel implements IViewable
   public function render($name, $params = [])
   {
     return $this->view->generateContent($name, $params);
+  }
+
+  public function getView()
+  {
+    return $this->view;
   }
 }

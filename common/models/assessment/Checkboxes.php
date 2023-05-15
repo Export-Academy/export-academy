@@ -2,14 +2,29 @@
 
 namespace common\models\assessment;
 
-use lib\app\view\View;
-
 class Checkboxes extends Question
 {
 
-  public static function renderBuild(View $view)
+  public $options;
+
+  public function renderBuild()
   {
-    $component = self::generate($view);
-    return $component->render("checkbox-build");
+    return $this->render("checkbox-build", ["question" => $this]);
+  }
+
+  public static function createContext($context)
+  {
+    $options = [];
+    foreach ($context as $key => $value) {
+      $options[$key] = $value;
+    }
+
+
+    return ["options" => $options];
+  }
+
+  public function renderView()
+  {
+    return $this->view->render("checkbox-view");
   }
 }

@@ -2,14 +2,23 @@
 
 namespace common\models\assessment;
 
-use lib\app\view\View;
-
 class Dropdown extends Question
 {
 
-  public static function renderBuild(View $view)
+  public $options;
+
+  public function renderBuild()
   {
-    $component = self::generate($view);
-    return $component->render("dropdown-build");
+    return $this->render("dropdown-build", ["question" => $this]);
+  }
+
+  public static function createContext($context)
+  {
+    $options = [];
+    foreach ($context as $key => $value) {
+      $options[$key] = $value;
+    }
+
+    return ["options" => $options];
   }
 }

@@ -9,6 +9,7 @@ use lib\app\view\View;
  */
 $this->registerJsFile("multiple-choice-build", $this::POS_END);
 
+
 $context = $this->context;
 $option = "";
 if ($context instanceof MultipleChoice) {
@@ -17,21 +18,18 @@ if ($context instanceof MultipleChoice) {
 ?>
 
 
-<?= $this->renderAssets($this::POS_HEAD) ?>
 
 
 <div id="multiple-choice-container">
-  <?= $option ?>
+  <?php if (isset($question->type) && $question instanceof MultipleChoice) : ?>
+    <?php foreach ($question->options as $key => $value) : ?>
+      <?= $question->render("multiple-choice-option", ["key" => $key, "value" => $value]) ?>
+    <?php endforeach; ?>
+  <?php else : ?>
+    <?= $option ?>
+  <?php endif; ?>
 </div>
 <hr>
 <button type="button" id="add-multiple-choice-option" class="btn gap-2">
   <div>Add Option</div>
 </button>
-
-
-<?= $this->renderAssets($this::POS_END) ?>
-
-
-<script>
-MultipleChoice.initialize();
-</script>

@@ -2,6 +2,7 @@
 
 namespace lib\app\view;
 
+use lib\app\log\Logger;
 use lib\app\view\interface\IViewable;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -46,22 +47,49 @@ class View extends BaseObject
     return new View(['context' => $context]);
   }
 
+  /**
+   * Set the page title
+   *
+   * @param string $title
+   * @return void
+   */
   public function setTitle($title)
   {
     $this->title = $title;
   }
 
+  /**
+   * Generate and render the given file
+   *
+   * @param string $filename
+   * @param array $params
+   * @return void
+   */
   public function render(string $filename, array $params = [])
   {
     $content = $this->generateContent($filename, $params);
     $this->renderContent($content);
   }
 
+  /**
+   * Echo provided content
+   *
+   * @param string $content
+   * @return void
+   */
   public function renderContent($content)
   {
     echo $content;
   }
 
+  /**
+   * Generates and returns the content of a view
+   *
+   * @param string $filename
+   * @param array $__params__
+   * @param boolean $base_path
+   * @return void
+   */
   public function generateContent($filename, $__params__ = [], $base_path = true)
   {
     $__file__ = $base_path ? $this->context->getViewsDirectory() . $filename : $filename;
@@ -90,107 +118,148 @@ class View extends BaseObject
     }
   }
 
-
+  /**
+   * Register a JS file to be rendered in final view
+   *
+   * @param string $__file__
+   * @param string $pos
+   * @return void
+   */
   public function registerJsFile($__file__, $pos = self::POS_LOAD)
   {
     $this->js_scripts[$pos][] = $__file__;
   }
 
-
+  /**
+   * Register CSS file to be rendered in final view
+   *
+   * @param string $__file__
+   * @return void
+   */
   public function registerCssFile($__file__)
   {
     $this->css_styles[] = $__file__;
   }
 
+  /**
+   * Register a SCSS file to be rendered in final view
+   *
+   * @param string $__file__
+   * @return void
+   */
   public function registerSCSSFile($__file__)
   {
     $this->scss_styles[] = $__file__;
   }
 
-
+  /**
+   * Register JS code
+   *
+   * @param string $script
+   * @param string $pos
+   * @return void
+   */
   public function registerJs($script, $pos = self::POS_LOAD)
   {
     $this->scripts[$pos][] = $script;
   }
 
+  /**
+   * Gets content from a file and returns the URL to access the file
+   *
+   * @param string $filename
+   * @param string $type
+   * @param string $content
+   * @return void
+   */
   public function registerFile($filename = null, $type = 'js', $content = "")
   {
-
-    $base_directory = Helper::getAlias('@common/views/assets', "/");
-
-    if (isset($this->context))
-      $base_directory = $this->context->getAssetDirectory();
+    // Gets the base directory from IViewable Context
+    $base_directory = $this->context->getAssetDirectory();
 
 
     if ($filename) {
+      // Creates the current path of the file
       $__file__ =  $base_directory . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . $filename;
 
       if (strpos($filename, '@') === 0)
         $__file__ =  Helper::getAlias($filename);
 
-
+      // Add file extension if it was not provided
       if (!strpos($__file__, ".$type"))
         $__file__ .= ".$type";
 
 
-
+      // Check if the file exists
       if (!file_exists($__file__)) {
         echo "File doesn't exist: $__file__ <br>";
         return null;
       }
     }
-
+    // Gets the content from file or provided content
     $content = isset($__file__) ?  file_get_contents($__file__) : $content;
+
+    // Hash the content from the file
     $hash = hash('md5', $content);
 
 
     if ($type == 'scss') {
-
+      // Generate path to distributed files
       $generated_path = "web/source/css/$hash.css";
       $path = Helper::getAlias("@$generated_path", "/");
 
-
+      // If file already exist return null
       if (file_exists($path)) {
         return null;
       }
 
+      // Creating compiler to convert SCSS to CSS
       $compiler = new Compiler();
       $compliedCss = $compiler->compileString($content)->getCss();
       $file = fopen($path, "w");
 
+      // Write CSS content to the file
       fwrite($file, $compliedCss);
       fclose($file);
 
-      return Helper::getURL($generated_path, "/");
-    } else {
-      $generated_path = "web/source/" . $type . "/$hash.$type";
-      $path = Helper::getAlias("@$generated_path", "/");
-
-      if (file_exists($path)) {
-        return null;
-      }
-
-      if (isset($__file__)) {
-        $success = copy($__file__, $path);
-      } else {
-        $file = fopen($path, "w");
-        fwrite($file, $content);
-        fclose($file);
-
-        $success = true;
-      }
-
-
-      if (!$success) {
-        echo "Failed to copy file $__file__ to $path";
-        return null;
-      }
-
-
+      // Return the URL to access distribution file
       return Helper::getURL($generated_path, "/");
     }
+
+    // Generate path to distributed files
+    $generated_path = "web/source/" . $type . "/$hash.$type";
+    $path = Helper::getAlias("@$generated_path", "/");
+
+    // If file already exist return null
+    if (file_exists($path)) {
+      return null;
+    }
+
+
+    if (isset($__file__)) {
+      // Copy file to the generated path
+      $success = copy($__file__, $path);
+
+      if (!$success) return null;
+    } else {
+
+      // Create new to add the content
+      $file = fopen($path, "w");
+      fwrite($file, $content);
+      fclose($file);
+
+      $success = true;
+    }
+
+    return Helper::getURL($generated_path, "/");
   }
 
+  /**
+   * Render the html asset components for the specified position
+   *
+   * @param string $pos
+   * @return mixed
+   */
   public function renderPosition($pos)
   {
     $renders = [];
@@ -211,12 +280,15 @@ class View extends BaseObject
     foreach ($js_files as $file) {
       $path = $this->registerFile($file, 'js');
       if (!isset($path)) continue;
+
+
       $renders[] = $pos === self::POS_LOAD ? $path : Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
 
     $scripts = Helper::getValue($pos, $this->scripts, []);
     foreach ($scripts as $script) {
       $path = $this->registerFile(null, 'js', $script);
+      if (!isset($path)) continue;
       $renders[] = $pos === self::POS_LOAD ? $path : Html::tag('script', '', ['src' => $path, 'type' => 'text/javascript']);
     }
     return $renders;
@@ -225,12 +297,26 @@ class View extends BaseObject
   public function registerView($views)
   {
     if (is_array($views)) {
-      $this->registeredViews = array_merge($this->registeredViews, $views);
+      foreach ($views as $view) {
+        $id = spl_object_id($view);
+        if ($id === spl_object_id($this))
+          continue;
+        $this->registeredViews[$id] = $view;
+      }
     } else {
-      $this->registeredViews[] = $views;
+      $id = spl_object_id($views);
+      if ($id === spl_object_id($this))
+        return;
+      $this->registeredViews[$id] = $views;
     }
   }
 
+  /**
+   * Render Assets for the specified position
+   *
+   * @param string $pos
+   * @return string
+   */
   public function renderAssets($pos)
   {
     $views = [$this];
@@ -248,10 +334,16 @@ class View extends BaseObject
       return $this->renderOnload($assets);
     }
 
-    return implode("\n", $assets);
+    $content = implode("\n", $assets);
+    Logger::log($content, spl_object_id($this) . "::" . $pos);
+    return $content;
   }
 
-
+  /**
+   * Reset the View Asset directories
+   *
+   * @return void
+   */
   public static function reset()
   {
     $js_dir = Helper::getAlias("@web\source\css");
@@ -274,7 +366,12 @@ class View extends BaseObject
     closedir($dir_handle);
   }
 
-
+  /**
+   * Render scripts in ready event wrapper
+   *
+   * @param [type] $scripts
+   * @return void
+   */
   private function renderOnload($scripts)
   {
     $files = implode(", ", array_map(function ($s) {

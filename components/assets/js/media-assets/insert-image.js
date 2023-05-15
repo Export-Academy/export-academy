@@ -42,9 +42,8 @@ class InsertImageModal {
     const target = $(e.currentTarget);
 
     let container = target.data("container");
-    let hiddenInput = target.data("hidden");
 
-    InsertImageModal.context = { container, hiddenInput };
+    InsertImageModal.context = { container };
 
 
     InsertImageModal.imageModal.modal('show');
@@ -122,7 +121,7 @@ class InsertImageModal {
     let res;
     if (image) {
       let data = InsertImageModal.getImageData(image);
-      res = await AdminController.fetch("assessment", "image_upload", null, data);
+      res = await AdminController.fetch("assessment", "image_upload", null, data, { "Content-Type": "multipart/form-data" });
     } else if (url) {
       res = await AdminController.fetch("assessment", "image_upload", {
         image: {
@@ -130,14 +129,14 @@ class InsertImageModal {
         }
       });
     }
-    console.log(res);
     if (!res) {
       InsertImageModal.loading.addClass("d-none");
       // Handle Error Saving Image
       return;
     }
 
-    let { container, hiddenInput } = InsertImageModal.context;
+    let { container } = InsertImageModal.context;
+    console.log(InsertImageModal.context);
     container = $(container);
     container.append(res);
     feather.replace();

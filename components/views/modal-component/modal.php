@@ -66,12 +66,12 @@ $footerOptions = $footerOptions ?? [];
       <?php endif; ?>
     </div>
   </div>
+</div>
+
+<?php
 
 
-  <?php
-
-
-  $script = <<< JS
+$script = <<< JS
 
     class Modal {
 
@@ -100,4 +100,4 @@ $footerOptions = $footerOptions ?? [];
 
 JS;
 
-  $this->registerJs($script);
+$this->registerJs($script);

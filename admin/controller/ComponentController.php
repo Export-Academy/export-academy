@@ -9,8 +9,7 @@ use common\models\assessment\QuestionType;
 use components\BaseComponent;
 use components\HtmlComponent;
 use components\ModelComponent;
-
-
+use lib\app\view\View;
 
 class ComponentController extends Controller
 {
@@ -34,9 +33,20 @@ class ComponentController extends Controller
         $component = $instance::instance($view);
       }
     }
+
+
     $content = $component->render($name, $params);
-    isset($content) ? $this->renderView($content) : $this->jsonResponse("Component Not Found");
+    if ($content) {
+      $content = $view->renderAssets(View::POS_HEAD) . "\n" . $content . "\n" . $view->renderAssets(View::POS_END) . "\n" . $view->renderAssets(View::POS_LOAD);;
+      $this->renderView($content);
+      return;
+    }
+
+    $this->jsonResponse("Component Not Found");
+    return;
   }
+
+
 
   public function actionQuestionBuild()
   {
@@ -48,12 +58,26 @@ class ComponentController extends Controller
       $this->jsonResponse("Not Found");
       return;
     }
+
+
     $handler = new $type->handler;
 
     if ($handler instanceof Question) {
+
       $view = $this->getView();
-      $content = $handler::renderBuild($view);
+
+      $instance = $handler::generate($view);
+      $content = $instance->renderBuild();
+
+
+      if ($content) {
+        $content = $view->renderAssets(View::POS_HEAD) . "\n" . $content . "\n" . $view->renderAssets(View::POS_END) . "\n" . $view->renderAssets(View::POS_LOAD);
+        $this->renderView($content);
+        return;
+      }
     }
+
+
     isset($content) ? $this->renderView($content) : $this->jsonResponse("Not Found");
   }
 }

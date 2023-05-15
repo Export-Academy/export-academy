@@ -1,6 +1,3 @@
-
-
-
 Checkbox = class {
   static get removeOptionButton() {
     return $("button.remove-option");
@@ -48,5 +45,7 @@ Checkbox = class {
     Checkbox.onUpdate();
   }
 }
+
+Checkbox.initialize();
 
 

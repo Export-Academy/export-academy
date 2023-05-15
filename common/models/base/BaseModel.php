@@ -11,9 +11,6 @@ use lib\app\database\Transaction;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
-
-
-
 /**
  * Base models are used to reference tables in the database
  * 
@@ -21,16 +18,30 @@ use lib\util\Helper;
  */
 abstract class BaseModel extends BaseObject implements IActiveModel
 {
+  public $__oldModel;
+
+  public function __construct($config = [], $model = null)
+  {
+    parent::__construct($config);
+    if ($model === true) {
+      $this->__oldModel = $this;
+    } elseif (isset($model)) {
+      $this->__oldModel = $model;
+    } else {
+      $this->__oldModel = null;
+    }
+  }
+
   /**
    * Returns instance of the model using properties provided in `config`
    *
    * @param array $config
    * @return static
    */
-  public static function instance($config = [])
+  public static function instance($config = [], $model = null)
   {
     $className = get_called_class();
-    $model = new $className($config);
+    $model = new $className($config, $model);
     return $model;
   }
 
@@ -84,7 +95,7 @@ abstract class BaseModel extends BaseObject implements IActiveModel
    */
   protected static function excludeProperty()
   {
-    return array_merge(["created_at"], explode(",", self::getPrimaryKey()));
+    return array_merge(["created_at", "__oldModel"], explode(",", self::getPrimaryKey()));
   }
 
   /**
@@ -169,22 +180,49 @@ abstract class BaseModel extends BaseObject implements IActiveModel
       return;
     }
     $query->run();
+    $this->updateProperties(null, $transaction);
+  }
+
+
+  public function insert(Transaction &$transaction = null)
+  {
+    $query = Query::create(get_called_class())->insert($this->getDatabaseProperties(false));
+    $lastInsertId = $query->run($transaction, true);
+    $this->updateProperties($lastInsertId, $transaction);
+  }
+
+
+  private function updateProperties($id = null, $tr = null)
+  {
+    if ($id) {
+      $data = self::find([$this->getPrimaryKey() => $id])->limit(1)->asArray()->one($tr);
+    } else {
+      $condition = $this->getPrimaryCondition();
+      $invalidPrimary = array_filter($condition, function ($val) {
+        return !isset($val);
+      });
+
+      if (count($invalidPrimary) === 0)
+        $data = self::find([$this->getPrimaryCondition()])->limit(1)->asArray()->one($tr);
+    }
+    if (!isset($data)) return;
+    $class = get_called_class();
+    $model = $class::instance($data, $this);
+    Helper::configure($this, $model->toArray());
+  }
+
+
+  public function isNewRecord()
+  {
+    return !isset($this->__oldModel);
   }
 
   public function save(Transaction &$transaction = null)
   {
-    $condition = $this->getPrimaryCondition();
-    $sql = "IF " . Query::create(get_called_class())->exists($condition)->createCommand() . " THEN " .
-      Query::create(get_called_class())
-      ->update($condition, $this->getDatabaseProperties())
-      ->createCommand() . "; " .
-      "ELSE " .
-      Query::create(get_called_class())
-      ->insert($this->getDatabaseProperties(false))
-      ->createCommand() . "; END IF;";
-
-    $query = Query::create(get_called_class())->query($sql);
-    $query->run($transaction);
+    if ($this->isNewRecord()) {
+      return $this->insert($transaction);
+    }
+    return $this->update(true, $transaction);
   }
 
   public function delete(Transaction &$transaction = null)

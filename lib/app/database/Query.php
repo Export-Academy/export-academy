@@ -49,6 +49,8 @@ class Query extends BaseObject implements IExpression
 
   public $model;
 
+  protected $isArray = false;
+
 
   protected function init()
   {
@@ -77,6 +79,12 @@ class Query extends BaseObject implements IExpression
   {
     $arr = $this->all();
     return count($arr);
+  }
+
+  public function asArray()
+  {
+    $this->isArray = true;
+    return $this;
   }
 
   public function select($select)
@@ -308,14 +316,18 @@ class Query extends BaseObject implements IExpression
       function ($column) {
         return Expression::format($column, $this->alias ?? $this->tableName);
       },
+
       $this->orderColumns
     )) . " $this->order";
   }
 
   private function getModelInstance($data = [])
   {
-    if (isset($this->model))
-      return $this->model::instance($data);
+    if ($this->isArray) return $data;
+    if (isset($this->model)) {
+      $class = $this->model;
+      return $class::instance($data, true);
+    }
     return $data;
   }
 
@@ -370,9 +382,9 @@ class Query extends BaseObject implements IExpression
     return null;
   }
 
-  public function run(Transaction $tr = null)
+  public function run(Transaction $tr = null, $lastId = false)
   {
-    $response = isset($tr) ? $tr->execute($this) : $this->database->execute($this);
+    $response = isset($tr) ? $tr->execute($this, $lastId) : $this->database->execute($this, $lastId);
     return $response;
   }
 }

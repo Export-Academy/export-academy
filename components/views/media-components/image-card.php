@@ -4,17 +4,13 @@ use lib\app\view\View;
 use lib\util\html\Html;
 
 /** @var View $this */
-
-
-
-$this->registerSCSSFile("media-component.scss");
-
 ?>
 
+
+
 <div class="col p-2">
-  <div class="media-component">
-    <?= Html::hiddenInput($id ?? "", "media[<>]") ?>
-    <img src="<?= $src ?? "" ?>" alt="<?= $alt ?? "No Image" ?>" class="w-100 rounded" />
+  <div class="media-component rounded-3" style="background-image: url('<?= $src ?>');">
+    <?= Html::hiddenInput($id, "media[]") ?>
     <div class="media-toolbar">
       <div class="hstack justify-content-between">
         <div class="btn-group dropup">

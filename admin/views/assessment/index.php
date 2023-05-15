@@ -3,13 +3,14 @@
 use common\models\assessment\Question;
 use lib\app\view\View;
 
-
 /**
  * @var View $this
+ * @var Question $component
  */
 
 $component = Question::generate($this);
-$content = $component->render("builder");
+
+
 ?>
 
-<?= $content ?>
+<?= $component->renderBuilder() ?>

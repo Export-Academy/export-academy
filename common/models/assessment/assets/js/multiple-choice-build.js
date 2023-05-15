@@ -1,6 +1,3 @@
-
-
-
 MultipleChoice = class {
 
   static get removeOptionButton() {
@@ -49,5 +46,7 @@ MultipleChoice = class {
     MultipleChoice.onUpdate();
   }
 }
+
+MultipleChoice.initialize();
 
 

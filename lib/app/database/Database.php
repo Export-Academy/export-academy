@@ -53,19 +53,20 @@ class Database extends BaseObject
     return new DateTimeZone("UTC");
   }
 
-  public function execute(Query $query)
+  public function execute(Query $query, $lastId = false)
   {
     $db = $this->_handler;
 
     try {
       $command = $db->prepare($query->createCommand());
       $command->execute();
+
       Logger::log("Executed: $command->queryString", "info");
     } catch (Exception $ex) {
-      Logger::log($ex->getMessage(), "error");
+      Logger::log("Error running:  " . $query->createCommand() . "\n" . $ex->getMessage(), "error");
     }
 
-    return $command;
+    return $lastId ? $db->lastInsertId() : $command;
   }
 
   public function getLastInsertId()
@@ -77,10 +78,19 @@ class Database extends BaseObject
   public function transaction($transaction)
   {
     $tr = new Transaction($this->_handler);
-    /** @var mixed $results */
-    $results = call_user_func_array($transaction, [$tr]);
-    $this->_handler->commit();
-    Logger::log("COMMIT TRANSACTION", "info");
+    $results = null;
+
+    try {
+      /** @var mixed $results */
+      $results = call_user_func_array($transaction, [$tr]);
+      $this->_handler->commit();
+      Logger::log("COMMIT TRANSACTION", "info");
+    } catch (Exception $ex) {
+      Logger::log($ex->getMessage(), "error");
+      $tr->rollback();
+      Logger::log("ROLLBACK", "info");
+    }
+
     return $results;
   }
 }

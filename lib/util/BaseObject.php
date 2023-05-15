@@ -3,12 +3,15 @@
 namespace lib\util;
 
 use Exception;
+use ReflectionClass;
 
 /**
  * @author Joel Henry <joel.henry.023@gmail.com>
  */
 class BaseObject
 {
+
+
 
   /**
    * Configures model using the provided associative array
@@ -50,6 +53,14 @@ class BaseObject
    */
   public function toArray()
   {
-    return json_decode(json_encode($this), true);
+    $ref = new ReflectionClass(get_called_class());
+    $properties = $ref->getProperties();
+
+    $model = [];
+
+    foreach ($properties as $property) {
+      $model[$property->name] = $this->{$property->name};
+    }
+    return $model;
   }
 }

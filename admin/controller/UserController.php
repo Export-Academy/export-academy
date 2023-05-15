@@ -34,11 +34,25 @@ class UserController extends Controller
     switch ($method) {
       case "POST":
         $data = $this->request->data("Role", []);
-        $role = new Role($data);
+
+        $id = Helper::getValue("id", $data);
+        $role = Role::findOne(["id" => $id]);
+
+        if (!isset($role)) {
+          $role = new Role($data);
+        } else {
+          Helper::configure($role, $data);
+        }
+
+        $isNewRecord = $role->isNewRecord();
+
 
         $role->save();
-        Router::redirect("/academy/admin/user/role");
-        return;
+        if ($isNewRecord) {
+          Router::redirect("/academy/admin/user/role");
+          return;
+        }
+        Router::redirect("/academy/admin/user/update_role?role=$role->id");
 
 
       default:

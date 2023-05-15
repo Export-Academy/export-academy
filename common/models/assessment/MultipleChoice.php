@@ -3,7 +3,6 @@
 
 namespace common\models\assessment;
 
-use lib\app\view\View;
 use lib\util\BaseObject;
 
 class Option extends BaseObject
@@ -23,9 +22,25 @@ class MultipleChoice extends Question
   public $options;
 
 
-  public static function renderBuild(View $view)
+  public function renderBuild()
   {
-    $component = self::generate($view);
-    return $component->render("multiple-choice-build");
+    return $this->render("multiple-choice-build", ["question" => $this]);
+  }
+
+
+  public static function createContext($context)
+  {
+    $options = [];
+    foreach ($context as $key => $value) {
+      $options[$key] = $value;
+    }
+
+
+    return ["options" => $options];
+  }
+
+  public function renderView()
+  {
+    return $this->view->render("multiple-choice-view");
   }
 }

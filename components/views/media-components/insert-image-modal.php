@@ -31,10 +31,13 @@ $body = <<< HTML
 <div role="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="flex-sm-fill text-sm-center nav-link active" data-bs-toggle="list" href="#upload-image" role="tab">Upload Image</a>
+      <a class="flex-sm-fill text-sm-center nav-link active" data-bs-toggle="list" href="#upload-image" role="tab">Upload File</a>
     </li>
     <li class="nav-item">
-      <a class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="list" href="#image-url" role="tab">Image URL</a>
+      <a class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="list" href="#image-url" role="tab">Via URL</a>
+    </li>
+    <li class="nav-item">
+      <a class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="list" href="#uploaded-images" role="tab">Uploaded Files</a>
     </li>
   </ul>
 </div>
@@ -47,12 +50,21 @@ $body = <<< HTML
     </div>
   </div>
   <div class="tab-pane fade" id="image-url" role="tabpanel">
-    <div class="vstack justify-content-center align-items-center p-5">
+    <div class="vstack justify-content-center align-items-center p-1">
       $urlInputButton
     </div>
     <div class="hstack justify-content-end gap-2">
       <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn btn-lg">Cancel</button>
       <button type="button" id="image-url-button" class="btn btn-lg">Insert Image</button>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="uploaded-images" role="tabpanel">
+    <div class="p-2 row">
+      
+    </div>
+    <div class="hstack justify-content-end gap-2">
+      <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn btn-lg">Cancel</button>
+      <button type="button" class="btn btn-lg">Select</button>
     </div>
   </div>
 </div>

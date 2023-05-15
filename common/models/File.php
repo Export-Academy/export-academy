@@ -23,15 +23,10 @@ class File extends BaseModel
   public $credentials;
   public $defaultBucket;
 
-  public static function instance($config = [])
-  {
-    return parent::instance(array_merge($config, Configuration::get("storage", [])));
-  }
-
   protected function init()
   {
     parent::init();
-
+    Helper::configure($this, Configuration::get("storage", []));
     if ($this->credentials) {
       putenv("GOOGLE_APPLICATION_CREDENTIALS=" . Helper::getBasePath() . "/$this->credentials");
       $this->client = new StorageClient([
@@ -49,7 +44,7 @@ class File extends BaseModel
   {
     $data = null;
     try {
-      $storage = self::instance();
+      $storage = new File();
       $bucket = $storage->client->bucket($bucketName ?? $storage->defaultBucket);
 
       if ($isURL) {
@@ -77,7 +72,7 @@ class File extends BaseModel
       $storage->name = $identity["object"];
 
       $storage->save();
-      return self::findOne(array("bucket" => $storage->bucket, "name" => $storage->name));
+      return $storage;
     }
     return null;
   }
@@ -88,14 +83,14 @@ class File extends BaseModel
     $name = Helper::getValue('name', $file);
     $type = Helper::getValue('type', $file);
 
-    $filename = "$path/$name." . explode("/", $type)[1];
+    $filename = (empty($path) ? "$name." : "$path/$name.") . explode("/", $type)[1];
     return self::upload($tmp_name, $filename, $bucket);
   }
 
 
   public static function uploadByURL($url, $name, $path = "", $bucket = null)
   {
-    $filename = "$path/$name";
+    $filename = (empty($path) ? "$name" : "$path/$name");
     return self::upload($url, $filename, $bucket, true);
   }
 

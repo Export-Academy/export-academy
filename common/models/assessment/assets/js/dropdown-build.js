@@ -1,6 +1,3 @@
-
-
-
 Dropdown = class {
 
   static get removeOptionButton() {
@@ -50,4 +47,6 @@ Dropdown = class {
   }
 }
 
+
+Dropdown.initialize();
 
