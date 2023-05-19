@@ -18,6 +18,12 @@ abstract class BaseComponent extends BaseObject implements IViewable
     $this->view = View::instance($this);
   }
 
+  /**
+   * Generates instance of Viewable Component class
+   *
+   * @param View $view
+   * @return static
+   */
   public static function instance(View &$view)
   {
     $className = get_called_class();

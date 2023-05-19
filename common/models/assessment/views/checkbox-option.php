@@ -8,6 +8,8 @@ use components\HtmlComponent;
  * @var View $this
  */
 
+$prefix = $prefix ?? "";
+
 
 if (!isset($option)) {
   $input = HtmlComponent::textarea($this, Checkboxes::class . "[" . $key . "]", $value, ["placeholder" => "Option " . $key . "", "variant" => "flushed"]);
@@ -17,10 +19,10 @@ if (!isset($option)) {
 
 ?>
 
-<div class="hstack gap-2 option-container my-2">
-  <i data-feather="square"></i>
+<div class="hstack gap-2 <?= $prefix ?>option-container my-2">
+  <i data-feather="square" width="16" height="16"></i>
   <?= $input ?>
-  <button type="button" class="btn remove-option">
-    <i data-feather="x"></i>
+  <button type="button" class="btn <?= $prefix ?>remove-option">
+    <i data-feather="x" width="16" height="16"></i>
   </button>
 </div>

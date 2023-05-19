@@ -136,7 +136,6 @@ class InsertImageModal {
     }
 
     let { container } = InsertImageModal.context;
-    console.log(InsertImageModal.context);
     container = $(container);
     container.append(res);
     feather.replace();

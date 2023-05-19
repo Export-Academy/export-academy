@@ -59,9 +59,8 @@ class Database extends BaseObject
 
     try {
       $command = $db->prepare($query->createCommand());
+      Logger::log("Executing: $command->queryString", "info");
       $command->execute();
-
-      Logger::log("Executed: $command->queryString", "info");
     } catch (Exception $ex) {
       Logger::log("Error running:  " . $query->createCommand() . "\n" . $ex->getMessage(), "error");
     }
@@ -87,8 +86,6 @@ class Database extends BaseObject
       Logger::log("COMMIT TRANSACTION", "info");
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
-      $tr->rollback();
-      Logger::log("ROLLBACK", "info");
     }
 
     return $results;

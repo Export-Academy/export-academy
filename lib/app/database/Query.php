@@ -13,6 +13,7 @@ use DateTime;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use Exception;
+use lib\app\Request;
 use PDO;
 
 
@@ -45,6 +46,8 @@ class Query extends BaseObject implements IExpression
 
 
   private $query;
+
+  public $cache = false;
 
 
   public $model;
@@ -90,6 +93,12 @@ class Query extends BaseObject implements IExpression
   public function select($select)
   {
     $this->selectOptions = is_array($select) ? $select : explode(',', $select);
+    return $this;
+  }
+
+  public function cache($period)
+  {
+    $this->cache = $period;
     return $this;
   }
 
@@ -202,7 +211,7 @@ class Query extends BaseObject implements IExpression
         continue;
       }
 
-      $setters[] = "`$key` = " . (isset($value) ? (is_int($value) ? $value : "'$value'") : "NULL");
+      $setters[] = "`$key` = " . (isset($value) ? (is_int($value) ? $value : "'" . str_replace("'", "\'", $value) . "'") : "NULL");
     }
     $condition_statement = $this->where($conditions)->generateWhereCondition();
     $sql = "UPDATE `$this->tableName` SET " . implode(", ", $setters) . " $condition_statement";
@@ -225,7 +234,7 @@ class Query extends BaseObject implements IExpression
       if (!isset($value)) continue;
 
       $keys[] = "`$key`";
-      $values[] = (is_int($value) ? $value : "'$value'");
+      $values[] = (is_int($value) ? $value : "'" . str_replace("'", "\'", $value) . "'");
     }
 
     $sql = "INSERT INTO `$this->tableName` (" . implode(", ", $keys) . ") VALUES (" . implode(", ", $values) . ")";
@@ -364,11 +373,20 @@ class Query extends BaseObject implements IExpression
 
   public function all(Transaction $tr = null)
   {
-    $all = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
-    if ($all)
+    $res = Request::get(md5($this->createCommand()));
+
+    if (!isset($res)) {
+      $res = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
+
+      if ($this->cache) {
+        Request::add(md5($this->createCommand()), $res);
+      }
+    }
+
+    if ($res)
       return array_map(function ($data) {
         return $this->getModelInstance($data);
-      }, $all);
+      }, $res);
 
     return [];
   }
@@ -376,9 +394,17 @@ class Query extends BaseObject implements IExpression
 
   public function one(Transaction $tr = null)
   {
-    $one = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
-    if ($one)
-      return $this->getModelInstance($one);
+    $res = Request::get(md5($this->createCommand()));
+
+    if (!isset($res)) {
+      $res = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
+
+      if ($this->cache) {
+        Request::add(md5($this->createCommand()), $res);
+      }
+    }
+    if ($res)
+      return $this->getModelInstance($res);
     return null;
   }
 

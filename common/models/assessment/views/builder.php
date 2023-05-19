@@ -12,6 +12,9 @@ use lib\util\html\Html;
  */
 
 
+$prefix = $prefix ?? "";
+
+
 $question = $this->context ?? Question::generate($this);
 $isNewRecord = !isset($question->id);
 
@@ -27,37 +30,37 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 
 ?>
 
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-
-
 <?= Html::form_begin("/academy/admin/assessment/build") ?>
-
 
 <?= $isNewRecord ? null : Html::hiddenInput($question->id, "question[id]")  ?>
 
-<div class="question-builder container">
-  <div class="toolbar card rounded-0 p-2 my-2 hstack justify-content-between gap-2">
+
+<?= isset($link) ? Html::hiddenInput($link, "link[id]") : "" ?>
+<?= isset($link) ? Html::hiddenInput($linkType, "link[type]") : "" ?>
+
+<div class="<?= $prefix ?>question-builder">
+  <div class="toolbar p-2 my-2 hstack justify-content-between gap-2 border">
 
     <div class="hstack gap-2">
-      <?= $InsertImageButton ?>
+      <!-- <?= $InsertImageButton ?> -->
     </div>
 
-    <button type="submit" class="btn btn-dark rounded-0"><?= $isNewRecord ? "Save" : "Update" ?></button>
+    <button type="submit" class="btn btn-dark"><?= ($isNewRecord ? ($link ? "Link to " . ($linkType === Question::QUESTION_LINK ? "Question" : "Answer") : "Save") : "Update") ?></button>
 
   </div>
 
 
-  <div class="card rounded-0 p-4 position-relative question-prompt-container border-0">
+  <div class="card p-2 position-relative <?= $prefix ?>question-prompt-container border-0">
 
-    <div class="fw-bold fs-5 my-2"><?= $isNewRecord ? "Create Question" : "Update Question" ?></div>
-
+    <div class="fw-bold fs-5 px-4"><?= $isNewRecord ? "Create Question" : "Update Question" ?></div>
+    <hr>
     <div class="row">
       <div class="col-md-7 col-sm-12">
         <?= HtmlComponent::textarea($this, "question[prompt]", $question->prompt ?? null, ["placeholder" => "Enter Question Prompt here", "variant" => "flushed"]); ?>
       </div>
 
       <div class="col-md-5 col-sm-12">
-        <div class="row" id="main-image-container">
+        <!-- <div class="row" id="main-image-container">
 
 
           <?php if (!$isNewRecord) : ?>
@@ -70,22 +73,23 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
           <?php endif; ?>
 
 
-        </div>
+        </div> -->
 
-        <?= Html::hiddenInput($question->type ?? null, "type", ["id" => "question-type-input", "required" => true]) ?>
+        <?= Html::hiddenInput($question->type ?? null, "type", ["id" => $prefix . "question-type-input", "required"
+        => true]) ?>
 
 
         <div class="btn-group w-100 border-0">
 
-          <button type="button" data-bs-toggle="dropdown" class="btn rounded-0 border" id="current-question-type">
+          <button type="button" data-bs-toggle="dropdown" class="btn rounded-3 border" id="<?= $prefix ?>current-question-type">
             <?= $isNewRecord ? "Select Question Type" : $question->questionType->name  ?>
           </button>
 
 
-          <ul class="dropdown-menu rounded-0 w-100">
+          <ul class="dropdown-menu rounded-3 w-100">
             <?php foreach ($types as $type) : ?>
               <li>
-                <button type="button" class="dropdown-item question-type" data-type="<?= $type->id ?>"><?= $type->name ?></button>
+                <button type="button" class="dropdown-item <?= $prefix ?>question-type" data-type="<?= $type->id ?>"><?= $type->name ?></button>
               </li>
             <?php endforeach; ?>
           </ul>
@@ -94,10 +98,10 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
       </div>
     </div>
 
-    <div class="card my-2 p-3 rounded-0" id="question-builder-container">
+    <div class="card my-2 p-3 rounded-0" id="<?= $prefix ?>question-builder-container">
       <?php if ($isNewRecord) : ?>
         <div class="text-center p-5">Please Select Question Type</div>
-      <?php else : ?>
+      <?php else : /** @var Question $question **/ ?>
         <?= $question->renderBuild() ?>
       <?php endif; ?>
     </div>
@@ -113,8 +117,8 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 
 $script = <<< JS
   let MultipleChoice = Checkbox = Dropdown = null;
-  Question.start();
 JS;
 
 
-$this->registerJs($script);
+$this->registerJs($script, View::POS_HEAD);
+$this->registerJs("Question.start('$prefix');");

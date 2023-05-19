@@ -19,6 +19,9 @@ class Request extends BaseObject
   public $auth;
 
 
+  public static $session = false;
+
+
   const CSRF = "csrf_token";
 
   static function instance($auth)
@@ -88,11 +91,30 @@ class Request extends BaseObject
 
   public static function startSession()
   {
-    $session = session_start();
-    if ($session) {
+    self::$session = session_start();
+    if (self::$session) {
       $_SESSION['token'] = md5(uniqid(mt_rand(), true));
     }
-    return $session;
+    return self::$session;
+  }
+
+
+  public static function add($key, $value)
+  {
+    if (self::$session) {
+      $_SESSION[$key] = $value;
+      return true;
+    }
+    return false;
+  }
+
+
+  public static function get($key, $default = null)
+  {
+    if (self::$session) {
+      return Helper::getValue($key, $_SERVER, $default);
+    }
+    return $default;
   }
 
 

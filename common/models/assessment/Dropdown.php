@@ -9,7 +9,12 @@ class Dropdown extends Question
 
   public function renderBuild()
   {
-    return $this->render("dropdown-build", ["question" => $this]);
+    return $this->render("dropdown-build", ["question" => $this, "prefix" => spl_object_id($this) . "-"]);
+  }
+
+  public function renderView()
+  {
+    return $this->render("dropdown-view");
   }
 
   public static function createContext($context)

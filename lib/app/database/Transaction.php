@@ -25,8 +25,8 @@ class Transaction extends BaseObject
 
     try {
       $command = $this->db->prepare($query->createCommand());
+      Logger::log("Executing: $command->queryString", "info");
       $command->execute();
-      Logger::log("Executed: $command->queryString", "info");
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
       $this->rollback();

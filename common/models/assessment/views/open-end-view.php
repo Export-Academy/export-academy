@@ -25,10 +25,10 @@ $context = $this->context;
 
   <div>
     <?php if ($context->length === $context::LONG_ANSWER) : ?>
-      <?= HtmlComponent::textarea($this, "answer", "", ["placeholder" => "Answer here...", "class" => "w-100"]) ?>
+      <?= HtmlComponent::textarea($this, "answer", "", ["placeholder" => "Answer here...", "class" => "w-100", "required" => true]) ?>
     <?php endif; ?>
     <?php if ($context->length === $context::SHORT_ANSWER) : ?>
-      <?= HtmlComponent::input($this, "answer", "", ["placeholder" => "Answer here...", "class" => "w-100"]) ?>
+      <?= HtmlComponent::input($this, "answer", "", ["placeholder" => "Answer here...", "class" => "w-100", "required" => true]) ?>
     <?php endif; ?>
   </div>
 

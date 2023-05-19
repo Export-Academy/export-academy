@@ -9,26 +9,35 @@ use lib\app\view\View;
  */
 $this->registerJsFile("dropdown-build", $this::POS_END);
 
+$prefix = $prefix ?? "";
+
 
 $context = $this->context;
 $option = "";
 if ($context instanceof Dropdown) {
-  $option = $context->render("dropdown-option", ["option" => 1]);
+  $option = $context->render("dropdown-option", ["option" => 1, "prefix" => $prefix]);
 }
 
 ?>
 
 
-<div id="dropdown-container">
+<div id="<?= $prefix ?>dropdown-container">
   <?php if (isset($question->type) && $question instanceof Dropdown) : ?>
-    <?php foreach ($question->options as $key => $value) : ?>
-      <?= $question->render("dropdown-option", ["key" => $key, "value" => $value]) ?>
-    <?php endforeach; ?>
+  <?php foreach ($question->options as $key => $value) : ?>
+  <?= $question->render("dropdown-option", ["key" => $key, "value" => $value, "prefix" => $prefix]) ?>
+  <?php endforeach; ?>
   <?php else : ?>
-    <?= $option ?>
+  <?= $option ?>
   <?php endif; ?>
 </div>
 <hr>
-<button type="button" id="add-dropdown-option" class="btn gap-2">
+<button type="button" id="<?= $prefix ?>add-dropdown-option" class="btn gap-2">
   <div>Add Option</div>
 </button>
+
+<?php
+$script = <<< JS
+Dropdown.initialize("$prefix");
+JS;
+
+$this->registerJs($script, View::POS_END);

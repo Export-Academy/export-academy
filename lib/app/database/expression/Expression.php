@@ -79,7 +79,7 @@ class Expression implements IExpression
         } else if ($clause instanceof IExpression) {
           $conditions[] = Expression::instance(self::format($key, $this->alias) . " IN ( " . $clause->createCommand() . " )", $this->alias);
         } else {
-          $conditions[] = Expression::instance(self::format($key, $this->alias) . " = " . Expression::instance((is_int($clause) ? $clause : (substr($clause, 0, 1) === "@" ? $clause : "'$clause'")), $this->alias)->createCommand(), $this->alias);
+          $conditions[] = Expression::instance(self::format($key, $this->alias) . " = " . Expression::instance((is_int($clause) ? $clause : (substr($clause, 0, 1) === "@" ? $clause : "'" . str_replace("'", "\'", $clause) . "'")), $this->alias)->createCommand(), $this->alias);
         }
       }
       return Condition::instance($conditions, $this->alias)->createCommand();

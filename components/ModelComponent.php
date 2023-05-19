@@ -20,6 +20,10 @@ abstract class ModelComponent extends BaseModel implements IViewable
     $this->view = View::instance($this);
   }
 
+  /**
+   * @param View $view
+   * @return static
+   */
   public static function generate(View &$view)
   {
     $className = get_called_class();

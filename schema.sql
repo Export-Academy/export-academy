@@ -57,7 +57,9 @@ CREATE TABLE `user_role` (
 
 CREATE TABLE `answer` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `content` blob NOT NULL
+  `context` blob NOT NULL,
+  `link` int,
+  `type` int
 );
 
 CREATE TABLE `response` (
@@ -86,10 +88,15 @@ CREATE TABLE `question` (
   `prompt` text NOT NULL,
   `context` blob NOT NULL,
   `type` int NOT NULL,
-  `answer` int,
+  `link` int,
   `enabled` boolean DEFAULT false,
   `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+);
+
+CREATE TABLE `question_answer` (
+  `question_id` int NOT NULL,
+  `answer_id` int NOT NULL
 );
 
 CREATE TABLE `question_context` (
@@ -169,17 +176,15 @@ CREATE INDEX `question_type_index_13` ON `question_type` (`name`);
 
 CREATE INDEX `question_index_14` ON `question` (`type`);
 
-CREATE INDEX `question_index_15` ON `question` (`answer`);
+CREATE INDEX `question_index_15` ON `question` (`enabled`);
 
-CREATE INDEX `question_index_16` ON `question` (`enabled`);
+CREATE INDEX `format_index_16` ON `format` (`name`);
 
-CREATE INDEX `format_index_17` ON `format` (`name`);
+CREATE INDEX `resource_index_17` ON `resource` (`title`);
 
-CREATE INDEX `resource_index_18` ON `resource` (`title`);
+CREATE UNIQUE INDEX `file_index_18` ON `file` (`name`, `bucket`);
 
-CREATE UNIQUE INDEX `file_index_19` ON `file` (`name`, `bucket`);
-
-CREATE INDEX `file_index_20` ON `file` (`bucket`);
+CREATE INDEX `file_index_19` ON `file` (`bucket`);
 
 ALTER TABLE `user` ADD FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`);
 
@@ -195,13 +200,21 @@ ALTER TABLE `user_role` ADD FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON 
 
 ALTER TABLE `user_role` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
+ALTER TABLE `answer` ADD FOREIGN KEY (`link`) REFERENCES `question` (`id`);
+
+ALTER TABLE `answer` ADD FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
+
 ALTER TABLE `response` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 ALTER TABLE `response` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
 ALTER TABLE `question` ADD FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
 
-ALTER TABLE `question` ADD FOREIGN KEY (`answer`) REFERENCES `answer` (`id`);
+ALTER TABLE `question` ADD FOREIGN KEY (`link`) REFERENCES `question` (`id`);
+
+ALTER TABLE `question_answer` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+
+ALTER TABLE `question_answer` ADD FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`);
 
 ALTER TABLE `question_context` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
@@ -220,6 +233,7 @@ ALTER TABLE `user_context` ADD FOREIGN KEY (`context_id`) REFERENCES `context` (
 ALTER TABLE `question_asset` ADD FOREIGN KEY (`file_id`) REFERENCES `file` (`id`);
 
 ALTER TABLE `question_asset` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+
 
 INSERT INTO
   `permission` (`name`)

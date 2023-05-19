@@ -88,7 +88,7 @@ class View extends BaseObject
    * @param string $filename
    * @param array $__params__
    * @param boolean $base_path
-   * @return void
+   * @return string
    */
   public function generateContent($filename, $__params__ = [], $base_path = true)
   {
@@ -335,7 +335,6 @@ class View extends BaseObject
     }
 
     $content = implode("\n", $assets);
-    Logger::log($content, spl_object_id($this) . "::" . $pos);
     return $content;
   }
 

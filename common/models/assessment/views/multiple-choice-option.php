@@ -4,6 +4,9 @@ use common\models\assessment\MultipleChoice;
 use lib\app\view\View;
 use components\HtmlComponent;
 
+
+$prefix = $prefix ?? "";
+
 /**
  * @var View $this
  */
@@ -14,10 +17,10 @@ if (!isset($option)) {
 }
 ?>
 
-<div class="hstack gap-2 option-container my-2">
-  <i data-feather="circle"></i>
+<div class="hstack gap-2 <?= $prefix ?>option-container my-2">
+  <i data-feather="circle" width="16" height="16"></i>
   <?= $input ?>
-  <button type="button" class="btn btn-sm remove-option">
-    <i data-feather="x"></i>
+  <button type="button" class="btn btn-sm <?= $prefix ?>remove-option">
+    <i data-feather="x" width="16" height="16"></i>
   </button>
 </div>

@@ -9,7 +9,7 @@ class Checkboxes extends Question
 
   public function renderBuild()
   {
-    return $this->render("checkbox-build", ["question" => $this]);
+    return $this->render("checkbox-build", ["question" => $this, "prefix" => spl_object_id($this) . "-"]);
   }
 
   public static function createContext($context)

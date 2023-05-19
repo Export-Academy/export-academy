@@ -61,4 +61,17 @@ class HtmlComponent extends BaseComponent
 
     return $content;
   }
+
+
+  public static function dropdown(View &$view, $name, $value, $items = [], $options = [])
+  {
+    $component = self::instance($view);
+    $content = $component->render("form-components/dropdown-component", array_merge([
+      "name" => $name,
+      "value" => $value,
+      "items" => $items,
+    ], $options));
+
+    return $content;
+  }
 }

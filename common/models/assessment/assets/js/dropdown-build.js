@@ -1,52 +1,69 @@
 Dropdown = class {
+  prefix = "";
 
-  static get removeOptionButton() {
-    return $("button.remove-option");
+  static initialize(prefix = null) {
+    const instance = new Dropdown();
+
+    if (prefix)
+      instance.definePrefix(prefix)
+
+    instance.addOptionButton.on("click", () => instance.handleAddOption(instance));
+    instance.onUpdate();
+
+    return instance;
   }
 
-  static get addOptionButton() {
-    return $("#add-dropdown-option");
+  definePrefix(prefix) {
+    this.prefix = prefix;
   }
 
-  static get optionsContainer() {
-    return $("#dropdown-container");
+
+  get removeOptionButton() {
+    return $("button." + this.prefix + "remove-option");
   }
 
-  static initialize() {
-    Dropdown.addOptionButton.on("click", Dropdown.handleAddOption);
-    Dropdown.onUpdate();
+  get addOptionButton() {
+    return $("#" + this.prefix + "add-dropdown-option");
   }
 
-  static onUpdate() {
-    Dropdown.removeOptionButton.on("click", Dropdown.handleRemoveOption);
-    if (Dropdown.removeOptionButton.length === 1) {
-      Dropdown.removeOptionButton.addClass("disabled");
+  get optionsContainer() {
+    return $("#" + this.prefix + "dropdown-container");
+  }
+
+
+
+  onUpdate() {
+    const context = this;
+    this.removeOptionButton.on("click", (e) => context.handleRemoveOption(e, context));
+
+    if (this.removeOptionButton.length === 1) {
+      this.removeOptionButton.addClass("disabled");
     } else {
-      Dropdown.removeOptionButton.removeClass("disabled");
+      this.removeOptionButton.removeClass("disabled");
     }
     feather.replace();
   }
 
-  static handleRemoveOption(e) {
+  handleRemoveOption(e, context) {
     const target = $(e.currentTarget);
     target.parent().remove();
-    Dropdown.onUpdate();
+    context.onUpdate();
   }
 
-  static async handleAddOption() {
-    const count = Dropdown.removeOptionButton.length + 1;
+  async handleAddOption(context) {
+    const count = context.removeOptionButton.length + 1;
+
     const content = await AdminController.fetch("component", "render", {
       name: "dropdown-option",
       handler: "common\\models\\assessment\\Dropdown",
       params: {
-        option: count
+        option: count,
+        prefix: context.prefix ?? null
       }
     });
-    Dropdown.optionsContainer.append(content);
-    Dropdown.onUpdate();
+
+    context.optionsContainer.append(content);
+    context.onUpdate();
   }
 }
-
-
-Dropdown.initialize();
 

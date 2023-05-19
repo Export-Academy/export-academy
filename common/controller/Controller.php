@@ -55,6 +55,7 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
       'content' => $body
     ], $params), false);
     $content ? $this->getView()->renderContent($content) :  $this->getView()->renderContent($body);
+    exit();
   }
 
   protected function renderView($content)

@@ -9,6 +9,8 @@ use lib\util\Helper;
 class RelationalQuery extends Query
 {
 
+
+
   public static function instance($className, $condition)
   {
     try {

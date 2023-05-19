@@ -25,7 +25,7 @@ $context = $this->context;
 
       <div class="p-2">
         <div class="form-check">
-          <input class="form-check-input fw-semibold" value="<?= $value ?>" type="radio" name="<?= $context::class ?>" id="<?= $key ?>">
+          <input required class="form-check-input fw-semibold" value="<?= $value ?>" type="radio" name="<?= $context::class ?>" id="<?= $key ?>">
           <label class="form-check-label fw-semibold" for="#<?= $key ?>">
             <?= $value ?>
           </label>

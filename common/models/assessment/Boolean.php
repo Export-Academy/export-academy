@@ -6,12 +6,17 @@ use lib\util\Helper;
 
 class Boolean extends Question
 {
-  public $trueLabel;
-  public $falseLabel;
+  public $trueLabel = "True";
+  public $falseLabel = "False";
 
   public function renderBuild()
   {
     return $this->render("boolean-build", ["question" => $this]);
+  }
+
+  public function renderView()
+  {
+    return $this->render("boolean-view");
   }
 
   public static function createContext($context)

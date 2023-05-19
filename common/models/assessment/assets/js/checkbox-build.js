@@ -1,51 +1,66 @@
 Checkbox = class {
-  static get removeOptionButton() {
-    return $("button.remove-option");
+
+  prefix = "";
+
+  get removeOptionButton() {
+    return $("button." + this.prefix + "remove-option");
   }
 
-  static get addOptionButton() {
-    return $("#add-checkbox-option");
+  get addOptionButton() {
+    return $("#" + this.prefix + "add-checkbox-option");
   }
 
-  static get optionsContainer() {
-    return $("#checkbox-container");
+  get optionsContainer() {
+    return $("#" + this.prefix + "checkbox-container");
   }
 
-  static initialize() {
-    Checkbox.addOptionButton.on("click", Checkbox.handleAddOption);
-    Checkbox.onUpdate();
+  static initialize(prefix = null) {
+    const instance = new Checkbox();
+
+    if (prefix)
+      instance.definePrefix(prefix);
+
+    instance.addOptionButton.on("click", () => instance.handleAddOption(instance));
+    instance.onUpdate();
+
+    return instance;
   }
 
-  static onUpdate() {
-    Checkbox.removeOptionButton.on("click", Checkbox.handleRemoveOption);
-    if (Checkbox.removeOptionButton.length === 1) {
-      Checkbox.removeOptionButton.addClass("disabled");
+
+  definePrefix(prefix) {
+    this.prefix = prefix;
+  }
+
+  onUpdate() {
+    const context = this;
+    this.removeOptionButton.on("click", (e) => context.handleRemoveOption(e, context));
+    if (this.removeOptionButton.length === 1) {
+      this.removeOptionButton.addClass("disabled");
     } else {
-      Checkbox.removeOptionButton.removeClass("disabled");
+      this.removeOptionButton.removeClass("disabled");
     }
     feather.replace();
   }
 
-  static handleRemoveOption(e) {
+  handleRemoveOption(e, context) {
     const target = $(e.currentTarget);
     target.parent().remove();
-    Checkbox.onUpdate();
+    context.onUpdate();
   }
 
-  static async handleAddOption() {
-    const count = Checkbox.removeOptionButton.length + 1;
+  async handleAddOption(context) {
+    const count = context.removeOptionButton.length + 1;
     const content = await AdminController.fetch("component", "render", {
       name: "checkbox-option",
       handler: "common\\models\\assessment\\Checkboxes",
       params: {
-        option: count
+        option: count,
+        prefix: context.prefix ?? null
       }
     });
-    Checkbox.optionsContainer.append(content);
-    Checkbox.onUpdate();
+    context.optionsContainer.append(content);
+    context.onUpdate();
   }
 }
-
-Checkbox.initialize();
 
 

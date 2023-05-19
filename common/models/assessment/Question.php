@@ -6,7 +6,9 @@ namespace common\models\assessment;
 
 use common\models\File;
 use components\ModelComponent;
+use Exception;
 use lib\app\database\Database;
+use lib\app\log\Logger;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use ReflectionClass;
@@ -16,7 +18,7 @@ use ReflectionClass;
  * @property string $prompt
  * @property int $type
  * @property string $content
- * @property int $answer
+ * @property int $link
  * @property bool $enabled
  * @property date $created_at
  * @property data $updated_at
@@ -24,12 +26,16 @@ use ReflectionClass;
  */
 class Question extends ModelComponent
 {
+  const QUESTION_LINK = self::class;
+  const ANSWER_LINK = Answer::class;
+
+
   public $id;
   public $prompt;
   public $context;
   public $type;
   public $enabled;
-  public $answer;
+  public $link;
   public $created_at;
   public $updated_at;
 
@@ -37,7 +43,9 @@ class Question extends ModelComponent
   {
     $question = parent::instance($config, $model);
     $type = $question->questionType;
-    return Helper::createObject(array_merge($config, $question->getParsedContent()), $type->handler);
+
+    $parsedContent = $question->getParsedContent();
+    return Helper::createObject(array_merge($config, $parsedContent ? $parsedContent : []), $type->handler);
   }
 
   public static function tableName()
@@ -62,9 +70,25 @@ class Question extends ModelComponent
   }
 
 
+  public function getLinkQuestion()
+  {
+    return $this->hasOne(self::class, ["id" => $this->link]);
+  }
+
+
+  public function getLinked()
+  {
+    return $this->hasMany(self::class, ["link" => $this->id]);
+  }
+
+  public function getQuestionAnswers()
+  {
+    return $this->hasMany(QuestionAnswer::class, ["question_id" => $this->id]);
+  }
+
   public function getQuestionType()
   {
-    return $this->hasOne(QuestionType::class, ["id" => $this->type]);
+    return $this->hasOne(QuestionType::class, ["id" => $this->type])->cache(30);
   }
 
   public function getAssets()
@@ -130,13 +154,46 @@ class Question extends ModelComponent
     return "View not Implemented";
   }
 
-  public function renderBuilder()
+  public function getAnswer(Answer $answer)
   {
-    return $this->render("builder");
+    if ($this->type !== $answer->type) return "Invalid Answer";
+
+    $handler = $this->questionType->handler;
+    $context = $answer->parseContext();
+
+    switch ($handler) {
+      case Boolean::class:
+        /** @var Boolean $this */
+        $value = Helper::getValue("value", $context);
+        return isset($value) ? ($value ? $this->trueLabel : $this->falseLabel) : "No Answer";
+
+      default:
+        return "Invalid Answer";
+    }
   }
 
-  public static function configure($data, QuestionType $type, $context, $media = [])
+  public function renderBuilder($link = null, $type = self::QUESTION_LINK)
   {
+    return $this->render("builder", ["prefix" => spl_object_id($this) . "-", "link" => $link, "linkType" => $type]);
+  }
+
+  public static function configure($params = [])
+  {
+
+    $data = Helper::getValue("data", $params);
+    if (!isset($data)) throw new Exception("Question data is required");
+
+
+    $type = Helper::getValue("type", $params);
+    if (!$type && !$type instanceof QuestionType) throw new Exception("Invalid type provided");
+
+
+    $context = Helper::getValue("context", $params, []);
+    $media = Helper::getValue("media", $params, []);
+    $link = Helper::getValue("link", $params, []);
+
+
+
     $db = Database::instance();
     $qid = Helper::getValue("id", $data);
 
@@ -147,9 +204,11 @@ class Question extends ModelComponent
 
 
     $result = $db->transaction(
-      function ($tr) use ($type, $data, $context, $media, $q) {
+      function ($tr) use ($type, $data, $context, $media, $q, $link) {
 
         $handlerName = $type->handler;
+
+        Logger::log($link);
 
         $params = [
           "prompt" => Helper::getValue("prompt", $data),
@@ -187,6 +246,21 @@ class Question extends ModelComponent
         if (!empty($removeAssets))
           QuestionAsset::deleteByCondition(["file_id" => $removeAssets, "question_id" => $q->id]);
 
+
+        Logger::log("Link: " . (empty($link) ? "empty" : "content"));
+
+
+        if (!empty($link)) {
+          $type = Helper::getValue("type", $link);
+          $id = Helper::getValue("id", $link);
+
+          $instance = $type::findOne(["id" => $id]);
+
+
+          if (!isset($instance)) throw new Exception("Failed to link the question. " . basename($type) . " ($id) is invalid");
+          $instance->link = $q->id;
+          $instance->update(true, $tr);
+        }
         return $q;
       }
     );
@@ -197,5 +271,22 @@ class Question extends ModelComponent
   public static function createContext($context)
   {
     return [];
+  }
+
+
+  public static function dropdownOptions($skip = [])
+  {
+    $skip = is_array($skip) ? $skip : [$skip];
+    $questions = self::find()->all();
+    $options = [];
+
+    foreach ($questions as $option) {
+      if (in_array($option->id, $skip))
+        continue;
+      $type = $option->questionType->name;
+      $options[$option->id] = "QID-$option->id ($type) <br/> <small>$option->prompt</small>";
+    }
+
+    return $options;
   }
 }

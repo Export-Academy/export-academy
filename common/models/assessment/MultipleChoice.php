@@ -24,7 +24,7 @@ class MultipleChoice extends Question
 
   public function renderBuild()
   {
-    return $this->render("multiple-choice-build", ["question" => $this]);
+    return $this->render("multiple-choice-build", ["question" => $this, "prefix" => spl_object_id($this) . "-"]);
   }
 
 

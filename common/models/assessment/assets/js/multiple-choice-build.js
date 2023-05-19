@@ -1,52 +1,71 @@
 MultipleChoice = class {
 
-  static get removeOptionButton() {
-    return $("button.remove-option");
+  prefix = "";
+
+  static initialize(prefix = null) {
+    const instance = new MultipleChoice();
+
+    if (prefix)
+      instance.definePrefix(prefix ?? "");
+
+    instance.addOptionButton.on("click", () =>
+      instance.handleAddOption(instance)
+    );
+
+    instance.onUpdate();
+    return instance;
   }
 
-  static get addOptionButton() {
-    return $("#add-multiple-choice-option");
+  definePrefix(prefix) {
+    this.prefix = prefix;
   }
 
-  static get optionsContainer() {
-    return $("#multiple-choice-container");
+  get removeOptionButton() {
+    return $("button." + this.prefix + "remove-option");
   }
 
-  static initialize() {
-    MultipleChoice.addOptionButton.on("click", MultipleChoice.handleAddOption);
-    MultipleChoice.onUpdate();
+  get addOptionButton() {
+    return $("#" + this.prefix + "add-multiple-choice-option");
   }
 
-  static onUpdate() {
-    MultipleChoice.removeOptionButton.on("click", MultipleChoice.handleRemoveOption);
-    if (MultipleChoice.removeOptionButton.length === 1) {
-      MultipleChoice.removeOptionButton.addClass("disabled");
+  get optionsContainer() {
+    return $("#" + this.prefix + "multiple-choice-container");
+  }
+
+  onUpdate() {
+    const context = this;
+
+    this.removeOptionButton.on("click", (e) => context.handleRemoveOption(e, context));
+
+    if (this.removeOptionButton.length === 1) {
+      this.removeOptionButton.addClass("disabled");
     } else {
-      MultipleChoice.removeOptionButton.removeClass("disabled");
+      this.removeOptionButton.removeClass("disabled");
     }
     feather.replace();
   }
 
-  static handleRemoveOption(e) {
+  handleRemoveOption(e, context) {
     const target = $(e.currentTarget);
     target.parent().remove();
-    MultipleChoice.onUpdate();
+    context.onUpdate();
   }
 
-  static async handleAddOption() {
-    const count = MultipleChoice.removeOptionButton.length + 1;
+  async handleAddOption(context) {
+    const count = context.removeOptionButton.length + 1;
+
     const content = await AdminController.fetch("component", "render", {
       name: "multiple-choice-option",
       handler: "common\\models\\assessment\\MultipleChoice",
       params: {
-        option: count
+        option: count,
+        prefix: context.prefix ?? null
       }
     });
-    MultipleChoice.optionsContainer.append(content);
-    MultipleChoice.onUpdate();
+
+    context.optionsContainer.append(content);
+    context.onUpdate();
   }
 }
-
-MultipleChoice.initialize();
 
 
