@@ -25,6 +25,6 @@ class Checkboxes extends Question
 
   public function renderView()
   {
-    return $this->view->render("checkbox-view");
+    return $this->render("checkbox-view");
   }
 }

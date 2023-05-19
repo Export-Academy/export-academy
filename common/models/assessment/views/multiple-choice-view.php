@@ -20,12 +20,12 @@ $context = $this->context;
 
 <?php if ($context instanceof MultipleChoice) : ?>
 
-  <div class="border p-3">
+  <div class="border position-relative p-3">
     <?php foreach ($context->options as $key => $value) : ?>
 
       <div class="p-2">
         <div class="form-check">
-          <input required class="form-check-input fw-semibold" value="<?= $value ?>" type="radio" name="<?= $context::class ?>" id="<?= $key ?>">
+          <input required class="form-check-input fw-semibold" value="<?= $key ?>" type="radio" name="<?= $context::class ?>" id="<?= $key ?>">
           <label class="form-check-label fw-semibold" for="#<?= $key ?>">
             <?= $value ?>
           </label>

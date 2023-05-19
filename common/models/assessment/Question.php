@@ -8,7 +8,6 @@ use common\models\File;
 use components\ModelComponent;
 use Exception;
 use lib\app\database\Database;
-use lib\app\log\Logger;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use ReflectionClass;
@@ -165,8 +164,27 @@ class Question extends ModelComponent
       case Boolean::class:
         /** @var Boolean $this */
         $value = Helper::getValue("value", $context);
-        return isset($value) ? ($value ? $this->trueLabel : $this->falseLabel) : "No Answer";
+        return isset($value) ? ($value ? $this->trueLabel : $this->falseLabel) : "Invalid Answer";
+      case OpenEnd::class:
+        /** @var OpenEnd $this */
+        $value = Helper::getValue("value", $context);
+        return isset($value) ? (empty((str_replace(" ", "", $value))) ? "Blank Answer" : $value) : "Invalid Answer";
+      case MultipleChoice::class:
+        /** @var OpenEnd $this */
+        $value = Helper::getValue("value", $context);
+        return Helper::getValue($value, $this->options, "Invalid Answer");
+      case Dropdown::class:
+        /** @var OpenEnd $this */
+        $value = Helper::getValue("value", $context);
+        return Helper::getValue($value, $this->options, "Invalid Answer");
+      case Checkboxes::class:
+        /** @var Checkboxes $this */
+        $options = $this->options;
+        $selected = array_map(function ($key) use ($options) {
+          return Helper::getValue($key, $options, "Invalid Selection");
+        }, is_array($context) ? $context : []);
 
+        return is_array($selected) && count($selected) > 0 ? implode("<br/>", $selected) : "No Selections";
       default:
         return "Invalid Answer";
     }
@@ -208,8 +226,6 @@ class Question extends ModelComponent
 
         $handlerName = $type->handler;
 
-        Logger::log($link);
-
         $params = [
           "prompt" => Helper::getValue("prompt", $data),
           "type" => $type->id,
@@ -246,8 +262,6 @@ class Question extends ModelComponent
         if (!empty($removeAssets))
           QuestionAsset::deleteByCondition(["file_id" => $removeAssets, "question_id" => $q->id]);
 
-
-        Logger::log("Link: " . (empty($link) ? "empty" : "content"));
 
 
         if (!empty($link)) {

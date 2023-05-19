@@ -44,6 +44,8 @@ class AssessmentController extends Controller
         $handler = $questionType->handler;
         $context = $this->request->data($handler);
 
+        $qid = Helper::getValue("id", $data);
+
 
         try {
           $q = $handler::configure([
@@ -62,6 +64,11 @@ class AssessmentController extends Controller
           Router::redirect(Helper::getURL("/admin/assessment/question?id=$id"));
           return;
         }
+
+        if (isset($qid)) {
+          Router::redirect("/academy/admin/assessment/question?id=$qid");
+          return;
+        }
         Router::redirect("/academy/admin/assessment");
         break;
 
@@ -73,7 +80,6 @@ class AssessmentController extends Controller
 
   public function actionUnlink()
   {
-    Logger::log($this->request->data());
     $id = $this->request->data("id");
     $type = $this->request->data("type", Question::class);
 
@@ -112,7 +118,6 @@ class AssessmentController extends Controller
 
     try {
       $answer = Answer::configure($question, $context);
-      Logger::log($answer);
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
     }
@@ -140,7 +145,40 @@ class AssessmentController extends Controller
 
 
     $question->update();
-    Router::redirect(Helper::getURL("/admin/assessment/question?id=$question->id"));
+    Router::redirect(Helper::getURL("/admin/assessment/question?id=$questionId"));
+  }
+
+  public function actionDelete()
+  {
+    $id = $this->request->data("id");
+    $type = $this->request->data("type", Question::class);
+
+
+    $instance = $type::findOne(["id" => $id]);
+
+    if (!isset($instance)) {
+      Router::redirect(Helper::getURL("/admin/assessment"));
+      return;
+    }
+
+    $question = null;
+    if ($instance instanceof Answer) {
+      $question = $instance->question;
+    }
+
+    $instance->delete();
+
+    if ($instance instanceof Question) {
+      Router::redirect(Helper::getURL("/admin/assessment"));
+      return;
+    }
+
+    if ($question) {
+      Router::redirect(Helper::getURL("/admin/assessment/question?id=$question->id"));
+      return;
+    }
+
+    Router::redirect(Helper::getURL("/admin/assessment"));
   }
 
   public function actionUpdateAnswer()
@@ -168,11 +206,10 @@ class AssessmentController extends Controller
   {
     $id = $this->request->params("id");
     $question = Question::findOne(["id" => $id]);
-
-
-    if ($question)
-      $this->render("question", ["question" => $question]);
-
+    if ($question) {
+      $this->render("question", ["question" => $question, "title" => "Manage Question ( $question->id )"]);
+      return;
+    }
     Router::redirect(Helper::getURL("/admin/assessment"));
   }
 

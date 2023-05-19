@@ -1,150 +1,177 @@
 DROP DATABASE IF EXISTS `export-academy`;
+
 CREATE DATABASE `export-academy` DEFAULT CHARACTER SET = 'utf8mb4';
+
 USE `export-academy`;
-CREATE TABLE `user_type` (
-  `id` int PRIMARY KEY,
-  `name` varchar(255) NOT NULL,
-  `description` text
-);
 
-CREATE TABLE `user` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
-  `email` varchar(255) UNIQUE NOT NULL,
-  `password` text NOT NULL,
-  `token` text,
-  `verified` boolean DEFAULT false,
-  `email_verified` boolean DEFAULT false,
-  `disabled` boolean DEFAULT false,
-  `requires_verification` boolean DEFAULT false,
-  `type_id` int,
-  `last_logged_in` timestamp,
-  `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-);
+CREATE TABLE
+    `user_type` (
+        `id` int PRIMARY KEY,
+        `name` varchar(255) NOT NULL,
+        `description` text
+    );
 
-CREATE TABLE `permission` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) UNIQUE NOT NULL,
-  `description` text
-);
+CREATE TABLE
+    `user` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `firstName` varchar(255) NOT NULL,
+        `lastName` varchar(255) NOT NULL,
+        `email` varchar(255) UNIQUE NOT NULL,
+        `password` text NOT NULL,
+        `token` text,
+        `verified` boolean DEFAULT false,
+        `email_verified` boolean DEFAULT false,
+        `disabled` boolean DEFAULT false,
+        `requires_verification` boolean DEFAULT false,
+        `type_id` int,
+        `last_logged_in` timestamp,
+        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+    );
 
-CREATE TABLE `role` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) UNIQUE NOT NULL,
-  `description` text
-);
+CREATE TABLE
+    `permission` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(255) UNIQUE NOT NULL,
+        `description` text
+    );
 
-CREATE TABLE `grants` (
-  `role_id` int NOT NULL,
-  `permission_id` int NOT NULL,
-  PRIMARY KEY (`role_id`, `permission_id`)
-);
+CREATE TABLE
+    `role` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(255) UNIQUE NOT NULL,
+        `description` text
+    );
 
-CREATE TABLE `restriction` (
-  `user_id` int,
-  `permission_id` int NOT NULL,
-  `role_id` int NOT NULL,
-  PRIMARY KEY (`permission_id`, `role_id`, `user_id`)
-);
+CREATE TABLE
+    `grants` (
+        `role_id` int NOT NULL,
+        `permission_id` int NOT NULL,
+        PRIMARY KEY (`role_id`, `permission_id`)
+    );
 
-CREATE TABLE `user_role` (
-  `role_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`role_id`, `user_id`)
-);
+CREATE TABLE
+    `restriction` (
+        `user_id` int,
+        `permission_id` int NOT NULL,
+        `role_id` int NOT NULL,
+        PRIMARY KEY (
+            `permission_id`,
+            `role_id`,
+            `user_id`
+        )
+    );
 
-CREATE TABLE `answer` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `context` blob NOT NULL,
-  `link` int,
-  `type` int
-);
+CREATE TABLE
+    `user_role` (
+        `role_id` int NOT NULL,
+        `user_id` int NOT NULL,
+        PRIMARY KEY (`role_id`, `user_id`)
+    );
 
-CREATE TABLE `response` (
-  `user_id` int NOT NULL,
-  `question_id` int NOT NULL,
-  `content` blob NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  PRIMARY KEY (`user_id`, `question_id`)
-);
+CREATE TABLE
+    `answer` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `context` blob NOT NULL,
+        `link` int,
+        `type` int
+    );
 
-CREATE TABLE `question_type` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` text UNIQUE NOT NULL,
-  `handler` text NOT NULL
-);
+CREATE TABLE
+    `response` (
+        `user_id` int NOT NULL,
+        `question_id` int NOT NULL,
+        `content` blob NOT NULL,
+        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        PRIMARY KEY (`user_id`, `question_id`)
+    );
 
-CREATE TABLE `context` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `description` text
-);
+CREATE TABLE
+    `question_type` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` text UNIQUE NOT NULL,
+        `handler` text NOT NULL
+    );
 
-CREATE TABLE `question` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `prompt` text NOT NULL,
-  `context` blob NOT NULL,
-  `type` int NOT NULL,
-  `link` int,
-  `enabled` boolean DEFAULT false,
-  `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-);
+CREATE TABLE
+    `context` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(255) NOT NULL,
+        `description` text
+    );
 
-CREATE TABLE `question_answer` (
-  `question_id` int NOT NULL,
-  `answer_id` int NOT NULL
-);
+CREATE TABLE
+    `question` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `prompt` text NOT NULL,
+        `context` blob NOT NULL,
+        `type` int NOT NULL,
+        `link` int,
+        `enabled` boolean DEFAULT false,
+        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+    );
 
-CREATE TABLE `question_context` (
-  `question_id` int NOT NULL,
-  `context_id` int NOT NULL,
-  PRIMARY KEY (`question_id`, `context_id`)
-);
+CREATE TABLE
+    `question_answer` (
+        `question_id` int NOT NULL,
+        `answer_id` int NOT NULL
+    );
 
-CREATE TABLE `format` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `handler` text UNIQUE NOT NULL
-);
+CREATE TABLE
+    `question_context` (
+        `question_id` int NOT NULL,
+        `context_id` int NOT NULL,
+        PRIMARY KEY (`question_id`, `context_id`)
+    );
 
-CREATE TABLE `resource` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `title` text NOT NULL,
-  `description` text,
-  `content` blob NOT NULL,
-  `enabled` boolean DEFAULT false,
-  `format_id` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-  `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
-);
+CREATE TABLE
+    `format` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(255) NOT NULL,
+        `handler` text UNIQUE NOT NULL
+    );
 
-CREATE TABLE `resource_context` (
-  `resource_id` int NOT NULL,
-  `context_id` int NOT NULL,
-  PRIMARY KEY (`resource_id`, `context_id`)
-);
+CREATE TABLE
+    `resource` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `title` text NOT NULL,
+        `description` text,
+        `content` blob NOT NULL,
+        `enabled` boolean DEFAULT false,
+        `format_id` int NOT NULL,
+        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+    );
 
-CREATE TABLE `user_context` (
-  `user_type_id` int NOT NULL,
-  `context_id` int NOT NULL,
-  PRIMARY KEY (`user_type_id`, `context_id`)
-);
+CREATE TABLE
+    `resource_context` (
+        `resource_id` int NOT NULL,
+        `context_id` int NOT NULL,
+        PRIMARY KEY (`resource_id`, `context_id`)
+    );
 
-CREATE TABLE `file` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(250) NOT NULL,
-  `bucket` varchar(100) NOT NULL
-);
+CREATE TABLE
+    `user_context` (
+        `user_type_id` int NOT NULL,
+        `context_id` int NOT NULL,
+        PRIMARY KEY (`user_type_id`, `context_id`)
+    );
 
-CREATE TABLE `question_asset` (
-  `file_id` int NOT NULL,
-  `question_id` int NOT NULL,
-  PRIMARY KEY (`file_id`, `question_id`)
-);
+CREATE TABLE
+    `file` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(250) NOT NULL,
+        `bucket` varchar(100) NOT NULL
+    );
+
+CREATE TABLE
+    `question_asset` (
+        `file_id` int NOT NULL,
+        `question_id` int NOT NULL,
+        PRIMARY KEY (`file_id`, `question_id`)
+    );
 
 CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
 
@@ -186,147 +213,171 @@ CREATE UNIQUE INDEX `file_index_18` ON `file` (`name`, `bucket`);
 
 CREATE INDEX `file_index_19` ON `file` (`bucket`);
 
-ALTER TABLE `user` ADD FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`);
+ALTER TABLE `user`
+ADD
+    FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`);
 
-ALTER TABLE `grants` ADD FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `grants`
+ADD
+    FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `grants` ADD FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `grants`
+ADD
+    FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `restriction` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+ALTER TABLE `restriction`
+ADD
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
-ALTER TABLE `restriction` ADD FOREIGN KEY (`permission_id`, `role_id`) REFERENCES `grants` (`permission_id`, `role_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `restriction`
+ADD
+    FOREIGN KEY (`permission_id`, `role_id`) REFERENCES `grants` (`permission_id`, `role_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `user_role` ADD FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `user_role`
+ADD
+    FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `user_role` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `user_role`
+ADD
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `answer` ADD FOREIGN KEY (`link`) REFERENCES `question` (`id`);
+ALTER TABLE `answer`
+ADD
+    FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
 
-ALTER TABLE `answer` ADD FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
+ALTER TABLE `answer`
+ADD
+    FOREIGN KEY (`link`) REFERENCES `question` (`id`) ON DELETE
+SET NULL ON UPDATE NO ACTION;
 
-ALTER TABLE `response` ADD FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+ALTER TABLE `response`
+ADD
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
-ALTER TABLE `response` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+ALTER TABLE `response`
+ADD
+    FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
-ALTER TABLE `question` ADD FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
+ALTER TABLE `question`
+ADD
+    FOREIGN KEY (`type`) REFERENCES `question_type` (`id`);
 
-ALTER TABLE `question` ADD FOREIGN KEY (`link`) REFERENCES `question` (`id`);
+ALTER TABLE `question`
+ADD
+    FOREIGN KEY (`link`) REFERENCES `question` (`id`) ON DELETE
+SET NULL ON UPDATE NO ACTION;
 
-ALTER TABLE `question_answer` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+ALTER TABLE `question_answer`
+ADD
+    FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `question_answer` ADD FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`);
+ALTER TABLE `question_answer`
+ADD
+    FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `question_context` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+ALTER TABLE `question_context`
+ADD
+    FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
-ALTER TABLE `question_context` ADD FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
+ALTER TABLE `question_context`
+ADD
+    FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
 
-ALTER TABLE `resource` ADD FOREIGN KEY (`format_id`) REFERENCES `format` (`id`);
+ALTER TABLE `resource`
+ADD
+    FOREIGN KEY (`format_id`) REFERENCES `format` (`id`);
 
-ALTER TABLE `resource_context` ADD FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`);
+ALTER TABLE `resource_context`
+ADD
+    FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`);
 
-ALTER TABLE `resource_context` ADD FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
+ALTER TABLE `resource_context`
+ADD
+    FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
 
-ALTER TABLE `user_context` ADD FOREIGN KEY (`user_type_id`) REFERENCES `user_type` (`id`);
+ALTER TABLE `user_context`
+ADD
+    FOREIGN KEY (`user_type_id`) REFERENCES `user_type` (`id`);
 
-ALTER TABLE `user_context` ADD FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
+ALTER TABLE `user_context`
+ADD
+    FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
 
-ALTER TABLE `question_asset` ADD FOREIGN KEY (`file_id`) REFERENCES `file` (`id`);
+ALTER TABLE `question_asset`
+ADD
+    FOREIGN KEY (`file_id`) REFERENCES `file` (`id`);
 
-ALTER TABLE `question_asset` ADD FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+ALTER TABLE `question_asset`
+ADD
+    FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
 
+INSERT INTO `permission` (`name`) VALUES ('Create User');
+
+INSERT INTO `permission` (`name`) VALUES ('Update User');
 
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Create User');
+    `permission` (`name`)
+VALUES ('Access User Controller');
+
+INSERT INTO `permission` (`name`) VALUES ('Create Question');
+
+INSERT INTO `permission` (`name`) VALUES ('Update Question');
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Update User');
+    `permission` (`name`)
+VALUES ('Access Question Controller');
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Access User Controller');
+    `permission` (`name`)
+VALUES ('Access Resource Controller');
+
+INSERT INTO `permission` (`name`) VALUES ('Update Resource');
+
+INSERT INTO `permission` (`name`) VALUES ('Create Resource');
+
+INSERT INTO `permission` (`name`) VALUES ('Create User Role');
+
+INSERT INTO `permission` (`name`) VALUES ('Update User Role');
+
+INSERT INTO `permission` (`name`) VALUES ('Create Permission');
+
+INSERT INTO `permission` (`name`) VALUES ('Update Permission');
+
+INSERT INTO `role` (`name`) VALUES ('Administrator');
+
+INSERT INTO `role` (`name`) VALUES ('Developer');
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Create Question');
+    `question_type` (`name`, `handler`)
+VALUES (
+        'Multiple Choice',
+        'common\\models\\assessment\\MultipleChoice'
+    );
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Update Question');
+    `question_type` (`name`, `handler`)
+VALUES (
+        'Dropdown',
+        'common\\models\\assessment\\Dropdown'
+    );
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Access Question Controller');
+    `question_type` (`name`, `handler`)
+VALUES (
+        'Checkbox',
+        'common\\models\\assessment\\Checkboxes'
+    );
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Access Resource Controller');
+    `question_type` (`name`, `handler`)
+VALUES (
+        'Boolean Question',
+        'common\\models\\assessment\\Boolean'
+    );
+
 INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Update Resource');
-INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Create Resource');
-INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Create User Role');
-INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Update User Role');
-INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Create Permission');
-INSERT INTO
-  `permission` (`name`)
-VALUES
-  ('Update Permission');
-INSERT INTO
-  `role` (`name`)
-VALUES
-  ('Administrator');
-INSERT INTO
-  `role` (`name`)
-VALUES
-  ('Developer');
-INSERT INTO
-  `question_type` (`name`, `handler`)
-VALUES
-  (
-    'Multiple Choice',
-    'common\\models\\assessment\\MultipleChoice'
-  );
-INSERT INTO
-  `question_type` (`name`, `handler`)
-VALUES
-  (
-    'Dropdown',
-    'common\\models\\assessment\\Dropdown'
-  );
-INSERT INTO
-  `question_type` (`name`, `handler`)
-VALUES
-  (
-    'Checkbox',
-    'common\\models\\assessment\\Checkboxes'
-  );
-INSERT INTO
-  `question_type` (`name`, `handler`)
-VALUES
-  (
-    'Boolean Question',
-    'common\\models\\assessment\\Boolean'
-  );
-INSERT INTO
-  `question_type` (`name`, `handler`)
-VALUES
-  (
-    'Open',
-    'common\\models\\assessment\\OpenEnd'
-  );
+    `question_type` (`name`, `handler`)
+VALUES (
+        'Open',
+        'common\\models\\assessment\\OpenEnd'
+    );

@@ -1,8 +1,10 @@
 <?php
 
 use common\models\assessment\Question;
+use components\HtmlComponent;
 use lib\app\view\View;
 use lib\util\Helper;
+use lib\util\html\Html;
 
 /**
  * @var View $this
@@ -15,8 +17,8 @@ $questions = Question::find()->all();
 
 ?>
 
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#question-builder">Create
-  Question</button>
+
+
 
 <div class="offcanvas-end offcanvas w-75" tabindex="-1" id="question-builder">
   <div class="offcanvas-header">
@@ -28,17 +30,48 @@ $questions = Question::find()->all();
   </div>
 </div>
 
-<div class="row my-5 gap-2">
-  <?php foreach ($questions as $question) : ?>
-    <div class="col-sm-3">
-      <div class="bg-white border my-2 hstack gap-3 justify-content-between p-2">
-        <div class="vstack">
-          <small class="fw-semibold">QID-<?= $question->id ?> <small class="text-muted">(<?= $question->questionType->name ?>)</small></small>
-          <small class="text-muted"><?= $question->prompt ?></small>
-        </div>
-        <a href="<?= Helper::getURL("/admin/assessment/question?id=" . $question->id) ?>" class="btn btn-sm btn-light border">Edit</a>
+<div class="my-5 container">
+  <div class="hsack justify-content-right border p-2">
+    <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#question-builder">
+      <div class="hstack justify-content-between gap-3 text-nowrap">
+        Create
+        Question
+        <i data-feather="plus" width="16" height="16"></i>
       </div>
+    </button>
+  </div>
+  <div class="card mt-2">
+    <div class="card-body">
+      <?= HtmlComponent::instance($this)->render('data-table-component/data-table', [
+        "data" => $questions,
+        "columns" => [
+          "id" => [
+            "label" => "ID",
+            "content" => function (Question $question) {
+              return Html::tag("a", "QID-$question->id", ["href" => Helper::getURL("/admin/assessment/question?id=" . $question->id)]);
+            }
+          ],
+          "prompt" => [
+            "label" => "Prompt",
+            "content" => function (Question $question) {
+              return Html::tag("small", $question->prompt, ["class" => "fw-semibold text-muted text-wrap"]);
+            }
+          ],
+          "type" => [
+            "label" => "Question Type",
+            "content" => function (Question $question) {
+              return Html::tag("div", $question->questionType->name, ["class" => "fw-semibold text-muted"]);
+            }
+          ],
+          "action" => [
+            "label" => "Action",
+            "content" => function (Question $question) {
+              return Html::tag("a", "Edit", ["href" => Helper::getURL("/admin/assessment/question?id=" . $question->id), "class" => "btn btn-sm btn-light"]);
+            }
+          ]
+        ]
+      ]) ?>
     </div>
+  </div>
 
-  <?php endforeach; ?>
 </div>

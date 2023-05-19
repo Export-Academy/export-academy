@@ -41,6 +41,6 @@ class MultipleChoice extends Question
 
   public function renderView()
   {
-    return $this->view->render("multiple-choice-view");
+    return $this->render("multiple-choice-view");
   }
 }

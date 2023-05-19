@@ -77,7 +77,7 @@ class Html extends BaseObject
     foreach ($list as $item) {
       $count += 1;
 
-      if ($count == $max) {
+      if ($count === $max) {
         $content .= $component ?? "";
         break;
       }

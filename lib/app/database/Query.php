@@ -395,7 +395,6 @@ class Query extends BaseObject implements IExpression
   public function one(Transaction $tr = null)
   {
     $res = Request::get(md5($this->createCommand()));
-
     if (!isset($res)) {
       $res = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
 

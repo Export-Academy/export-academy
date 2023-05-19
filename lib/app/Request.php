@@ -112,7 +112,7 @@ class Request extends BaseObject
   public static function get($key, $default = null)
   {
     if (self::$session) {
-      return Helper::getValue($key, $_SERVER, $default);
+      return Helper::getValue($key, $_SESSION, $default);
     }
     return $default;
   }
