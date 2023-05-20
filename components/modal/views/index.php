@@ -28,26 +28,13 @@ use lib\util\html\Html;
  * 
  * */
 
-
-
-$showHeader = $showHeader ?? true;
-$showFooter = $showFooter ?? true;
-
-$showCloseButton = $showCloseButton ?? true;
-
-$defaultOptions = ["id" => $id, "tabindex" => "-1"];
-
-$options = array_merge($defaultOptions, $options ?? []) ?? $defaultOptions;
-$headerOptions = $headerOptions ?? [];
-$footerOptions = $footerOptions ?? [];
-
 ?>
 
 
 
-<div class="modal fade" <?= Html::renderAttributes($options ?? []) ?>>
-  <div class="modal-dialog modal-<?= $size ?? "md" ?>">
-    <div class="modal-content">
+<div class="modal fade shadow-lg" <?= Html::renderAttributes($options ?? []) ?> tabindex="-1">
+  <div class="modal-dialog modal-<?= $size ?>">
+    <div class="modal-content shadow-lg">
       <?php if ($showHeader) : ?>
         <div class="modal-header" <?= Html::renderAttributes($headerOptions ?? []) ?>>
           <?= $header ?? "" ?>
@@ -77,7 +64,6 @@ $script = <<< JS
 
       static content;
       static target;
-    
       static initialize() {
         $(".modal").on("show.bs.modal", Modal.handleModalShow);
         $(".modal").on("hide.bs.modal", Modal.handleModalHide);

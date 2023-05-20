@@ -10,6 +10,6 @@ $this->registerSCSSFile("media-component.scss");
 ?>
 
 
-<button type="button" data-container="<?= $container ?>" class="btn btn-sm insert-image">
+<button type="button" data-container="<?= $container ?>" class="btn insert-image">
   <i data-feather="image"></i>
 </button>

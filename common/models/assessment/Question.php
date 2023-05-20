@@ -155,39 +155,7 @@ class Question extends ModelComponent
 
   public function getAnswer(Answer $answer)
   {
-    if ($this->type !== $answer->type) return "Invalid Answer";
-
-    $handler = $this->questionType->handler;
-    $context = $answer->parseContext();
-
-    switch ($handler) {
-      case Boolean::class:
-        /** @var Boolean $this */
-        $value = Helper::getValue("value", $context);
-        return isset($value) ? ($value ? $this->trueLabel : $this->falseLabel) : "Invalid Answer";
-      case OpenEnd::class:
-        /** @var OpenEnd $this */
-        $value = Helper::getValue("value", $context);
-        return isset($value) ? (empty((str_replace(" ", "", $value))) ? "Blank Answer" : $value) : "Invalid Answer";
-      case MultipleChoice::class:
-        /** @var OpenEnd $this */
-        $value = Helper::getValue("value", $context);
-        return Helper::getValue($value, $this->options, "Invalid Answer");
-      case Dropdown::class:
-        /** @var OpenEnd $this */
-        $value = Helper::getValue("value", $context);
-        return Helper::getValue($value, $this->options, "Invalid Answer");
-      case Checkboxes::class:
-        /** @var Checkboxes $this */
-        $options = $this->options;
-        $selected = array_map(function ($key) use ($options) {
-          return Helper::getValue($key, $options, "Invalid Selection");
-        }, is_array($context) ? $context : []);
-
-        return is_array($selected) && count($selected) > 0 ? implode("<br/>", $selected) : "No Selections";
-      default:
-        return "Invalid Answer";
-    }
+    return "Invalid Answer";
   }
 
   public function renderBuilder($link = null, $type = self::QUESTION_LINK)

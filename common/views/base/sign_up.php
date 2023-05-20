@@ -47,7 +47,7 @@ $this->registerSCSSFile("login.scss");
 
 
           <div class="container mt-5">
-            <button type="submit" class="w-100 btn btn-light btn-lg">Sign Up</button>
+            <button type="submit" class="w-100 btn">Sign Up</button>
           </div>
 
 
@@ -56,7 +56,7 @@ $this->registerSCSSFile("login.scss");
       </div>
     </div>
   </div>
-  <div class="col-lg-5 p-1 bg-secondary-subtle">
+  <div class="col-lg-5 p-1">
 
   </div>
 </div>

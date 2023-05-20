@@ -58,7 +58,7 @@ $passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
           <?= $passwordComponent  ?>
 
           <div class="container mt-5">
-            <button type="submit" class="w-100 btn btn-light btn-lg">Continue</button>
+            <button type="submit" class="w-100 btn">Continue</button>
           </div>
 
           <?= Html::form_end() ?>
@@ -68,7 +68,7 @@ $passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
       </div>
     </div>
   </div>
-  <div class="col-lg-5 p-1 bg-secondary-subtle">
+  <div class="col-lg-5 p-1">
 
   </div>
 </div>

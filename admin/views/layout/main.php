@@ -12,6 +12,8 @@ $this->registerJsFile("admin", View::POS_HEAD);
 $components = HtmlComponent::instance($this);
 $navbar = $components->render("navbar");
 
+$this->registerSCSSFile("site.scss");
+
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +44,7 @@ $navbar = $components->render("navbar");
   <?= $navbar ?>
 
 
-  <div class="px-md-5 py-5 ">
+  <div class="px-md-5 py-5">
     <div class="hstack gap-3 p-3 mb-5">
       <h3 class="text-nowrap fw-semibold fs-4"><?= $title ?? "Dashboard" ?></h3>
       <div class="w-100 border-top"></div>

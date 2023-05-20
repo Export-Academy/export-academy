@@ -2,6 +2,7 @@
 
 use common\models\assessment\Question;
 use components\HtmlComponent;
+use components\modal\Modal;
 use lib\app\view\View;
 use lib\util\Helper;
 use lib\util\html\Html;
@@ -10,29 +11,15 @@ use lib\util\html\Html;
  * @var View $this
  * @var Question $component
  */
-
-$component = Question::generate($this);
 $questions = Question::find()->all();
 
 
 ?>
 
 
-
-
-<div class="offcanvas-end offcanvas w-75" tabindex="-1" id="question-builder">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasBottomLabel">Create New Question</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <?= $component->renderBuilder() ?>
-  </div>
-</div>
-
 <div class="my-5 container">
-  <div class="hsack justify-content-right border p-2">
-    <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#question-builder">
+  <div class="hsack justify-content-right p-2">
+    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#question-builder">
       <div class="hstack justify-content-between gap-3 text-nowrap">
         Create
         Question
@@ -66,7 +53,7 @@ $questions = Question::find()->all();
           "action" => [
             "label" => "Action",
             "content" => function (Question $question) {
-              return Html::tag("a", "Edit", ["href" => Helper::getURL("/admin/assessment/question?id=" . $question->id), "class" => "btn btn-sm btn-light"]);
+              return Html::tag("a", "Edit", ["href" => Helper::getURL("/admin/assessment/question?id=" . $question->id), "class" => "btn"]);
             }
           ]
         ]
@@ -75,3 +62,15 @@ $questions = Question::find()->all();
   </div>
 
 </div>
+
+
+
+<?php
+
+
+
+?>
+
+
+
+<?= Modal::instance($this)->show("question-builder", Question::generate($this)->renderBuilder(), null, null, ["showHeader" => false, "showFooter" => false, "size" => Modal::MODAL_LG]) ?>

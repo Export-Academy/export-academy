@@ -20,7 +20,7 @@ $context = $this->context;
 
 <?php if ($context instanceof Boolean) : ?>
 
-  <div class="border p-3">
+  <div class="p-3">
     <div class="row">
       <div class="col-6">
         <div class="p-2">

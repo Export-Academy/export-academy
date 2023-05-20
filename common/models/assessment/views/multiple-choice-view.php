@@ -20,7 +20,7 @@ $context = $this->context;
 
 <?php if ($context instanceof MultipleChoice) : ?>
 
-  <div class="border position-relative p-3">
+  <div class="position-relative p-3">
     <?php foreach ($context->options as $key => $value) : ?>
 
       <div class="p-2">

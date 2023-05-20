@@ -14,13 +14,13 @@ $prefix = spl_object_id($this->context);
 
 
 
-<div class="btn-group border-0">
+<div class="btn-group">
   <?= Html::hiddenInput($value ?? null, $name ?? "", ["id" => "$prefix-selected-item-input"]) ?>
 
   <hr>
 
 
-  <div type="button" data-bs-toggle="dropdown" class="bg-light hstack gap-5 justify-content-between rounded-2 border w-100 p-3">
+  <div type="button" data-bs-toggle="dropdown" class="hstack gap-5 justify-content-between w-100 p-3">
     <div class="fw-semibold text-muted text-wrap" id="<?= $prefix ?>-dropdown-item-label">
       <?= $label ?? "Select Option" ?>
     </div>
@@ -28,15 +28,17 @@ $prefix = spl_object_id($this->context);
   </div>
 
 
-  <ul class="dropdown-menu rounded-0 w-100" style="overflow-y: scroll; height: 40vh;">
+  <ul class="dropdown-menu rounded-0 w-100" style="overflow-y: auto; max-height: 40vh;">
     <?php foreach ($items as $key => $value) : ?>
       <li>
-        <button type="button" class="dropdown-item text-wrap border-top <?= $prefix ?>-item" data-key="<?= $key ?>">
+        <button type="button" class="dropdown-item text-wrap <?= $prefix ?>-item" data-key="<?= $key ?>">
           <?= $value ?>
         </button>
       </li>
-
     <?php endforeach; ?>
+    <?php if (empty($items)) : ?>
+      <div class="text-center">No Options</div>
+    <?php endif; ?>
   </ul>
 
 </div>

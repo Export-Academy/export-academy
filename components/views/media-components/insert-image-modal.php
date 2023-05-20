@@ -1,6 +1,7 @@
 <?php
 
 use components\HtmlComponent;
+use components\modal\Modal;
 use lib\app\view\View;
 
 /**
@@ -54,8 +55,8 @@ $body = <<< HTML
       $urlInputButton
     </div>
     <div class="hstack justify-content-end gap-2">
-      <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn btn-lg">Cancel</button>
-      <button type="button" id="image-url-button" class="btn btn-lg">Insert Image</button>
+      <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn">Cancel</button>
+      <button type="button" id="image-url-button" class="btn">Insert Image</button>
     </div>
   </div>
   <div class="tab-pane fade" id="uploaded-images" role="tabpanel">
@@ -63,12 +64,12 @@ $body = <<< HTML
       
     </div>
     <div class="hstack justify-content-end gap-2">
-      <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn btn-lg">Cancel</button>
-      <button type="button" class="btn btn-lg">Select</button>
+      <button data-bs-dismiss="modal" aria-label="Close" type="button" class="btn">Cancel</button>
+      <button type="button" class="btn">Select</button>
     </div>
   </div>
 </div>
-    <div id="insert-image-loading" class="position-absolute d-none bg-white top-0 bottom-0 start-0 end-0 vstack justify-content-center align-items-center p-5">
+    <div id="insert-image-loading" class="position-absolute d-none top-0 bottom-0 start-0 end-0 vstack justify-content-center align-items-center p-5">
       <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
@@ -80,12 +81,4 @@ HTML;
 ?>
 
 
-
-
-<?= $components->render("modal-component/modal", [
-  "header" => $header,
-  "id" => "insert-image-modal",
-  "content" => $body,
-  "size" => "lg",
-  "showFooter" => false
-]) ?>
+<?= Modal::instance($this)->show("insert-image-modal", $body, $header, null, ["showFooter" => false, "size" => "lg"]) ?>

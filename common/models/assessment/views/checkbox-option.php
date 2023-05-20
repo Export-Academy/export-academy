@@ -22,7 +22,7 @@ if (!isset($option)) {
 <div class="hstack gap-2 <?= $prefix ?>option-container my-2">
   <i data-feather="square" width="16" height="16"></i>
   <?= $input ?>
-  <button type="button" class="btn <?= $prefix ?>remove-option">
+  <button type="button" class="btn icon <?= $prefix ?>remove-option">
     <i data-feather="x" width="16" height="16"></i>
   </button>
 </div>

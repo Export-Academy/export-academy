@@ -20,7 +20,7 @@ $context = $this->context;
 
 <?php if ($context instanceof Checkboxes) : ?>
 
-  <div class="border p-3">
+  <div class="p-3">
     <?php foreach ($context->options as $key => $value) : ?>
 
       <div class="p-2">

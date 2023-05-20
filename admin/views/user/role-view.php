@@ -39,7 +39,7 @@ $components = HtmlComponent::instance($this);
                 $content = "";
                 $roles = $user->roles;
                 foreach ($roles as $role) {
-                  $content .= "<span class='badge bg-secondary mx-1'>$role->name</span>";
+                  $content .= "<span class='badge bg-success mx-1'>$role->name</span>";
                 }
                 return $content;
               }

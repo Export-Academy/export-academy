@@ -19,8 +19,8 @@ $components = HtmlComponent::instance($this);
 
 
 
-<div class="container">
-  <div class="card h-100 rounded-4">
+<div class="px-md-5 py-5">
+  <div class="card">
     <div class="card-body">
 
       <?= $components->render('data-table-component/data-table', [
@@ -43,7 +43,7 @@ $components = HtmlComponent::instance($this);
               $content = "";
               $roles = $permission->assignedRoles;
               foreach ($roles as $role) {
-                $content .= "<span class='badge bg-secondary mx-1'>$role->name</span>";
+                $content .= "<span class='badge bg-success mx-1'>$role->name</span>";
               }
               return $content;
             }
@@ -51,7 +51,7 @@ $components = HtmlComponent::instance($this);
           "action" => [
             "label" => "Action",
             "content" => function (Permission $permission) {
-              return Html::tag("button", "Edit Permission", ["class" => "btn btn-light"]);
+              return Html::tag("button", "Edit Permission", ["class" => "btn"]);
             }
           ]
         ]

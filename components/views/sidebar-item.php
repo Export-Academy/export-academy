@@ -22,9 +22,9 @@ $unique = str_replace(" ", "-", strtolower($title));
       <div class="accordion-header">
         <div class="academy-nav-item rounded-1 <?= $active ? "active" : "" ?>">
           <div class="item collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#container-<?= $unique ?>">
-            <div class="hstack justify-content-between">
-              <div class="p-2"><?= $title ?? "Title" ?></div>
-              <div class="p-2">
+            <div class="hstack gap-2 justify-content-between">
+              <div><?= $title ?? "Title" ?></div>
+              <div>
                 <i data-feather="arrow-right-circle" width="16" height="16"></i>
               </div>
             </div>
@@ -45,8 +45,8 @@ $unique = str_replace(" ", "-", strtolower($title));
             <div class="academy-nav-item sub-item rounded-1 <?= $active ? "active" : "" ?>">
               <a class="item" href="<?= $link ?? "#" ?>">
                 <div class="hstack justify-content-between">
-                  <div class="p-2"><?= $title ?? "Title" ?></div>
-                  <div class="p-2">
+                  <div><?= $title ?? "Title" ?></div>
+                  <div>
                     <i data-feather="plus" width="16" height="16"></i>
                   </div>
                 </div>
@@ -64,9 +64,9 @@ $unique = str_replace(" ", "-", strtolower($title));
 
   <div class="academy-nav-item rounded-1 <?= $active ? "active" : "" ?>">
     <a class="item" href="<?= $link ?? "#" ?>">
-      <div class="hstack justify-content-between">
-        <div class="p-2"><?= $title ?? "Title" ?></div>
-        <div class="p-2">
+      <div class="hstack gap-2 justify-content-between">
+        <div><?= $title ?? "Title" ?></div>
+        <div>
           <i data-feather="arrow-right-circle" width="16" height="16"></i>
         </div>
       </div>

@@ -4,6 +4,7 @@
 namespace common\models\assessment;
 
 use lib\util\BaseObject;
+use lib\util\Helper;
 
 class Option extends BaseObject
 {
@@ -42,5 +43,14 @@ class MultipleChoice extends Question
   public function renderView()
   {
     return $this->render("multiple-choice-view");
+  }
+
+  public function getAnswer(Answer $answer)
+  {
+    if ($this->type !== $answer->type) return "Invalid Answer";
+    $context = $answer->parseContext();
+
+    $value = Helper::getValue("value", $context);
+    return Helper::getValue($value, $this->options, "Invalid Answer");
   }
 }

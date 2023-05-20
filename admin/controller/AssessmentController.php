@@ -207,7 +207,7 @@ class AssessmentController extends Controller
     $id = $this->request->params("id");
     $question = Question::findOne(["id" => $id]);
     if ($question) {
-      $this->render("question", ["question" => $question, "title" => "Manage Question ( $question->id )"]);
+      $this->render("question", ["question" => $question, "title" => "Manage Question ($question->id)"]);
       return;
     }
     Router::redirect(Helper::getURL("/admin/assessment"));

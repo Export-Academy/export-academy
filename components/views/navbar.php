@@ -16,7 +16,7 @@ $components = HtmlComponent::instance($this);
 
 
 
-<div class="hstack container-fluid align-items-center justify-content-between w-100 py-2 bg-light ">
+<div class="hstack container-fluid align-items-center justify-content-between w-100 py-2 bg-light">
   <div class="p-2">
     <button class="btn icon-btn" data-bs-toggle="offcanvas" data-bs-target="#sidebar-canvas">
       <i data-feather="menu"></i>
@@ -24,13 +24,13 @@ $components = HtmlComponent::instance($this);
   </div>
   <div class="hstack">
 
-    <div class="btn-group border-0">
-      <button type="button" data-bs-toggle="dropdown" class="btn border-0">
+    <div class="btn-group">
+      <button type="button" data-bs-toggle="dropdown" class="btn">
         <div class="text-start">
           <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?> <br><small class="fw-semibold">Administrator</small></div>
         </div>
       </button>
-      <button type="button" class="btn border-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="visually-hidden">Toggle Dropdown</span>
       </button>
       <ul class="dropdown-menu rounded-0">

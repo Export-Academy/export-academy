@@ -39,22 +39,20 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 <?= isset($link) ? Html::hiddenInput($linkType, "link[type]") : "" ?>
 
 <div class="<?= $prefix ?>question-builder">
-  <div class="toolbar p-2 my-2 hstack justify-content-between gap-2 border">
-
+  <!-- <div class="toolbar p-2 my-2 hstack justify-content-between gap-2">
     <div class="hstack gap-2">
-      <!-- <?= $InsertImageButton ?> -->
+       <?= $InsertImageButton ?>
     </div>
-
-    <button type="submit" class="btn btn-dark"><?= ($isNewRecord ? ($link ? "Link to " . ($linkType === Question::QUESTION_LINK ? "Question" : "Answer") : "Save") : "Update") ?></button>
-
-  </div>
+  </div> -->
 
 
-  <div class="card p-2 position-relative <?= $prefix ?>question-prompt-container border-0">
-
-    <div class="fw-bold fs-5 px-4"><?= $isNewRecord ? "Create Question" : "Update Question" ?></div>
+  <div class="position-relative <?= $prefix ?>question-prompt-container">
+    <div class="hstack justify-content-between gap-2">
+      <div class="fw-bold fs-5 text-nowrap"><?= $isNewRecord ? "Create Question" : "Update Question" ?></div>
+      <button type="submit" class="btn"><?= ($isNewRecord ? ($link ? "Link to " . ($linkType === Question::QUESTION_LINK ? "Question" : "Answer") : "Save") : "Update") ?></button>
+    </div>
     <hr>
-    <div class="row">
+    <div class="row mt-4">
       <div class="col-md-7 col-sm-12">
         <?= HtmlComponent::textarea($this, "question[prompt]", $question->prompt ?? null, ["placeholder" => "Enter Question Prompt here", "variant" => "flushed"]); ?>
       </div>
@@ -75,30 +73,29 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 
         </div> -->
 
-        <?= Html::hiddenInput($question->type ?? null, "type", ["id" => $prefix . "question-type-input", "required"
-        => true]) ?>
+        <?= Html::hiddenInput($question->type ?? null, "type", ["id" => $prefix . "question-type-input", "required" => true]) ?>
 
 
-        <div class="btn-group w-100 border-0">
+        <div class="position-relative">
 
-          <button type="button" data-bs-toggle="dropdown" class="btn rounded-3 border" id="<?= $prefix ?>current-question-type">
+          <button type="button" data-bs-toggle="dropdown" class="btn w-100" id="<?= $prefix ?>current-question-type">
             <?= $isNewRecord ? "Select Question Type" : $question->questionType->name  ?>
           </button>
 
 
-          <ul class="dropdown-menu rounded-3 w-100">
+          <ul class="dropdown-menu">
             <?php foreach ($types as $type) : ?>
               <li>
                 <button type="button" class="dropdown-item <?= $prefix ?>question-type" data-type="<?= $type->id ?>"><?= $type->name ?></button>
               </li>
             <?php endforeach; ?>
           </ul>
-
         </div>
+
       </div>
     </div>
 
-    <div class="card my-2 p-3 rounded-0" id="<?= $prefix ?>question-builder-container">
+    <div class="my-2 p-3" id="<?= $prefix ?>question-builder-container">
       <?php if ($isNewRecord) : ?>
         <div class="text-center p-5">Please Select Question Type</div>
       <?php else : /** @var Question $question **/ ?>

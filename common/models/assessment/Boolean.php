@@ -26,4 +26,14 @@ class Boolean extends Question
 
     return $data;
   }
+
+
+  public function getAnswer(Answer $answer)
+  {
+    if ($this->type !== $answer->type) return "Invalid Answer";
+    $context = $answer->parseContext();
+
+    $value = Helper::getValue("value", $context);
+    return isset($value) ? ($value ? $this->trueLabel : $this->falseLabel) : "Invalid Answer";
+  }
 }

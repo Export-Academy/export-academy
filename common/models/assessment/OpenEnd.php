@@ -2,6 +2,8 @@
 
 namespace common\models\assessment;
 
+use lib\util\Helper;
+
 class OpenEnd extends Question
 {
 
@@ -23,5 +25,13 @@ class OpenEnd extends Question
   public function renderView()
   {
     return $this->render("open-end-view");
+  }
+
+  public function getAnswer(Answer $answer)
+  {
+    if ($this->type !== $answer->type) return "Invalid Answer";
+    $context = $answer->parseContext();
+    $value = Helper::getValue("value", $context);
+    return isset($value) ? (empty((str_replace(" ", "", $value))) ? "Blank Answer" : $value) : "Invalid Answer";
   }
 }

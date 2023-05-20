@@ -3,6 +3,7 @@
 
   use common\models\access\Role;
   use components\HtmlComponent;
+  use components\modal\Modal;
   use lib\util\html\Html;
 
   /** @var Role[] $roles */
@@ -59,7 +60,7 @@ $beginForm
 
 <div class="mt-3 d-block gap-2">
   <div class="hstack justify-content-end">
-    <button type="submit" class="btn btn-lg">Save</button>
+    <button type="submit" class="btn">Save</button>
   </div>
 </div>
 $endForm
@@ -69,10 +70,4 @@ HTML;
 ?>
 
 
-<?= $components->render("modal-component/modal", [
-  "header" => $header,
-  "id" => "new-role-modal",
-  "content" => $content,
-  "size" => "lg",
-  "showFooter" => false
-]) ?>
+<?= Modal::instance($this)->show("new-role-modal", $content, $header, null, ["showFooter" => false, "size" => "lg"]) ?>

@@ -16,8 +16,8 @@ $hideViewButton = $hideViewButton ?? false;
 
 ?>
 
-<div class="card h-100 rounded-4 overflow-hidden border-0">
-  <div class="card-body bg-body-secondary vstack justify-content-between">
+<div class="card">
+  <div class="card-body vstack justify-content-between">
     <div class="container-fluid">
       <h4><?= $role->name ?></h4>
       <small><?= (empty($role->description) ? "No Description" : $role->description) ?></small>
@@ -53,10 +53,10 @@ $hideViewButton = $hideViewButton ?? false;
 
     <div class="d-block gap-2 mt-5">
       <?php if (!$hideUpdateButton) : ?>
-      <a href="/academy/admin/user/update_role?role=<?= $role->id ?>" class="btn btn-secondary">Update Permissions</a>
+        <a href="/academy/admin/user/update_role?role=<?= $role->id ?>" class="btn">Update Permissions</a>
       <?php endif ?>
       <?php if (!$hideViewButton) : ?>
-      <a href="/academy/admin/user/role?role=<?= $role->id ?>" class="btn btn-secondary">View Role</a>
+        <a href="/academy/admin/user/role?role=<?= $role->id ?>" class="btn">View Role</a>
       <?php endif ?>
     </div>
   </div>

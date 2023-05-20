@@ -18,13 +18,11 @@ if (isset($question) && $question instanceof Boolean) {
 }
 
 ?>
-<div class="fw-semibold fs-5 mb-4">Boolean Options</div>
 <div class="hstack w-100 justify-content-between gap-3">
-
-  <div class="border p-4 w-100">
+  <div class="p-4 w-100">
     <?= $input2Component ?>
   </div>
-  <div class="border p-4 w-100">
+  <div class="p-4 w-100">
     <?= $input1Component ?>
   </div>
 </div>
