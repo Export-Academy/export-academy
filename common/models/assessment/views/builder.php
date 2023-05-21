@@ -2,8 +2,10 @@
 
 use common\models\assessment\Question;
 use common\models\assessment\QuestionType;
+use components\form\FormComponent;
 use components\HtmlComponent;
 use lib\app\view\View;
+use lib\util\Helper;
 use lib\util\html\Html;
 
 /**
@@ -14,7 +16,7 @@ use lib\util\html\Html;
 
 $prefix = $prefix ?? "";
 
-
+/** @var Question */
 $question = $this->context ?? Question::generate($this);
 $isNewRecord = !isset($question->id);
 
@@ -30,7 +32,7 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 
 ?>
 
-<?= Html::form_begin("/academy/admin/assessment/build") ?>
+<?= FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/build_question")) ?>
 
 <?= $isNewRecord ? null : Html::hiddenInput($question->id, "question[id]")  ?>
 
@@ -58,21 +60,6 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
       </div>
 
       <div class="col-md-5 col-sm-12">
-        <!-- <div class="row" id="main-image-container">
-
-
-          <?php if (!$isNewRecord) : ?>
-            <?php foreach ($question->files as $asset) : ?>
-              <?= $htmlComponent->render("media-components/image-card", [
-                "src" => $asset->getURL(),
-                "id" => $asset->id
-              ]) ?>
-            <?php endforeach; ?>
-          <?php endif; ?>
-
-
-        </div> -->
-
         <?= Html::hiddenInput($question->type ?? null, "type", ["id" => $prefix . "question-type-input", "required" => true]) ?>
 
 
@@ -98,7 +85,7 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
     <div class="my-2 p-3" id="<?= $prefix ?>question-builder-container">
       <?php if ($isNewRecord) : ?>
         <div class="text-center p-5">Please Select Question Type</div>
-      <?php else : /** @var Question $question **/ ?>
+      <?php else : ?>
         <?= $question->renderBuild() ?>
       <?php endif; ?>
     </div>
@@ -106,7 +93,7 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
   </div>
 </div>
 
-<?= Html::form_end() ?>
+<?= FormComponent::instance($this)->end() ?>
 
 <?= $ImageModal ?>
 

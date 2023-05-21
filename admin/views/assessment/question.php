@@ -2,6 +2,7 @@
 
 use common\models\assessment\Answer;
 use common\models\assessment\Question;
+use components\form\FormComponent;
 use components\HtmlComponent;
 use components\modal\Modal;
 use lib\app\view\View;
@@ -32,7 +33,7 @@ $questionOptions = Question::dropdownOptions($question->id);
 
   <!-- Question Builder -->
   <div class="col-lg-7 col-sm-12">
-    <div class="card">
+    <div class="card mb-4">
       <div class="card-body">
         <?= $question->renderBuilder() ?>
       </div>
@@ -44,16 +45,23 @@ $questionOptions = Question::dropdownOptions($question->id);
 
     <div class="card">
       <div class="card-body">
-        <?= Html::form_begin(Helper::getURL("/admin/assessment/update")) ?>
+
+        <?= FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/question")) ?>
         <?= Html::hiddenInput($question->id, "id") ?>
+
+
         <div class="hstack justify-content-between">
           <div class="fw-bold fs-5">Question Settings</div>
           <div class="hstack gap-1">
             <button class="btn">Save Changes</button>
-            <button type="button" class="btn delete-button" data-id="<?= $question->id ?>" data-type="<?= Question::class ?>">Delete Question</button>
+            <button type="button" class="btn delete-button" data-type="<?= Question::class ?>" data-id="<?= $question->id ?>">Delete Question</button>
           </div>
         </div>
+
+
         <hr>
+
+
         <div class="vstack gap-3">
 
           <div class="form-check form-switch mt-4">
@@ -62,7 +70,9 @@ $questionOptions = Question::dropdownOptions($question->id);
           </div>
 
           <div class="vstack">
+
             <?php if ($linkedQuestion) : ?>
+
               <small class="fw-semibold text-muted">Linked Question</small>
               <div class="my-2 hstack gap-3 justify-content-between p-2">
                 <div class="vstack">
@@ -70,14 +80,18 @@ $questionOptions = Question::dropdownOptions($question->id);
                   <small class="text-muted"><?= $linkedQuestion->prompt ?></small>
                 </div>
                 <div class="hstack gap-2">
-                  <a href="<?= Helper::getURL("/admin/assessment/question?id=" . $linkedQuestion->id) ?>" class="btn">Edit</a>
+                  <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linkedQuestion->id) ?>" class="btn">Edit</a>
                   <button type="button" data-type="<?= Question::class ?>" data-id="<?= $question->id ?>" class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link" width="16" height="16"></i></button>
                 </div>
               </div>
+
             <?php else : ?>
+
               <?= HtmlComponent::dropdown($this, get_class($question) . "[link]", null, $questionOptions, ["label" => "Select Linked Question"]) ?>
               <button type="button" class="btn w-100 my-3" data-bs-toggle="modal" data-bs-target="#question-builder">Create Link
                 Question</button>
+
+
             <?php endif; ?>
           </div>
 
@@ -92,17 +106,15 @@ $questionOptions = Question::dropdownOptions($question->id);
                   <small class="fw-semibold">QID-<?= $linked->id ?> <small class="text-muted">(<?= $linked->questionType->name ?>)</small></small>
                   <small class="text-muted"><?= $linked->prompt ?></small>
                 </div>
-                <a href="<?= Helper::getURL("/admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
+                <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
               </div>
             <?php endforeach; ?>
           </div>
 
         </div>
-        <?= Html::form_end() ?>
+        <?= FormComponent::instance($this)->end() ?>
       </div>
     </div>
-
-
 
 
     <div class="card mt-4">
@@ -126,7 +138,7 @@ $questionOptions = Question::dropdownOptions($question->id);
           $linked = $answer->linked;
         ?>
           <div class="p-3 my-2">
-            <?= Html::form_begin(Helper::getURL("/admin/assessment/update_answer"), "POST") ?>
+            <?= FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/answer")) ?>
             <?= Html::hiddenInput($answer->id, "id") ?>
             <div class="vstack gap-2 justify-content-between">
               <div class="fw-semibold pb-1">Response</div>
@@ -141,7 +153,7 @@ $questionOptions = Question::dropdownOptions($question->id);
                     <small class="text-muted"><?= $linked->prompt ?></small>
                   </div>
                   <div class="hstack gap-2">
-                    <a href="<?= Helper::getURL("/admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
+                    <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
                     <button type="button" data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>" class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link" width="16" height="16"></i></button>
                   </div>
                 </div>
@@ -151,13 +163,15 @@ $questionOptions = Question::dropdownOptions($question->id);
             </div>
             <div class="hstack justify-content-end gap-2">
               <button class="btn">Save</button>
-              <button type="button" class="btn delete-button" data-toggle="tooltip" title="Delete Answer" data-id="<?= $answer->id ?>" data-type="<?= Answer::class ?>"><i data-feather="trash" width="16" height="16"></i></button>
+              <button type="button" class="btn delete-button" data-toggle="tooltip" title="Delete Answer" data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>"><i data-feather="trash" width="16" height="16"></i></button>
             </div>
-            <?= Html::form_end() ?>
+            <?= FormComponent::instance($this)->end() ?>
           </div>
         <?php endforeach; ?>
       </div>
     </div>
+
+
 
   </div>
 
@@ -168,9 +182,9 @@ $questionOptions = Question::dropdownOptions($question->id);
 
 
 $view = $question->renderView();
-$beginForm = Html::form_begin(Helper::getURL("/admin/assessment/submit_answer"));
+$beginForm = FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/build_answer"));
 $hiddenInput = Html::hiddenInput($question->id, "id");
-$endForm = Html::form_end();
+$endForm = FormComponent::instance($this)->end();
 $content = <<< HTML
     $beginForm
     $hiddenInput
@@ -181,7 +195,7 @@ $content = <<< HTML
           $view 
     </div>
     <div class="hstack mt-5 justify-content-end">
-        <button class="btn" >Add Answer</button>
+        <button type="submit" class="btn" >Add Answer</button>
     </div>
     $endForm
 HTML;
@@ -192,55 +206,13 @@ HTML;
 
 ?>
 
-<?= Html::form_begin(Helper::getURL("/admin/assessment/unlink"), "POST", ["id" => "unlink-form"]) ?>
-<?= Html::hiddenInput(null, "id", ["id" => "unlink-id-input"]) ?>
-<?= Html::hiddenInput(null, "type", ["id" => "unlink-type-input"]) ?>
-<?= Html::form_end() ?>
 
 
-<?= Html::form_begin(Helper::getURL("/admin/assessment/delete"), "POST", ["id" => "delete-form"]) ?>
-<?= Html::hiddenInput(null, "id", ["id" => "delete-id-input"]) ?>
-<?= Html::hiddenInput(null, "type", ["id" => "delete-type-input"]) ?>
-<?= Html::form_end() ?>
 
+
+<?= FormComponent::instance($this)->deleteForm(Helper::getURL("admin/assessment/unlink"), ".unlink-button") ?>
+<?= FormComponent::instance($this)->deleteForm(Helper::getURL("admin/assessment/delete"), "button.delete-button") ?>
 
 
 <?= Modal::instance($this)->show("question-answer", $content, $header, null, ["showFooter" => false, "size" => "lg"]) ?>
 <?= Modal::instance($this)->show("question-builder", Question::generate($this)->renderBuilder($question->id), null, null, ["size" => Modal::MODAL_LG, "showHeader" => false, "showFooter" => false]) ?>
-
-<?php
-
-
-
-$script = <<< JS
-$(".unlink-button").on("click", function (e) {
-
-  const target = $(e.currentTarget);
-  const typeInput = $("#unlink-type-input");
-  const idInput = $("#unlink-id-input");
-
-
-  typeInput.val(target.data("type"));
-  idInput.val(target.data("id"));
-
-
-  $("form#unlink-form").submit();
-});
-
-
-$(".delete-button").on("click", function (e) {
-
-const target = $(e.currentTarget);
-const typeInput = $("#delete-type-input");
-const idInput = $("#delete-id-input");
-
-typeInput.val(target.data("type"));
-idInput.val(target.data("id"));
-
-
-$("form#delete-form").submit();
-});
-JS;
-
-
-$this->registerJs($script);

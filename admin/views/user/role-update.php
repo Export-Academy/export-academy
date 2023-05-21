@@ -1,9 +1,11 @@
 <?php
 
 use common\models\access\Permission;
+use components\form\FormComponent;
 use components\HtmlComponent;
 use components\modal\Modal;
 use lib\app\view\View;
+use lib\util\Helper;
 use lib\util\html\Html;
 
 /** @var View $this */
@@ -33,7 +35,7 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
     </div>
     <div class="col-lg-9 col-md-12 px-2">
       <div class="display-6 fw-bold">Role Permissions</div>
-      <?= Html::form_begin("/academy/admin/user/update_role", "post", ["id" => "permissions-form", "data-role" => "$role->name Role"]) ?>
+      <?= FormComponent::instance($this)->begin(Helper::getURL("admin/user/update_role"), "post", ["id" => "permissions-form", "data-role" => "$role->name Role"]) ?>
 
       <div class="hstack justify-content-between align-items-center my-3">
         <div class="form-check">
@@ -80,7 +82,7 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
       </div>
 
       <?= Html::hiddenInput($role->id, "role") ?>
-      <?= Html::form_end() ?>
+      <?= FormComponent::instance($this)->end() ?>
     </div>
   </div>
 </div>
@@ -92,13 +94,13 @@ $this->registerJsFile("role-update.js", View::POS_LOAD);
 
 $header = "<h5 class='modal-title'>Update $role->name Role</h5>";
 
-$beginForm = Html::form_begin("/academy/admin/user/role", "post");
+$beginForm = FormComponent::instance($this)->begin("/academy/admin/user/role", "post");
 
 
 $nameInput = HtmlComponent::input($this, "Role[name]", $role->name, ["label" => "Role Name", "type" => "text"]);
 $descriptionInput = HtmlComponent::textarea($this, "Role[description]", $role->description, ["label" => "Role Description"]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
-$endForm = Html::form_end();
+$endForm = FormComponent::instance($this)->end();
 
 
 

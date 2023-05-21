@@ -110,7 +110,9 @@ class App extends BaseObject
         $this->router->route($action);
       }
     } catch (Exception $ex) {
-      Logger::log($ex->getMessage(), "ERROR");
+      echo $ex->getMessage();
+      Logger::log($ex->getMessage());
+      Logger::log($_REQUEST);
     }
   }
 }

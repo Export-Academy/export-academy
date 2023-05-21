@@ -1,9 +1,9 @@
 <?php
 
+use components\form\FormComponent;
 use components\HtmlComponent;
 use lib\app\Request;
 use lib\app\view\View;
-use lib\util\html\Html;
 
 /** @var View $this */
 
@@ -51,7 +51,7 @@ $passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
             <hr class="my-5">
           </div>
 
-          <?= Html::form_begin($actionLink) ?>
+          <?= FormComponent::instance($this)->begin($actionLink) ?>
 
           <?= $emailComponent  ?>
 
@@ -61,7 +61,7 @@ $passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
             <button type="submit" class="w-100 btn">Continue</button>
           </div>
 
-          <?= Html::form_end() ?>
+          <?= FormComponent::instance($this)->end() ?>
 
         </div>
 

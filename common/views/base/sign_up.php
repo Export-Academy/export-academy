@@ -1,8 +1,8 @@
 <?php
 
+use components\form\FormComponent;
 use components\HtmlComponent;
 use lib\app\view\View;
-use lib\util\html\Html;
 
 
 $this->registerSCSSFile("login.scss");
@@ -27,7 +27,7 @@ $this->registerSCSSFile("login.scss");
             <hr class="my-5">
           </div>
 
-          <?= Html::form_begin("/academy/sign_up") ?>
+          <?= FormComponent::instance($this)->begin("/academy/sign_up") ?>
 
 
           <div class="hstack gap-2">
@@ -51,7 +51,7 @@ $this->registerSCSSFile("login.scss");
           </div>
 
 
-          <?= Html::form_end() ?>
+          <?= FormComponent::instance($this)->end() ?>
         </div>
       </div>
     </div>

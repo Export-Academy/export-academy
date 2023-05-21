@@ -2,6 +2,7 @@
   <?php
 
   use common\models\access\Role;
+  use components\form\FormComponent;
   use components\HtmlComponent;
   use components\modal\Modal;
   use lib\util\html\Html;
@@ -37,13 +38,13 @@
 
 $header = "<h5 class='modal-title'>Add New Role</h5>";
 
-$beginForm = Html::form_begin("/academy/admin/user/role", "post");
+$beginForm = FormComponent::instance($this)->begin("/academy/admin/user/role", "post");
 
 
 $nameInput = HtmlComponent::input($this, "Role[name]", "", ["label" => "Role Name", "type" => "text"]);
 $descriptionInput = HtmlComponent::textarea($this, "Role[description]", "", ["label" => "Role Description"]);
 $hiddenInput = Html::hiddenInput($role->id, "Role[id]");
-$endForm = Html::form_end();
+$endForm = FormComponent::instance($this)->end();
 
 
 
