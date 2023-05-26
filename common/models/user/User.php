@@ -5,7 +5,7 @@ namespace common\models\user;
 use common\models\access\Role;
 use common\models\access\UserRole;
 use common\models\base\BaseModel;
-use lib\app\auth\interface\IAuthIdentity;
+use lib\app\auth\interfaces\IAuthIdentity;
 use lib\app\database\Query;
 
 /**

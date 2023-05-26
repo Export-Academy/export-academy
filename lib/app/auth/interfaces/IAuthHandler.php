@@ -1,9 +1,9 @@
 <?php
 
 
-namespace lib\app\auth\interface;
+namespace lib\app\auth\interfaces;
 
-use lib\app\auth\interface\IAuthIdentity;
+use lib\app\auth\interfaces\IAuthIdentity;
 use lib\app\Request;
 
 

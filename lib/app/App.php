@@ -6,7 +6,7 @@ namespace lib\app;
 use common\controller\Controller;
 use Exception;
 use lib\app\auth\AuthHandler;
-use lib\app\auth\interface\IAuthHandler;
+use lib\app\auth\interfaces\IAuthHandler;
 use lib\app\auth\Secure;
 use lib\app\database\Database;
 use lib\app\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\app\auth\interface;
+namespace lib\app\auth\interfaces;
 
 
 interface IAuthController

@@ -2,7 +2,7 @@
 
 namespace lib\app\auth;
 
-use lib\app\auth\interface\IAuthIdentity;
+use lib\app\auth\interfaces\IAuthIdentity;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
