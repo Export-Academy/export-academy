@@ -1,0 +1,20 @@
+{
+  "storage": {
+    "projectId": "",
+    "credentials": "",
+  },
+  "auth": {
+    "challengePath": "",
+    "forbiddenPath": "",
+    "redirectPath": ""
+  },
+  "database": {
+    "server": "",
+    "username": "",
+    "password": "",
+    "db": ""
+  },
+  "logger": {
+    "filename": "app.log"
+  }
+}
