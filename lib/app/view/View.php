@@ -345,19 +345,22 @@ class View extends BaseObject
    */
   public static function reset()
   {
-    $js_dir = Helper::getAlias("@web\source\css");
-    $css_dir = Helper::getAlias("@web\source\js");
+    $js_dir = Helper::getAlias("@web\source\js");
+    $css_dir = Helper::getAlias("@web\source\css");
 
-    self::delete($js_dir);
-    self::delete($css_dir);
+    self::delete($js_dir, "js");
+    self::delete($css_dir, "css");
   }
 
 
-  private static function delete($dir)
+  private static function delete($dir, $ext = null)
   {
     $dir_handle = opendir($dir);
     while ($file = readdir($dir_handle)) {
       $file = $dir . '\\' . $file;
+      if ($ext) {
+        if (pathinfo($file, PATHINFO_EXTENSION) != $ext) continue;
+      }
       if (is_dir($file)) continue;
       if (file_exists($file))
         unlink($file);
