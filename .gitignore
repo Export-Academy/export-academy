@@ -1,10 +1,5 @@
 composer.phar
 /vendor/
-/web/source/js/*
-/web/source/css/*
-
-/common/runtime/logs/*
-
 .vscode
 
 /configuration.local.json

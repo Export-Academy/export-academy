@@ -5,8 +5,8 @@ namespace lib\app\auth;
 
 use common\models\user\User;
 use DateTime;
-use lib\app\auth\interface\IAuthHandler;
-use lib\app\auth\interface\IAuthIdentity;
+use lib\app\auth\interfaces\IAuthHandler;
+use lib\app\auth\interfaces\IAuthIdentity;
 use lib\app\database\Database;
 use lib\app\Request;
 use lib\app\route\Router;

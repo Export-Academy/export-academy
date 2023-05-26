@@ -3,6 +3,7 @@
 namespace lib\app\log;
 
 use DateTime;
+use Exception;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use lib\util\Helper;
@@ -22,17 +23,21 @@ class Logger extends BaseObject
 
   private function output($content, $state)
   {
-    $path = Helper::getAlias("@common/runtime/logs/$this->filename", "/");
-    $file = fopen($path, "a");
-
-    if (!$file)
-      return;
-
 
     if (is_array($content) || is_object($content)) {
       $content = print_r($content, true);
     }
     $message = "[" . (new DateTime())->format("D, d M Y H:i:s. u") . "] [" . strtoupper($state) . "] -- $content \n";
+
+
+
+    $path = Helper::getAlias("@common/runtime/logs/$this->filename", "/");
+    $file = fopen($path, "a+");
+
+    if (!$file) {
+      // throw new Exception("Error logging message");
+      return;
+    }
     fwrite($file, $message);
     fclose($file);
   }

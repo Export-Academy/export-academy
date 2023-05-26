@@ -1,18 +1,18 @@
 {
   "storage": {
     "projectId": "",
-    "credentials": "",
+    "credentials": ""
   },
   "auth": {
-    "challengePath": "",
-    "forbiddenPath": "",
-    "redirectPath": ""
+    "challengePath": "/academy/login",
+    "forbiddenPath": "/academy/_401",
+    "redirectPath": "/academy/admin/dashboard"
   },
   "database": {
-    "server": "",
-    "username": "",
+    "server": "localhost",
+    "username": "root",
     "password": "",
-    "db": ""
+    "db": "export-academy"
   },
   "logger": {
     "filename": "app.log"

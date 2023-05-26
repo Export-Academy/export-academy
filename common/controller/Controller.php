@@ -2,7 +2,7 @@
 
 namespace common\controller;
 
-use lib\app\auth\interface\IAuthController;
+use lib\app\auth\interfaces\IAuthController;
 use lib\app\Request;
 use lib\app\view\interface\IViewable;
 use lib\app\view\View;

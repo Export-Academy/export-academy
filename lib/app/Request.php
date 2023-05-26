@@ -3,8 +3,8 @@
 
 namespace lib\app;
 
-use lib\app\auth\interface\IAuthHandler;
-use lib\app\auth\interface\IAuthIdentity;
+use lib\app\auth\interfaces\IAuthHandler;
+use lib\app\auth\interfaces\IAuthIdentity;
 use lib\util\BaseObject;
 use lib\util\Helper;
 
