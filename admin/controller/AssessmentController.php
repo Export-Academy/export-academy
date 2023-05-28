@@ -139,7 +139,6 @@ class AssessmentController extends Controller
   {
     $data = $this->request->data("question");
     $link = $this->request->data("link", []);
-    $media = $this->request->data("media", []);
     $type = $this->request->data("type");
     $questionType = QuestionType::findOne(["id" => $type]);
     $handler = $questionType->handler;
@@ -152,7 +151,6 @@ class AssessmentController extends Controller
         "data" => $data,
         "type" => $questionType,
         "context" => $context,
-        "media" => $media,
         "link" => $link
       ]);
     } catch (Exception $ex) {

@@ -127,13 +127,6 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    `format` (
-        `id` int PRIMARY KEY AUTO_INCREMENT,
-        `name` varchar(255) NOT NULL,
-        `handler` text UNIQUE NOT NULL
-    );
-
-CREATE TABLE
     `resource` (
         `id` int PRIMARY KEY AUTO_INCREMENT,
         `title` text NOT NULL,
@@ -160,17 +153,32 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    `file` (
+    `asset` (
         `id` int PRIMARY KEY AUTO_INCREMENT,
         `name` varchar(250) NOT NULL,
-        `bucket` varchar(100) NOT NULL
+        `bucket` varchar(100) NOT NULL,
+        `format` int NOT NULL
     );
 
 CREATE TABLE
-    `question_asset` (
-        `file_id` int NOT NULL,
-        `question_id` int NOT NULL,
-        PRIMARY KEY (`file_id`, `question_id`)
+    `format` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `name` varchar(255) NOT NULL,
+        `handler` text UNIQUE NOT NULL
+    );
+
+CREATE TABLE
+    `entity` (
+        `id` int PRIMARY KEY NOT NULL,
+        `name` varchar(100) UNIQUE NOT NULL
+    );
+
+CREATE TABLE
+    `asset_relation` (
+        `entity` int NOT NULL,
+        `asset` int NOT NULL,
+        `entity_id` int NOT NULL,
+        PRIMARY KEY (`entity`, `entity_id`, `asset`)
     );
 
 CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
@@ -205,13 +213,15 @@ CREATE INDEX `question_index_14` ON `question` (`type`);
 
 CREATE INDEX `question_index_15` ON `question` (`enabled`);
 
-CREATE INDEX `format_index_16` ON `format` (`name`);
+CREATE INDEX `resource_index_16` ON `resource` (`title`);
 
-CREATE INDEX `resource_index_17` ON `resource` (`title`);
+CREATE UNIQUE INDEX `asset_index_17` ON `asset` (`name`, `bucket`);
 
-CREATE UNIQUE INDEX `file_index_18` ON `file` (`name`, `bucket`);
+CREATE INDEX `asset_index_18` ON `asset` (`bucket`);
 
-CREATE INDEX `file_index_19` ON `file` (`bucket`);
+CREATE INDEX `asset_index_19` ON `asset` (`format`);
+
+CREATE INDEX `format_index_20` ON `format` (`name`);
 
 ALTER TABLE `user`
 ADD
@@ -303,13 +313,17 @@ ALTER TABLE `user_context`
 ADD
     FOREIGN KEY (`context_id`) REFERENCES `context` (`id`);
 
-ALTER TABLE `question_asset`
+ALTER TABLE `asset`
 ADD
-    FOREIGN KEY (`file_id`) REFERENCES `file` (`id`);
+    FOREIGN KEY (`format`) REFERENCES `format` (`id`);
 
-ALTER TABLE `question_asset`
+ALTER TABLE `asset_relation`
 ADD
-    FOREIGN KEY (`question_id`) REFERENCES `question` (`id`);
+    FOREIGN KEY (`entity`) REFERENCES `entity` (`id`);
+
+ALTER TABLE `asset_relation`
+ADD
+    FOREIGN KEY (`asset`) REFERENCES `asset` (`id`);
 
 INSERT INTO `permission` (`name`) VALUES ('Create User');
 

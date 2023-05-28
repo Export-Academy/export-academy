@@ -12,7 +12,6 @@
     }
   ],
   "require": {
-    "scssphp/scssphp": "^1.11",
-    "google/cloud-storage": "^1.31"
+    "scssphp/scssphp": "^1.11"
   }
 }

@@ -90,19 +90,6 @@ class Question extends ModelComponent
     return $this->hasOne(QuestionType::class, ["id" => $this->type])->cache(30);
   }
 
-  public function getAssets()
-  {
-    return $this->hasMany(QuestionAsset::class, ["question_id" => $this->id]);
-  }
-
-
-  public function getFiles()
-  {
-    $assetTableName = QuestionAsset::tableName();
-    return $this->hasMany(File::class, ["id" => "@$assetTableName.file_id"])->viaTable($assetTableName, ["question_id" => $this->id]);
-  }
-
-
   public function getParsedContent()
   {
     return unserialize($this->context);
@@ -175,7 +162,6 @@ class Question extends ModelComponent
 
 
     $context = Helper::getValue("context", $params, []);
-    $media = Helper::getValue("media", $params, []);
     $link = Helper::getValue("link", $params, []);
 
 
@@ -190,7 +176,7 @@ class Question extends ModelComponent
 
 
     $result = $db->transaction(
-      function ($tr) use ($type, $data, $context, $media, $q, $link) {
+      function ($tr) use ($type, $data, $context, $q, $link) {
 
         $handlerName = $type->handler;
 
@@ -209,26 +195,6 @@ class Question extends ModelComponent
           if (!$q instanceof Question) return;
           $q->save($tr);
         }
-
-
-        $assets = array_map(function ($asset) {
-          return $asset->file_id;
-        }, $q->assets);
-
-        foreach ($media as $mediaId) {
-          if (in_array($mediaId, $assets))
-            continue;
-
-          $asset = new QuestionAsset([
-            "file_id" => $mediaId,
-            "question_id" => $q->id
-          ]);
-          $asset->save($tr);
-        }
-
-        $removeAssets = array_diff($assets, $media);
-        if (!empty($removeAssets))
-          QuestionAsset::deleteByCondition(["file_id" => $removeAssets, "question_id" => $q->id]);
 
 
 

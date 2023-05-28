@@ -5,7 +5,7 @@ namespace admin\controller;
 
 use common\controller\Controller;
 
-class MediaController extends Controller
+class AssetController extends Controller
 {
 
 
@@ -35,7 +35,6 @@ class MediaController extends Controller
         break;
     }
   }
-
 
 
 
