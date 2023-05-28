@@ -3,7 +3,6 @@
 namespace lib\app\log;
 
 use DateTime;
-use Exception;
 use lib\config\Configuration;
 use lib\util\BaseObject;
 use lib\util\Helper;

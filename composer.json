@@ -12,6 +12,11 @@
     }
   ],
   "require": {
-    "scssphp/scssphp": "^1.11"
+    "scssphp/scssphp": "^1.11",
+    "league/flysystem": "^3.0"
+  },
+  "config": {
+    "disable-tls": false,
+    "secure-http": true
   }
 }

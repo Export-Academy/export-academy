@@ -156,14 +156,16 @@ CREATE TABLE
     `asset` (
         `id` int PRIMARY KEY AUTO_INCREMENT,
         `name` varchar(250) NOT NULL,
-        `bucket` varchar(100) NOT NULL,
-        `format` int NOT NULL
+        `dir` varchar(100),
+        `format` int NOT NULL,
+        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
     );
 
 CREATE TABLE
     `format` (
         `id` int PRIMARY KEY AUTO_INCREMENT,
-        `name` varchar(255) NOT NULL,
+        `name` varchar(255) UNIQUE NOT NULL,
         `handler` text UNIQUE NOT NULL
     );
 
@@ -215,9 +217,9 @@ CREATE INDEX `question_index_15` ON `question` (`enabled`);
 
 CREATE INDEX `resource_index_16` ON `resource` (`title`);
 
-CREATE UNIQUE INDEX `asset_index_17` ON `asset` (`name`, `bucket`);
+CREATE UNIQUE INDEX `asset_index_17` ON `asset` (`name`, `dir`);
 
-CREATE INDEX `asset_index_18` ON `asset` (`bucket`);
+CREATE INDEX `asset_index_18` ON `asset` (`dir`);
 
 CREATE INDEX `asset_index_19` ON `asset` (`format`);
 

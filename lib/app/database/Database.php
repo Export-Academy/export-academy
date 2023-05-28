@@ -86,6 +86,7 @@ class Database extends BaseObject
       Logger::log("COMMIT TRANSACTION", "info");
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
+      throw new Exception("Transaction Failed: " . $ex->getMessage());
     }
 
     return $results;

@@ -3,105 +3,113 @@
 namespace common\models\resource;
 
 use common\models\base\BaseModel;
-use common\models\resource\interfaces\IAssetModel;
-use DateTime;
+use common\models\resource\interfaces\IAssetStorage;
 use Exception;
-use Google\Cloud\Storage\StorageClient;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Flysystem\UnableToCheckExistence;
+use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToReadFile;
 use lib\app\log\Logger;
-use lib\config\Configuration;
 use lib\util\Helper;
 
 
 /**
  * @author Joel Henry <joel.henry.023@gmail.com>
  */
-abstract class AssetModel extends BaseModel implements IAssetModel
+abstract class AssetModel extends BaseModel implements IAssetStorage
 {
-  public $projectId;
-  public $credentials;
-
-  public $client;
-  public $defaultBucket;
+  /** @var Filesystem */
+  private $_filesystem;
+  /** @var LocalFilesystemAdapter */
+  private $_adapter;
 
 
   protected function init()
   {
     parent::init();
-    Helper::configure($this, Configuration::get("storage", []));
-
-    if ($this->credentials) {
-      putenv("GOOGLE_APPLICATION_CREDENTIALS=" . Helper::getBasePath() . "/$this->credentials");
-      $this->client = new StorageClient([
-        "projectId" => $this->projectId
-      ]);
-    }
+    $this->_adapter = new LocalFilesystemAdapter(Helper::getBasePath() . "/source");
+    $this->_filesystem = new Filesystem($this->_adapter);
   }
 
   protected static function excludeProperty()
   {
-    return array_merge(["client", "projectId", "credentials", "defaultBucket"], parent::excludeProperty());
+    return array_merge(["_filesystem", "_adapter"], parent::excludeProperty());
   }
 
 
-  public static function upload(File $file, $bucket = null, $type = self::BY_FILE)
+
+  public function upload(File $file, $options)
   {
-    $data = null;
-
-
     try {
-      $instanceClass = get_called_class();
-      $instance = new $instanceClass;
-      $bucket = $instance->client->bucket($bucket ?? $instance->defaultBucket);
-
-      if ($type === self::BY_URL) {
-        $content = file_get_contents($file->tmp_name);
-
-        $tempFile = tmpfile();
-        fwrite($tempFile, $content);
-      } else {
-        $tempFile = fopen($file->tmp_name, "r");
-      }
-
-
-      if ($tempFile) {
-        $data = $bucket->upload($tempFile, array("name" => $file->name));
-        Logger::log("File Uploaded: " . $data->getUri());
-
-        return $data;
-      }
+      $this->_filesystem->write($file->getParsedPath(), $file->getContent(), $options);
     } catch (Exception $ex) {
-      Logger::log($ex->getMessage(), "error");
+      Logger::log($ex->getMessage(), 'error');
     }
 
-    return null;
+    return $file;
   }
 
 
-  public static function uploadByURL($url, $name, $type, $path = "", $bucket = null)
+  public function uploadStream(File $file, $options)
   {
-    $file = new File([
-      "temp_name" => $url,
-      "name" => (empty($path) ? "$name." : "$path/$name.") . explode("/", $type)[1],
-      "type" => $type
-    ]);
-
-    return self::upload($file, $bucket, self::BY_URL);
+    try {
+      $this->_filesystem->writeStream($file->getParsedPath(), $file->getResource(), $options);
+    } catch (Exception $ex) {
+      Logger::log($ex->getMessage(), 'error');
+    }
   }
 
-  public static function uploadByFile($file, $path = "", $bucket = null)
+  public function has($path = null)
   {
-    $file = new File($file);
-
-    Helper::configure($file, [
-      "name" => (empty($path) ? "$file->name." : "$path/$file->name.") . explode("/", $file->type)[1]
-    ]);
-
-    return self::upload($file, $bucket, self::BY_FILE);
+    return $this->_filesystem->has($path ?? $this->getPath());
   }
 
 
-  public function getURL($options = [], $expiresIn = new DateTime("1 hour"))
+  public function read($path = null)
   {
-    return $this->getFileInstance()->signedUrl($expiresIn, $options);
+    try {
+      $response = $this->_filesystem->read($path ?? $this->getPath());
+    } catch (FilesystemException | UnableToReadFile $ex) {
+      Logger::log($ex->getMessage(), 'error');
+    }
+
+    return $response;
+  }
+
+
+  public function readStream($path = null)
+  {
+    try {
+      $response = $this->_filesystem->readStream($path ?? $this->getPath());
+    } catch (FilesystemException | UnableToReadFile $ex) {
+      Logger::log($ex->getMessage(), 'error');
+    }
+
+    return $response;
+  }
+
+
+
+  public function deleteFile($path = null)
+  {
+    try {
+      $this->_filesystem->delete($path ?? $this->getPath());
+    } catch (FilesystemException | UnableToDeleteFile $ex) {
+      Logger::log($ex->getMessage(), 'error');
+    }
+  }
+
+
+  public function exist($path = null)
+  {
+    try {
+      $fileExists = $this->_filesystem->fileExists($path ?? $this->getPath());
+    } catch (FilesystemException | UnableToCheckExistence $ex) {
+      Logger::log($ex->getMessage(), 'error');
+    }
+
+    return $fileExists;
   }
 }

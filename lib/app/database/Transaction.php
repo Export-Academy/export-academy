@@ -31,6 +31,7 @@ class Transaction extends BaseObject
       Logger::log($ex->getMessage(), "error");
       $this->rollback();
       Logger::log("ROLLBACK", "info");
+      throw $ex;
     }
 
     return $lastId ? $this->db->lastInsertId() : $command;
@@ -39,6 +40,7 @@ class Transaction extends BaseObject
 
   public function rollback()
   {
-    $this->db->rollBack();
+    if ($this->db->inTransaction())
+      $this->db->rollBack();
   }
 }
