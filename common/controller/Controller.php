@@ -80,6 +80,23 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
     exit();
   }
 
+
+  protected function returnAsset($path)
+  {
+    if (!file_exists($path)) {
+      http_response_code(404);
+      exit();
+    }
+    $file = fopen($path, "r");
+    $mime =  mime_content_type($file);
+    ob_clean();
+    header_remove();
+    header("Content-Type: $mime");
+    http_response_code(200);
+    echo file_get_contents($path);
+    exit();
+  }
+
   /**
    * Returns a JS script as response
    *
@@ -88,16 +105,7 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
    */
   protected function returnScript($filename)
   {
-    ob_clean();
-    header_remove();
-    header('Content-Type: text/javascript');
-    if (file_exists($filename)) {
-      http_response_code(200);
-      echo file_get_contents($filename);
-    } else {
-      http_response_code(404);
-    }
-    exit();
+    $this->returnAsset($filename);
   }
 
   /**

@@ -12,6 +12,7 @@ use League\Flysystem\UnableToCheckExistence;
 use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToReadFile;
 use lib\app\log\Logger;
+use lib\app\view\View;
 use lib\util\Helper;
 
 
@@ -26,11 +27,17 @@ abstract class AssetModel extends BaseModel implements IAssetStorage
   private $_adapter;
 
 
+  public static function base()
+  {
+    return Helper::getBasePath() . "/source";
+  }
+
+
   protected function init()
   {
     parent::init();
-    $this->_adapter = new LocalFilesystemAdapter(Helper::getBasePath() . "/source");
-    $this->_filesystem = new Filesystem($this->_adapter);
+    $this->_adapter = new LocalFilesystemAdapter(self::base());
+    $this->_filesystem = new Filesystem($this->_adapter, publicUrlGenerator: new Generator);
   }
 
   protected static function excludeProperty()
@@ -112,4 +119,20 @@ abstract class AssetModel extends BaseModel implements IAssetStorage
 
     return $fileExists;
   }
+
+
+  public function getUrl(): string
+  {
+    return $this->_filesystem->publicUrl($this->getId());
+  }
+
+
+  public function referencePath(): string
+  {
+    return self::base() . "/" . $this->getPath();
+  }
+
+  abstract public function renderThumbnail(View $view);
+
+  abstract public function view(View $view);
 }

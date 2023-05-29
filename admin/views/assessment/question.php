@@ -54,7 +54,8 @@ $questionOptions = Question::dropdownOptions($question->id);
           <div class="fw-bold fs-5">Question Settings</div>
           <div class="hstack gap-1">
             <button class="btn">Save Changes</button>
-            <button type="button" class="btn delete-button" data-type="<?= Question::class ?>" data-id="<?= $question->id ?>">Delete Question</button>
+            <button type="button" class="btn delete-button" data-type="<?= Question::class ?>"
+              data-id="<?= $question->id ?>">Delete Question</button>
           </div>
         </div>
 
@@ -65,7 +66,8 @@ $questionOptions = Question::dropdownOptions($question->id);
         <div class="vstack gap-3">
 
           <div class="form-check form-switch mt-4">
-            <input name="<?= get_class($question) ?>[enabled]" class="form-check-input" type="checkbox" role="switch" id="question-enable-toggle" <?= $question->enabled ? "checked" : "" ?>>
+            <input name="<?= get_class($question) ?>[enabled]" class="form-check-input" type="checkbox" role="switch"
+              id="question-enable-toggle" <?= $question->enabled ? "checked" : "" ?>>
             <label class="form-check-label fs-6" for="question-enable-toggle"><?= "Enable/Disable" ?></label>
           </div>
 
@@ -73,23 +75,28 @@ $questionOptions = Question::dropdownOptions($question->id);
 
             <?php if ($linkedQuestion) : ?>
 
-              <small class="fw-semibold text-muted">Linked Question</small>
-              <div class="my-2 hstack gap-3 justify-content-between p-2">
-                <div class="vstack">
-                  <small class="fw-semibold">QID-<?= $linkedQuestion->id ?> <small class="text-muted">(<?= $linkedQuestion->questionType->name ?>)</small></small>
-                  <small class="text-muted"><?= $linkedQuestion->prompt ?></small>
-                </div>
-                <div class="hstack gap-2">
-                  <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linkedQuestion->id) ?>" class="btn">Edit</a>
-                  <button type="button" data-type="<?= Question::class ?>" data-id="<?= $question->id ?>" class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link" width="16" height="16"></i></button>
-                </div>
+            <small class="fw-semibold text-muted">Linked Question</small>
+            <div class="my-2 hstack gap-3 justify-content-between p-2">
+              <div class="vstack">
+                <small class="fw-semibold">QID-<?= $linkedQuestion->id ?> <small
+                    class="text-muted">(<?= $linkedQuestion->questionType->name ?>)</small></small>
+                <small class="text-muted"><?= $linkedQuestion->prompt ?></small>
               </div>
+              <div class="hstack gap-2">
+                <a href="<?= Helper::getURL("admin/assessment/question", ["id" => $linkedQuestion->id]) ?>"
+                  class="btn">Edit</a>
+                <button type="button" data-type="<?= Question::class ?>" data-id="<?= $question->id ?>"
+                  class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link"
+                    width="16" height="16"></i></button>
+              </div>
+            </div>
 
             <?php else : ?>
 
-              <?= HtmlComponent::dropdown($this, get_class($question) . "[link]", null, $questionOptions, ["label" => "Select Linked Question"]) ?>
-              <button type="button" class="btn w-100 my-3" data-bs-toggle="modal" data-bs-target="#question-builder">Create Link
-                Question</button>
+            <?= HtmlComponent::dropdown($this, get_class($question) . "[link]", null, $questionOptions, ["label" => "Select Linked Question"]) ?>
+            <button type="button" class="btn w-100 my-3" data-bs-toggle="modal"
+              data-bs-target="#question-builder">Create Link
+              Question</button>
 
 
             <?php endif; ?>
@@ -98,16 +105,17 @@ $questionOptions = Question::dropdownOptions($question->id);
           <div class="vstack">
             <small class="fw-semibold text-muted">Linked From</small>
             <?php if (empty($linkedFromQuestions)) : ?>
-              <small class="text-center p-3">No Links</small>
+            <small class="text-center p-3">No Links</small>
             <?php endif; ?>
             <?php foreach ($linkedFromQuestions as $linked) : ?>
-              <div class="my-2 hstack gap-3 justify-content-between p-2">
-                <div class="vstack">
-                  <small class="fw-semibold">QID-<?= $linked->id ?> <small class="text-muted">(<?= $linked->questionType->name ?>)</small></small>
-                  <small class="text-muted"><?= $linked->prompt ?></small>
-                </div>
-                <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
+            <div class="my-2 hstack gap-3 justify-content-between p-2">
+              <div class="vstack">
+                <small class="fw-semibold">QID-<?= $linked->id ?> <small
+                    class="text-muted">(<?= $linked->questionType->name ?>)</small></small>
+                <small class="text-muted"><?= $linked->prompt ?></small>
               </div>
+              <a href="<?= Helper::getURL("admin/assessment/question", ["id" => $linked->id]) ?>" class="btn">Edit</a>
+            </div>
             <?php endforeach; ?>
           </div>
 
@@ -121,7 +129,8 @@ $questionOptions = Question::dropdownOptions($question->id);
       <div class="card-body">
         <div class="hstack justify-content-between">
           <div class="fw-bold fs-5">Answers</div>
-          <button class="btn" data-bs-toggle="modal" data-bs-target="#question-answer"><i data-feather="plus" width="16" length="16"></i></button>
+          <button class="btn" data-bs-toggle="modal" data-bs-target="#question-answer"><i data-feather="plus" width="16"
+              length="16"></i></button>
         </div>
 
         <hr>
@@ -129,7 +138,7 @@ $questionOptions = Question::dropdownOptions($question->id);
 
         <?php if (empty($questionAnswers)) : ?>
 
-          <div class="text-center p-4">No answer provided</div>
+        <div class="text-center p-4">No answer provided</div>
 
         <?php endif; ?>
 
@@ -137,36 +146,41 @@ $questionOptions = Question::dropdownOptions($question->id);
           $answer = $instance->answer;
           $linked = $answer->linked;
         ?>
-          <div class="p-3 my-2">
-            <?= FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/answer")) ?>
-            <?= Html::hiddenInput($answer->id, "id") ?>
-            <div class="vstack gap-2 justify-content-between">
-              <div class="fw-semibold pb-1">Response</div>
-              <div class="px-2">
-                <?= $question->getAnswer($answer) ?>
-              </div>
+        <div class="p-3 my-2">
+          <?= FormComponent::instance($this)->begin(Helper::getURL("admin/assessment/answer")) ?>
+          <?= Html::hiddenInput($answer->id, "id") ?>
+          <div class="vstack gap-2 justify-content-between">
+            <div class="fw-semibold pb-1">Response</div>
+            <div class="px-2">
+              <?= $question->getAnswer($answer) ?>
+            </div>
 
-              <?php if ($linked) : ?>
-                <div class="my-2 hstack gap-3 justify-content-between p-2">
-                  <div class="vstack">
-                    <small class="fw-semibold">QID-<?= $linked->id ?> <small class="text-muted">(<?= $linked->questionType->name ?>)</small></small>
-                    <small class="text-muted"><?= $linked->prompt ?></small>
-                  </div>
-                  <div class="hstack gap-2">
-                    <a href="<?= Helper::getURL("admin/assessment/question?id=" . $linked->id) ?>" class="btn">Edit</a>
-                    <button type="button" data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>" class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link" width="16" height="16"></i></button>
-                  </div>
-                </div>
-              <?php else : ?>
-                <?= HtmlComponent::dropdown($this, get_class($answer) . "[link]", null, $questionOptions, ["label" => "Select Linked Question"]) ?>
-              <?php endif; ?>
+            <?php if ($linked) : ?>
+            <div class="my-2 hstack gap-3 justify-content-between p-2">
+              <div class="vstack">
+                <small class="fw-semibold">QID-<?= $linked->id ?> <small
+                    class="text-muted">(<?= $linked->questionType->name ?>)</small></small>
+                <small class="text-muted"><?= $linked->prompt ?></small>
+              </div>
+              <div class="hstack gap-2">
+                <a href="<?= Helper::getURL("admin/assessment/question", ["id" => $linked->id]) ?>" class="btn">Edit</a>
+                <button type="button" data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>"
+                  class="btn unlink-button" data-toggle="tooltip" title="Unlink Question"><i data-feather="link"
+                    width="16" height="16"></i></button>
+              </div>
             </div>
-            <div class="hstack justify-content-end gap-2">
-              <button class="btn">Save</button>
-              <button type="button" class="btn delete-button" data-toggle="tooltip" title="Delete Answer" data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>"><i data-feather="trash" width="16" height="16"></i></button>
-            </div>
-            <?= FormComponent::instance($this)->end() ?>
+            <?php else : ?>
+            <?= HtmlComponent::dropdown($this, get_class($answer) . "[link]", null, $questionOptions, ["label" => "Select Linked Question"]) ?>
+            <?php endif; ?>
           </div>
+          <div class="hstack justify-content-end gap-2">
+            <button class="btn">Save</button>
+            <button type="button" class="btn delete-button" data-toggle="tooltip" title="Delete Answer"
+              data-type="<?= Answer::class ?>" data-id="<?= $answer->id ?>"><i data-feather="trash" width="16"
+                height="16"></i></button>
+          </div>
+          <?= FormComponent::instance($this)->end() ?>
+        </div>
         <?php endforeach; ?>
       </div>
     </div>

@@ -1,9 +1,13 @@
 <?php
 
+use components\media\MediaComponent;
 use lib\app\view\View;
 
 /** @var View $this */
+?>
 
 
 
-$this->setTitle("Export Academy | Resource Manager");
+<div class="container">
+  <?= MediaComponent::instance($this)->view() ?>
+</div>

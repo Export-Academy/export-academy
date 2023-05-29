@@ -4,7 +4,7 @@
 
 namespace common\models\assessment;
 
-use common\models\File;
+
 use components\ModelComponent;
 use Exception;
 use lib\app\database\Database;

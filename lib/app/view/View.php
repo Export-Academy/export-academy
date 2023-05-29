@@ -223,7 +223,7 @@ class View extends BaseObject
       fclose($file);
 
       // Return the URL to access distribution file
-      return Helper::getURL($generated_path, "/");
+      return Helper::getURL($generated_path);
     }
 
     // Generate path to distributed files
@@ -251,7 +251,7 @@ class View extends BaseObject
       $success = true;
     }
 
-    return Helper::getURL($generated_path, "/");
+    return Helper::getURL($generated_path);
   }
 
   /**

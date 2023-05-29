@@ -35,7 +35,7 @@ $questions = Question::find()->all();
           "id" => [
             "label" => "ID",
             "content" => function (Question $question) {
-              return Html::tag("a", "QID-$question->id", ["href" => Helper::getURL("admin/assessment/question?id=" . $question->id)]);
+              return Html::tag("a", "QID-$question->id", ["href" => Helper::getURL("admin/assessment/question", ["id" => $question->id])]);
             }
           ],
           "prompt" => [
@@ -53,7 +53,7 @@ $questions = Question::find()->all();
           "action" => [
             "label" => "Action",
             "content" => function (Question $question) {
-              return Html::tag("a", "Edit", ["href" => Helper::getURL("admin/assessment/question?id=" . $question->id), "class" => "btn"]);
+              return Html::tag("a", "Edit", ["href" => Helper::getURL("admin/assessment/question", ["id" => $question->id]), "class" => "btn"]);
             }
           ]
         ]

@@ -2,19 +2,22 @@
 
 namespace common\models\resource\format;
 
-use components\ModelComponent;
-use lib\util\Helper;
+use common\models\base\BaseModel;
+use lib\app\view\View;
 
-class Format extends ModelComponent
+class Format extends BaseModel
 {
+  public $id;
+  public $name;
+  public $handler;
 
-  public function getAssetDirectory()
-  {
-    return Helper::getAlias("@common\models\\resource\\format\assets\\");
-  }
 
-  public function getViewsDirectory()
+
+  public function handlerInstance(View $view)
   {
-    return Helper::getAlias("@common\models\\resource\\format\\views\\");
+    $className = $this->handler;
+    if (class_exists($className))
+      return $className::instance($view);
+    return null;
   }
 }

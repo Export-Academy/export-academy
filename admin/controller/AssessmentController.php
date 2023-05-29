@@ -83,13 +83,13 @@ class AssessmentController extends Controller
     $instance->update();
 
     if ($instance instanceof Question) {
-      Router::redirect(Helper::getURL("admin/assessment/question?id=$instance->id"));
+      Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $instance->id]));
       return;
     }
 
 
     $question = $instance->question;
-    Router::redirect(Helper::getURL("admin/assessment/question?id=$question->id"));
+    Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
 
@@ -122,7 +122,7 @@ class AssessmentController extends Controller
     }
 
     if ($question) {
-      Router::redirect(Helper::getURL("admin/assessment/question?id=$question->id"));
+      Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
       return;
     }
 
@@ -159,12 +159,12 @@ class AssessmentController extends Controller
 
     if (!empty($link)) {
       $id = Helper::getValue("id", $link);
-      Router::redirect(Helper::getURL("admin/assessment/question?id=$id"));
+      Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $id]));
       return;
     }
 
     if (isset($qid)) {
-      Router::redirect(Helper::getURL("admin/assessment/question?id=$qid"));
+      Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $qid]));
       return;
     }
     Router::redirect(Helper::getURL("admin/assessment"));
@@ -195,7 +195,7 @@ class AssessmentController extends Controller
 
 
     $question->update();
-    Router::redirect(Helper::getURL("admin/assessment/question?id=$questionId"));
+    Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
   /**
@@ -215,7 +215,7 @@ class AssessmentController extends Controller
     $answer->link = empty($link) ? null : $link;
     $answer->update();
     $question = $answer->question;
-    Router::redirect(Helper::getURL("admin/assessment/question?id=$question->id"));
+    Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
   /**
@@ -236,7 +236,7 @@ class AssessmentController extends Controller
     } catch (Exception $ex) {
       Logger::log($ex->getMessage(), "error");
     }
-    Router::redirect(Helper::getURL("admin/assessment/question?id=$question->id"));
+    Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
   /**

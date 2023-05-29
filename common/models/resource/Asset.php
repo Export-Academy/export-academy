@@ -4,9 +4,11 @@
 namespace common\models\resource;
 
 use common\models\resource\format\Format;
+use common\models\resource\format\handlers\FormatHandler;
 use Exception;
 use lib\app\database\Database;
 use lib\app\database\Transaction;
+use lib\app\view\View;
 
 class Asset extends AssetModel
 {
@@ -19,7 +21,7 @@ class Asset extends AssetModel
 
   public function getAssetFormat()
   {
-    return $this->hasOne(Format::class, ["id" => $this->format]);
+    return $this->hasOne(Format::class, ["id" => $this->format])->cache(30);
   }
 
 
@@ -28,12 +30,14 @@ class Asset extends AssetModel
     return $this->dir;
   }
 
-  public function getFile()
+  public function getName(): string
   {
-    return new File(array(
-      "name" => $this->name,
-      "path" => $this->dir
-    ));
+    return $this->name;
+  }
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   /**
@@ -99,5 +103,41 @@ class Asset extends AssetModel
     });
 
     return;
+  }
+
+
+  public function renderThumbnail(View $view)
+  {
+    $instance = $this->assetFormat->handlerInstance($view);
+
+    if ($instance instanceof FormatHandler)
+      return $instance->renderThumbnail($this);
+
+    return "Invalid Handler";
+  }
+
+
+
+  public function view(View $view)
+  {
+    $instance = $this->assetFormat->handlerInstance($view);
+    if ($instance instanceof FormatHandler)
+      return $instance->renderView($this);
+    return "Invalid Handler";
+  }
+
+
+  public static function path($path)
+  {
+    if (!isset($path)) return self::find()->all();
+
+    $query = self::find()->where("dir LIKE '%$path%'");
+    return $query->all();
+  }
+
+
+  public function getHandler(View $view)
+  {
+    return $this->assetFormat->handlerInstance($view);
   }
 }

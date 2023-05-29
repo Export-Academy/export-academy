@@ -135,8 +135,9 @@ class Helper
   }
 
 
-  public static function getURL($path, $separator = DIRECTORY_SEPARATOR)
+  public static function getURL($path, $params = [])
   {
-    return $_SERVER['HTTP_BASE_PATH'] . $separator . $path;
+    $search = http_build_query($params);
+    return $_SERVER['HTTP_BASE_PATH'] . "/" . $path . (empty($params) ? "" : "?$search");
   }
 }
