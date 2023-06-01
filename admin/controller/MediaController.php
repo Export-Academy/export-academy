@@ -5,9 +5,12 @@ namespace admin\controller;
 
 use common\controller\Controller;
 use common\models\resource\Asset;
+use common\models\resource\AssetModel;
 use common\models\resource\File;
+use components\media\MediaComponent;
 use Exception;
 use lib\app\log\Logger;
+use lib\app\view\View;
 
 class MediaController extends Controller
 {
@@ -130,12 +133,55 @@ class MediaController extends Controller
 
 
       case "POST":
+        $this->handleMedia();
         break;
 
 
       default:
         break;
     }
+  }
+
+
+  public function actionMediaContent()
+  {
+    $request = $this->request;
+    $assetId = $request->params("id");
+    $asset = Asset::findOne(["id" => $assetId]);
+
+    $view = $this->getView();
+
+
+    if (isset($asset) && ($asset instanceof AssetModel)) {
+      $content = MediaComponent::instance($view)->content($asset);
+
+      if ($content) {
+        $content = $view->renderAssets(View::POS_HEAD) . "\n" . $content . "\n" . $view->renderAssets(View::POS_END) . "\n" . $view->renderAssets(View::POS_LOAD);;
+        $this->renderView($content);
+        return;
+      }
+    }
+
+    $this->jsonResponse("Component Not Found");
+    return;
+  }
+
+
+  private function handleMedia()
+  {
+    $mediaId = $this->request->data("media");
+
+    $media = Asset::findOne(["id" => $mediaId]);
+    if ($media) {
+      $this->jsonResponse(array(
+        "url" => $media->getUrl(),
+        "mime" => mime_content_type($media->readStream()),
+        "id" => $mediaId
+      ));
+      return;
+    }
+
+    $this->jsonResponse(null, 404);
   }
 
 

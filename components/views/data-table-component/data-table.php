@@ -40,7 +40,7 @@ $columns = $columns ?? [];
         <?php foreach ($columns as $key => $column) :
           $label = Helper::getValue("label", $column);
         ?>
-          <th class="text-muted">
+          <th class="text-muted text-nowrap p-3">
             <?= $label ?? $key ?>
           </th>
         <?php endforeach; ?>
@@ -60,7 +60,7 @@ $columns = $columns ?? [];
           <?php $content = Helper::getValue("content", $column); ?>
 
           <?php if (isset($content)) : ?>
-            <td class="py-3"><?= is_callable($content) ? call_user_func_array($content, [$model]) : $model->{$content}  ?>
+            <td class="p-3"><?= is_callable($content) ? call_user_func_array($content, [$model]) : $model->{$content}  ?>
             </td>
           <?php else : ?>
             <td><?= $model->{$property} ?></td>

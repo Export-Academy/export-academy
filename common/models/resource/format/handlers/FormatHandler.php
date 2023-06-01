@@ -13,7 +13,7 @@ abstract class FormatHandler extends MediaComponent
     return $this->render("thumbnail", ["asset" => $asset]);
   }
 
-  public function renderView(AssetModel $asset)
+  public function renderView(AssetModel $asset = null)
   {
     return "View";
   }

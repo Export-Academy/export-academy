@@ -1,7 +1,6 @@
 <?php
 
 use common\models\resource\AssetModel;
-use lib\app\log\Logger;
 use lib\app\view\View;
 
 /** 
@@ -10,12 +9,22 @@ use lib\app\view\View;
  * @var AssetModel $asset
  * 
  **/
+
 ?>
 
-<div class="media-video-container" data-player-id="<?= spl_object_hash($asset) ?>">
-  <script src="//cdn.flowplayer.com/players/ffdf2c44-aa29-4df8-a270-3a199a1b119e/native/flowplayer.async.js">
-    {
-      "src": "<?= $asset->getUrl() ?>"
-    }
-  </script>
+
+<link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+
+
+<div class="media-video-container" id="media-video-handler" style="display: none;">
+  <video class="video-js" controls preload="auto">
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+  </video>
 </div>
+
+
+<script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>

@@ -2,6 +2,7 @@
 
 use common\models\resource\Asset;
 use common\models\resource\format\handlers\FormatHandler;
+use components\media\MediaComponent;
 use lib\app\Request;
 use lib\util\Helper;
 use lib\util\html\Html;
@@ -38,10 +39,7 @@ $current = "";
 
 <div class="row">
   <div class="col-lg-4 col-md-12" id="media-detail-container">
-    <?php
-    $handler = $assets[1]->getHandler($this);
-    echo $handler->renderView($assets[1]);
-    ?>
+    <?= MediaComponent::instance($this)->content() ?>
   </div>
 
 

@@ -3,6 +3,7 @@
 namespace common\controller;
 
 use lib\app\auth\interfaces\IAuthController;
+use lib\app\log\Logger;
 use lib\app\Request;
 use lib\app\view\interface\IViewable;
 use lib\app\view\View;
@@ -87,41 +88,37 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
       http_response_code(404);
       exit();
     }
-    $file = fopen($path, "r");
-    $mime =  mime_content_type($file);
+    $handle = fopen($path, "r");
+    $mime =  mime_content_type($handle);
     ob_clean();
-    header_remove();
-    header("Content-Type: $mime");
-    http_response_code(200);
-    echo file_get_contents($path);
-    exit();
-  }
 
-  /**
-   * Returns a JS script as response
-   *
-   * @param string $filename
-   * @return never
-   */
-  protected function returnScript($filename)
-  {
-    $this->returnAsset($filename);
-  }
 
-  /**
-   * Returns a CSS stylesheet as response
-   *
-   * @param string $filename
-   * @return never
-   */
-  protected function returnStylesheet($filename)
-  {
-    ob_clean();
-    header_remove();
-    header('Content-Type: text/css');
-    if (file_exists($filename)) {
+    $buffer  = "";
+    $count = 0;
+
+    if ($handle === false) {
+      http_response_code(404);
+      exit();
+    }
+
+    while (!feof($handle)) {
+      $buffer = fread($handle, 10 * 10);
+      echo $buffer;
+
+      ob_flush();
+      flush();
+
+      $count += strlen($buffer);
+    }
+
+    Logger::log($count);
+
+    $status = fclose($handle);
+
+    if ($status) {
+      header_remove();
+      header("Content-Type: $mime");
       http_response_code(200);
-      echo file_get_contents($filename);
     } else {
       http_response_code(404);
     }

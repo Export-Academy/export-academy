@@ -35,13 +35,13 @@ $questions = Question::find()->all();
           "id" => [
             "label" => "ID",
             "content" => function (Question $question) {
-              return Html::tag("a", "QID-$question->id", ["href" => Helper::getURL("admin/assessment/question", ["id" => $question->id])]);
+              return Html::tag("a", "QID-$question->id", ["class" => "text-nowrap", "href" => Helper::getURL("admin/assessment/question", ["id" => $question->id])]);
             }
           ],
           "prompt" => [
             "label" => "Prompt",
             "content" => function (Question $question) {
-              return Html::tag("small", $question->prompt, ["class" => "fw-semibold text-muted text-wrap"]);
+              return Html::tag("div", $question->prompt, ["class" => "fw-semibold text-muted text-wrap"]);
             }
           ],
           "type" => [

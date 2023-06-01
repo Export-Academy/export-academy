@@ -27,8 +27,8 @@ class MediaComponent extends BaseComponent
   }
 
 
-  public function content(AssetModel $asset)
+  public function content(AssetModel $asset = null)
   {
-    return $this->render("detail-container", ["asset" => $asset]);
+    return $this->render("media-content", ["asset" => $asset]);
   }
 }
