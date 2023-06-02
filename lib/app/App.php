@@ -4,6 +4,7 @@
 namespace lib\app;
 
 use common\controller\Controller;
+use components\flash\Flash;
 use Exception;
 use lib\app\auth\AuthHandler;
 use lib\app\auth\interfaces\IAuthHandler;
@@ -70,6 +71,7 @@ class App extends BaseObject
       $module = Helper::getValue("module", $action);
       if ($module !== "web") {
         View::reset();
+        Flash::reset();
       }
 
 
