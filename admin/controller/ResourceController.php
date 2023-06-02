@@ -18,4 +18,10 @@ class ResourceController extends Controller
   {
     $this->render('index', ["title" => "Manage Resources"]);
   }
+
+
+  public function actionFiles()
+  {
+    $this->render('file', ["title" => "File Manager"]);
+  }
 }

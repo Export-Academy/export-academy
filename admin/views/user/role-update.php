@@ -15,11 +15,10 @@ $granted_permissions = $granted_permissions ?? [];
 $permissions = Permission::find()->all();
 
 
-$this->registerJsFile("role-update.js", View::POS_LOAD);
+$this->registerJsFile("role-update.js");
 
 
 ?>
-<?= Html::tag("script", "", ["src" => "https://cdn.jsdelivr.net/npm/sweetalert2@11"]) ?>
 
 <div class="px-md-4 px-sm-3">
   <div class="row">

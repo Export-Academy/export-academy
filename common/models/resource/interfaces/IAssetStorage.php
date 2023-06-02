@@ -44,4 +44,14 @@ interface IAssetStorage
   public function getId();
 
   public function getHandler(View $view);
+
+  public function getMime();
+
+  public function getCreateDate();
+
+  public function getUpdateDate();
+
+  public function getUpdateUser();
+
+  public function getCreateUser();
 }

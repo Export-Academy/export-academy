@@ -5,9 +5,12 @@ namespace common\models\resource;
 
 use common\models\resource\format\Format;
 use common\models\resource\format\handlers\FormatHandler;
+use common\models\user\User;
+use DateTime;
 use Exception;
 use lib\app\database\Database;
 use lib\app\database\Transaction;
+use lib\app\Request;
 use lib\app\view\View;
 
 class Asset extends AssetModel
@@ -18,6 +21,53 @@ class Asset extends AssetModel
   public $format;
   public $created_at;
   public $updated_at;
+  public $created_by;
+  public $updated_by;
+
+
+  public function getCreatedByUser()
+  {
+    return $this->hasOne(User::class, ["id" => $this->created_by]);
+  }
+
+
+  public function getUpdatedByUser()
+  {
+    return $this->hasOne(User::class, ["id" => $this->updated_by]);
+  }
+
+
+  public function getUpdateUser()
+  {
+    $user = $this->updatedByUser;
+    if ($user)
+      return "{$user->getDisplayName()} ($user->email)";
+
+    return "User Not Found";
+  }
+
+  public function getCreateUser()
+  {
+    $user = $this->createdByUser;
+    if ($user)
+      return "{$user->getDisplayName()} ($user->email)";
+
+    return "User Not Found";
+  }
+
+
+  public function getCreateDate()
+  {
+    $date = new DateTime($this->created_at);
+    return date_format($date, "D, M d, Y h:i A");
+  }
+
+
+  public function getUpdateDate()
+  {
+    $date = new DateTime($this->updated_at);
+    return date_format($date, "D, M d, Y h:i A");
+  }
 
   public function getAssetFormat()
   {
@@ -50,11 +100,17 @@ class Asset extends AssetModel
     if (!$format) throw new Exception("Unsupported format");
     $db = Database::instance();
 
-    $asset = $db->transaction(function ($tr) use ($file, $format) {
+    $user = Request::getIdentity();
+
+    if (!$user) return null;
+
+    $asset = $db->transaction(function ($tr) use ($file, $format, $user) {
       $config = array(
         "name" => $file->name,
         "dir" => $file->getParsedPath(),
         "format" => $format->id,
+        "created_by" => $user->userId(),
+        "updated_by" => $user->userId()
       );
       $instance  = new Asset($config);
 
@@ -68,6 +124,17 @@ class Asset extends AssetModel
     });
 
     return $asset;
+  }
+
+
+  public function update($update = true, ?Transaction &$transaction = null)
+  {
+    $user = Request::getIdentity();
+    if (!$user) return null;
+
+    $this->updated_by = $user->userId();
+
+    parent::update($update, $transaction);
   }
 
   public static function findOne($condition = false)

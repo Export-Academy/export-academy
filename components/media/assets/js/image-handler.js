@@ -8,6 +8,7 @@
 class ImageHandler extends BaseHandler {
 
   src;
+  details;
   static registry = {};
 
 
@@ -28,9 +29,10 @@ class ImageHandler extends BaseHandler {
 
     const handler = new ImageHandler();
 
-    const { id, url } = res;
+    const { id, url, ...details } = res;
 
     handler.src = url;
+    handler.details = details;
     this.registry[id] = handler;
 
     return handler;

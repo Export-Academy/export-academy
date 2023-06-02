@@ -376,6 +376,7 @@ class View extends BaseObject
    */
   private function renderOnload($scripts)
   {
+    if (empty($scripts)) return "";
     $files = implode(", ", array_map(function ($s) {
       return "`$s`";
     }, array_filter($scripts, function ($script) {

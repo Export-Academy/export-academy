@@ -26,6 +26,7 @@ class Handler {
     const context = this;
     $(".view-asset-button").on('click', function (e) {
       context.container.children().hide();
+      context.detailContainer.hide();
       context.handleSelectMedia(e, context);
     });
   }
@@ -44,8 +45,18 @@ class Handler {
     if (Handler.types.hasOwnProperty(type)) {
       await context.handleMedia(key, type);;
     }
+  }
 
-    console.log(target, key, type);
+
+  configure(handler) {
+    const { mime, path, create_date, update_date, created_by, updated_by, name } = handler.details;
+    $("#filename").html(name);
+    $("#directory").html(path);
+    $("#mime-type").html(mime);
+    $("#created-user").html(created_by);
+    $("#created-date").html(create_date);
+    $("#updated-user").html(updated_by);
+    $("#updated-date").html(update_date);
   }
 
   /**
@@ -59,14 +70,22 @@ class Handler {
       handler = await Handler.types[type].init({ id: key });
 
     handler.initialize();
+
+    this.configure(handler);
+
+
     handler.container.show();
-    console.log("Initialized");
-    console.log(handler);
+    this.detailContainer.show();
   }
 
 
   get container() {
     return $(".media-container");
+  }
+
+
+  get detailContainer() {
+    return $("#media-details-container-handle");
   }
 }
 

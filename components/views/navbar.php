@@ -3,6 +3,7 @@
 use lib\app\view\View;
 use components\HtmlComponent;
 use lib\app\Request;
+use lib\util\Helper;
 
 /**
  * @var View $this
@@ -51,15 +52,18 @@ $components = HtmlComponent::instance($this);
   <div class="offcanvas-body">
 
 
-    <?= $components->render("sidebar-item", ["title" => "Dashboard", "link" => "/academy/admin/dashboard"]) ?>
-    <?= $components->render("sidebar-item", ["title" => "Assessment Manager", "link" => "/academy/admin/assessment", "items" => [
-      "Manage Assessment" => "/academy/admin/assessment"
+    <?= $components->render("sidebar-item", ["title" => "Dashboard", "link" => Helper::getURL("admin/dashboard")]) ?>
+    <?= $components->render("sidebar-item", ["title" => "Assessment Manager", "link" => Helper::getURL("admin/assessment"), "items" => [
+      "Manage Assessment" => Helper::getURL("admin/assessment")
     ]]) ?>
-    <?= $components->render("sidebar-item", ["title" => "Resource Manager", "link" => "/academy/admin/resource"]) ?>
+    <?= $components->render("sidebar-item", ["title" => "Resource Manager", "link" => "/academy/admin/resource", "items" => [
+      "Resource Manager" => Helper::getURL("admin/resource"),
+      "File Manager" => Helper::getURL("admin/resource/files")
+    ]]) ?>
     <?= $components->render("sidebar-item", ["title" => "User Manager", "link" => "/academy/admin/user", "items" => [
-      "Manage Users" => "/academy/admin/user",
-      "User Roles" => "/academy/admin/user/role",
-      "Permissions" => "/academy/admin/user/permission"
+      "Manage Users" => Helper::getURL("admin/user"),
+      "User Roles" => Helper::getURL("admin/user/role"),
+      "Permissions" => Helper::getURL("admin/user/permission")
     ]]) ?>
 
 

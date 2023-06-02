@@ -10,12 +10,18 @@ use common\models\resource\File;
 use components\media\MediaComponent;
 use Exception;
 use lib\app\log\Logger;
+use lib\app\route\Router;
 use lib\app\view\View;
 
 class MediaController extends Controller
 {
 
-
+  public function secure()
+  {
+    return [
+      "requiresAuth" => ["actionUpload", "actionUploadUrl"]
+    ];
+  }
 
 
   public function actionUpload()
@@ -24,9 +30,16 @@ class MediaController extends Controller
 
     switch ($method) {
       case "POST":
+        try {
+          $this->handleFileUpload();
+        } catch (Exception $ex) {
+          Logger::log($ex->getMessage(), "error");
+          $this->jsonResponse($ex->getMessage(), 500);
+        }
         break;
 
       default:
+        $this->jsonResponse("Invalid method", 405);
         break;
     }
   }
@@ -40,16 +53,14 @@ class MediaController extends Controller
       case "POST":
         try {
           $this->handleUrlUpload();
-
-          $this->jsonResponse('Success');
         } catch (Exception $ex) {
-          $this->jsonResponse($ex->getMessage());
+          Logger::log($ex->getMessage(), "error");
+          $this->jsonResponse($ex->getMessage(), 500);
         }
-
         break;
 
       default:
-        $this->jsonResponse("Invalid method");
+        $this->jsonResponse("Invalid method", 405);
         break;
     }
   }
@@ -66,9 +77,10 @@ class MediaController extends Controller
 
     try {
       $asset->delete();
-      $this->jsonResponse("Deleted");
+      Router::redirect($this->request->refer());
     } catch (Exception $ex) {
-      $this->jsonResponse($ex->getMessage());
+      Logger::log($ex->getMessage(), "error");
+      Router::redirect($this->request->refer());
     }
   }
 
@@ -82,7 +94,6 @@ class MediaController extends Controller
 
     if (!isset($media)) throw new Exception("No file was uploaded");
 
-
     $config = array(
       "tmp_name" => $media["tmp_name"],
       "name" => $name ?? $media["name"],
@@ -92,9 +103,19 @@ class MediaController extends Controller
 
 
     $file = new File($config);
-    $assetInstance = Asset::create($file);
+    $asset = Asset::create($file);
 
-    Logger::log($assetInstance);
+    $this->jsonResponse(array(
+      "url" => $asset->getUrl(),
+      "mime" => mime_content_type($asset->readStream()),
+      "id" => $asset->getId(),
+      "name" => $asset->getName(),
+      "path" => $asset->getPath(),
+      "create_date" => $asset->getCreateDate(),
+      "update_date" => $asset->getUpdateDate(),
+      "created_by" => $asset->getCreateUser(),
+      "updated_by" => $asset->getUpdateUser()
+    ));
   }
 
 
@@ -114,10 +135,19 @@ class MediaController extends Controller
     );
 
     $file = new File($config);
-    Logger::log(mime_content_type($file->getResource()));
-    $assetInstance = Asset::create($file);
+    $asset = Asset::create($file);
 
-    return $assetInstance;
+    $this->jsonResponse(array(
+      "url" => $asset->getUrl(),
+      "mime" => mime_content_type($asset->readStream()),
+      "id" => $asset->getId(),
+      "name" => $asset->getName(),
+      "path" => $asset->getPath(),
+      "create_date" => $asset->getCreateDate(),
+      "update_date" => $asset->getUpdateDate(),
+      "created_by" => $asset->getCreateUser(),
+      "updated_by" => $asset->getUpdateUser()
+    ));
   }
 
 
@@ -128,16 +158,13 @@ class MediaController extends Controller
     $method = $this->request->method();
 
     switch ($method) {
-      case "GET":
-        break;
-
-
       case "POST":
         $this->handleMedia();
         break;
 
 
       default:
+        $this->jsonResponse("Invalid Method", 405);
         break;
     }
   }
@@ -171,22 +198,30 @@ class MediaController extends Controller
   {
     $mediaId = $this->request->data("media");
 
-    $media = Asset::findOne(["id" => $mediaId]);
-    if ($media) {
-      $this->jsonResponse(array(
-        "url" => $media->getUrl(),
-        "mime" => mime_content_type($media->readStream()),
-        "id" => $mediaId
-      ));
+    $asset = Asset::findOne(["id" => $mediaId]);
+    if ($asset) {
+      try {
+        $data = array(
+          "url" => $asset->getUrl(),
+          "mime" => mime_content_type($asset->readStream()),
+          "id" => $asset->getId(),
+          "name" => $asset->getName(),
+          "path" => $asset->getPath(),
+          "create_date" => $asset->getCreateDate(),
+          "update_date" => $asset->getUpdateDate(),
+          "created_by" => $asset->getCreateUser(),
+          "updated_by" => $asset->getUpdateUser()
+        );
+
+        Logger::log($data);
+        $this->jsonResponse($data);
+      } catch (Exception $ex) {
+        Logger::log($ex->getMessage());
+        $this->jsonResponse($ex->getMessage(), 500);
+      }
       return;
     }
 
     $this->jsonResponse(null, 404);
-  }
-
-
-
-  private function getContent()
-  {
   }
 }

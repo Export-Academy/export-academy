@@ -2,6 +2,7 @@
 
 namespace common\controller;
 
+use Exception;
 use lib\app\auth\interfaces\IAuthController;
 use lib\app\log\Logger;
 use lib\app\Request;
@@ -82,66 +83,33 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
   }
 
 
-  protected function returnAsset($path)
+  protected function returnAsset($path, $mime = null)
   {
-    if (!file_exists($path)) {
+    try {
+      if (!file_exists($path)) {
+        http_response_code(404);
+        exit();
+      }
+      $handle = fopen($path, "r");
+      $mime = $mime ?? mime_content_type($handle);
+      ob_clean();
+
+      echo file_get_contents($path);
+
+      $status = fclose($handle);
+
+      if ($status) {
+        header_remove();
+        header("Content-Type: $mime");
+        http_response_code(200);
+      } else {
+        throw new Exception("File not found");
+      }
+    } catch (Exception $ex) {
       http_response_code(404);
-      exit();
-    }
-    $handle = fopen($path, "r");
-    $mime =  mime_content_type($handle);
-    ob_clean();
-
-
-    $buffer  = "";
-    $count = 0;
-
-    if ($handle === false) {
-      http_response_code(404);
-      exit();
+      Logger::log($ex->getMessage());
     }
 
-    while (!feof($handle)) {
-      $buffer = fread($handle, 10 * 10);
-      echo $buffer;
-
-      ob_flush();
-      flush();
-
-      $count += strlen($buffer);
-    }
-
-    Logger::log($count);
-
-    $status = fclose($handle);
-
-    if ($status) {
-      header_remove();
-      header("Content-Type: $mime");
-      http_response_code(200);
-    } else {
-      http_response_code(404);
-    }
-    exit();
-  }
-
-  /**
-   * Returns a CSS stylesheet as response
-   *
-   * @param string $filename
-   * @return never
-   */
-  protected function returnImage($filename)
-  {
-    ob_clean();
-    header_remove();
-    header('Content-Type: text/css');
-    if (file_exists($filename)) {
-      http_response_code(200);
-      echo file_get_contents($filename);
-    } else {
-      http_response_code(404);
-    }
     exit();
   }
 

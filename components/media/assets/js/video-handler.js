@@ -10,6 +10,8 @@ class VideoHandler extends BaseHandler {
   src;
   mime;
 
+  details;
+
   static registry = {};
 
   static getHandler(key, def = null) {
@@ -29,11 +31,12 @@ class VideoHandler extends BaseHandler {
 
     const handler = new VideoHandler();
 
-    const { id, url, mime } = res;
+    const { id, url, ...details } = res;
 
     handler.id = id;
     handler.src = url;
-    handler.mime = mime;
+    handler.mime = details.mime;
+    handler.details = details;
 
     this.registry[id] = handler;
     return handler;

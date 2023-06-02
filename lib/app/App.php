@@ -61,15 +61,18 @@ class App extends BaseObject
 
   public function run()
   {
-
     try {
       $session = $this->request->startSession();
       if (!$session) return;
-      View::reset();
-
-
       $router = $this->router;
       $action = $this->router->getAction();
+
+      $module = Helper::getValue("module", $action);
+      if ($module !== "web") {
+        View::reset();
+      }
+
+
       $user = $this->authHandler->authenticate($this->request);
 
 

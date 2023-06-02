@@ -158,6 +158,8 @@ CREATE TABLE
         `name` varchar(250) NOT NULL,
         `dir` varchar(100),
         `format` int NOT NULL,
+        `created_by` int NOT NULL,
+        `updated_by` int NOT NULL,
         `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
         `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
     );
@@ -319,6 +321,14 @@ ALTER TABLE `asset`
 ADD
     FOREIGN KEY (`format`) REFERENCES `format` (`id`);
 
+ALTER TABLE `asset`
+ADD
+    FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
+
+ALTER TABLE `asset`
+ADD
+    FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`);
+
 ALTER TABLE `asset_relation`
 ADD
     FOREIGN KEY (`entity`) REFERENCES `entity` (`id`);
@@ -396,4 +406,32 @@ INSERT INTO
 VALUES (
         'Open',
         'common\\models\\assessment\\OpenEnd'
+    );
+
+INSERT INTO format(
+        name,
+        handler
+    )
+VALUES (
+        'image',
+        'common\\models\\resource\\format\\handlers\\ImageHandler'
+    );
+
+INSERT INTO format(
+        name,
+        handler
+    )
+VALUES (
+        'text',
+        'common\\models\\resource\\format\\handlers\\TextHandler'
+    );
+
+INSERT INTO format(
+        name,
+        handler
+    )
+VALUES
+(
+        'video',
+        'common\\models\\resource\\format\\handlers\\VideoHandler'
     );

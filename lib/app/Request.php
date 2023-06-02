@@ -79,6 +79,12 @@ class Request extends BaseObject
     return $_SERVER['REDIRECT_URL'];
   }
 
+
+  public static function refer()
+  {
+    return $_SERVER['HTTP_REFERER'];
+  }
+
   public static function url()
   {
     return $_SERVER['REQUEST_URI'];

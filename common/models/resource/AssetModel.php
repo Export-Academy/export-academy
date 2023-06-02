@@ -132,6 +132,12 @@ abstract class AssetModel extends BaseModel implements IAssetStorage
     return self::base() . "/" . $this->getPath();
   }
 
+
+  public function getMime()
+  {
+    return mime_content_type($this->readStream());
+  }
+
   abstract public function renderThumbnail(View $view);
 
   abstract public function view(View $view);

@@ -31,4 +31,10 @@ class MediaComponent extends BaseComponent
   {
     return $this->render("media-content", ["asset" => $asset]);
   }
+
+
+  public function uploader($reload = false, $path = null)
+  {
+    return $this->render("uploader", ["reload" => $reload, "path" => $path]);
+  }
 }
