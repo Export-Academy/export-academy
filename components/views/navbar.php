@@ -10,6 +10,8 @@ use lib\util\Helper;
  */
 
 
+$this->registerSCSSFile("dashboard.scss");
+
 
 $components = HtmlComponent::instance($this);
 
@@ -17,28 +19,25 @@ $components = HtmlComponent::instance($this);
 
 
 
-<div class="hstack container-fluid align-items-center justify-content-between w-100 py-2 bg-light">
+<div class="dashboard-nav">
   <div class="p-2">
-    <button class="btn icon-btn" data-bs-toggle="offcanvas" data-bs-target="#sidebar-canvas">
-      <i data-feather="menu"></i>
+    <button class="menu" data-bs-toggle="offcanvas" data-bs-target="#sidebar-canvas">
+      <i data-feather="menu" width="36" height="36"></i>
     </button>
   </div>
   <div class="hstack">
-
-    <div class="btn-group">
-      <button type="button" data-bs-toggle="dropdown" class="btn">
+    <div>
+      <button type="button" data-bs-toggle="dropdown" class="user-detail">
         <div class="text-start">
-          <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?> <br><small class="fw-semibold">Administrator</small></div>
+          <div class="fw-bold"><?= Request::getIdentity()->getDisplayName() ?></div>
         </div>
       </button>
-      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="visually-hidden">Toggle Dropdown</span>
-      </button>
-      <ul class="dropdown-menu rounded-0">
-        <li><a class="dropdown-item" href="/academy/sign_out">Sign Out</a></li>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item fw-semibold" href="<?= Helper::getURL("admin/account") ?>">Account</a></li>
         <li>
           <hr class="dropdown-divider">
         </li>
+        <li><a class="dropdown-item fw-semibold" href="<?= Helper::getURL("sign_out") ?>">Sign Out</a></li>
       </ul>
     </div>
   </div>
@@ -47,9 +46,10 @@ $components = HtmlComponent::instance($this);
 
 <div id="sidebar-canvas" class="offcanvas offcanvas-start" tabindex="-1">
   <div class="offcanvas-header">
-    <input placeholder="Search" type="text" class="form-control form-control-sm">
+    <div class="fw-semibold fs-3">Export Academy</div>
+    <div class="fw-semibold">Admin Portal</div>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body mt-5">
 
 
     <?= $components->render("sidebar-item", ["title" => "Dashboard", "link" => Helper::getURL("admin/dashboard")]) ?>

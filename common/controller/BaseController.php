@@ -4,9 +4,8 @@ namespace common\controller;
 
 use common\controller\Controller;
 use common\models\user\User;
-use lib\app\log\Logger;
+use components\flash\Flash;
 use lib\app\route\Router;
-use lib\util\Helper;
 
 class BaseController extends Controller
 {
@@ -35,6 +34,7 @@ class BaseController extends Controller
           $redirectPath = $this->request->params("r", null);
           Router::redirect($redirectPath ?? "/academy/admin/dashboard");
         }
+        Flash::warning("Invalid login credentials", "Login Failed");
         Router::redirect("/academy/login");
         return;
 
@@ -50,15 +50,14 @@ class BaseController extends Controller
     switch ($this->request->method()) {
       case 'POST':
         $data = $this->request->data("User", []);
+        $user = User::create($data);
 
-        $password = Helper::getValue("password", $data, null);
-
-        if ($password) {
-          $data["password"] = User::encryptPassword($password);
+        if ($user) {
+          Router::redirect("/academy/login");
         }
-        $user = new User($data);
-        $user->save();
-        Router::redirect("/academy/login");
+
+        Flash::error("Something went wrong", "Registration Failed");
+        Router::redirect($this->request->refer());
         break;
 
       case 'GET':

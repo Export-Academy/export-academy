@@ -1,20 +1,13 @@
 <?php
 
 use common\models\access\Permission;
-use components\HtmlComponent;
+use components\table\DataTable;
+use lib\util\Helper;
 use lib\util\html\Html;
 
 /**
  * @var Permission[] $permissions
  */
-
-
-
-$components = HtmlComponent::instance($this);
-
-
-
-
 ?>
 
 
@@ -23,39 +16,36 @@ $components = HtmlComponent::instance($this);
   <div class="card">
     <div class="card-body">
 
-      <?= $components->render('data-table-component/data-table', [
-        "data" => $permissions,
-        "columns" => [
-          "id" => ["label" => "ID"],
-          "name" => [
-            "label" => "Name",
-            "content" => 'name'
-          ],
-          "description" => [
-            "label" => "Description",
-            "content" => function (Permission $permission) {
-              return $permission->description ?? "No Description";
+      <?= DataTable::instance($this)->table($permissions, [
+        "id" => ["label" => "ID"],
+        "name" => [
+          "label" => "Name",
+          "content" => 'name'
+        ],
+        "description" => [
+          "label" => "Description",
+          "content" => function (Permission $permission) {
+            return $permission->description ?? "No Description";
+          }
+        ],
+        "roles" => [
+          "label" => "Permitted Roles",
+          "content" => function (Permission $permission) {
+            $content = "";
+            $roles = $permission->assignedRoles;
+            foreach ($roles as $role) {
+              $content .= "<span class='badge bg-success mx-1'>$role->name</span>";
             }
-          ],
-          "roles" => [
-            "label" => "Permitted Roles",
-            "content" => function (Permission $permission) {
-              $content = "";
-              $roles = $permission->assignedRoles;
-              foreach ($roles as $role) {
-                $content .= "<span class='badge bg-success mx-1'>$role->name</span>";
-              }
-              return $content;
-            }
-          ],
-          "action" => [
-            "label" => "Action",
-            "content" => function (Permission $permission) {
-              return Html::tag("button", "Edit Permission", ["class" => "btn"]);
-            }
-          ]
+            return $content;
+          }
+        ],
+        "action" => [
+          "label" => "Action",
+          "content" => function (Permission $permission) {
+            return Html::tag("a", "Edit Permission", ["class" => "btn", "href" => Helper::getURL("admin/permission", ["id" => $permission->id])]);
+          }
         ]
-      ]) ?>
+      ], null) ?>
 
     </div>
   </div>

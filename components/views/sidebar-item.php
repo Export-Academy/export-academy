@@ -5,11 +5,10 @@ use lib\app\view\View;
 
 /** @var View $this */
 
-$this->registerSCSSFile("sidebar-item.scss");
+
 
 $path = Request::path();
 $active = is_int(strpos($path, $link)) ? true : false;
-
 
 $unique = str_replace(" ", "-", strtolower($title));
 
@@ -23,10 +22,8 @@ $unique = str_replace(" ", "-", strtolower($title));
         <div class="academy-nav-item rounded-1 <?= $active ? "active" : "" ?>">
           <div class="item collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#container-<?= $unique ?>">
             <div class="hstack gap-2 justify-content-between">
+              <i data-feather="chevrons-right"></i>
               <div><?= $title ?? "Title" ?></div>
-              <div>
-                <i data-feather="arrow-right-circle" width="16" height="16"></i>
-              </div>
             </div>
           </div>
         </div>
@@ -45,10 +42,8 @@ $unique = str_replace(" ", "-", strtolower($title));
             <div class="academy-nav-item sub-item rounded-1 <?= $active ? "active" : "" ?>">
               <a class="item" href="<?= $link ?? "#" ?>">
                 <div class="hstack justify-content-between">
+                  <i data-feather="circle" width="8" height="8"></i>
                   <div><?= $title ?? "Title" ?></div>
-                  <div>
-                    <i data-feather="plus" width="16" height="16"></i>
-                  </div>
                 </div>
               </a>
             </div>
@@ -65,10 +60,8 @@ $unique = str_replace(" ", "-", strtolower($title));
   <div class="academy-nav-item rounded-1 <?= $active ? "active" : "" ?>">
     <a class="item" href="<?= $link ?? "#" ?>">
       <div class="hstack gap-2 justify-content-between">
+        <i data-feather="chevrons-right"></i>
         <div><?= $title ?? "Title" ?></div>
-        <div>
-          <i data-feather="arrow-right-circle" width="16" height="16"></i>
-        </div>
       </div>
     </a>
   </div>

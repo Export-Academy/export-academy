@@ -4,6 +4,7 @@ use common\models\assessment\Question;
 use common\models\assessment\QuestionType;
 use components\form\FormComponent;
 use components\HtmlComponent;
+use components\media\MediaComponent;
 use lib\app\view\View;
 use lib\util\Helper;
 use lib\util\html\Html;
@@ -24,7 +25,6 @@ $htmlComponent = HtmlComponent::instance($this);
 $types = QuestionType::find()->all();
 
 
-$ImageModal = $htmlComponent->render("media-components/insert-image-modal");
 $InsertImageButton = $htmlComponent->render("media-components/insert-image-button", ["container" => "#main-image-container"]);
 
 
@@ -43,7 +43,7 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 <div class="<?= $prefix ?>question-builder">
   <!-- <div class="toolbar p-2 my-2 hstack justify-content-between gap-2">
     <div class="hstack gap-2">
-       <?= $InsertImageButton ?>
+      <?= MediaComponent::instance($this)->uploader(false, "question/assets") ?>
     </div>
   </div> -->
 
@@ -94,8 +94,6 @@ $this->registerJsFile("index.js", $this::POS_HEAD);
 </div>
 
 <?= FormComponent::instance($this)->end() ?>
-
-<?= $ImageModal ?>
 
 <?php
 

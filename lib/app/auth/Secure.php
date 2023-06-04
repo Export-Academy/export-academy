@@ -15,18 +15,12 @@ class Secure extends BaseObject
 
   public $requiresAuth = [];
   public $strictNoAuth = [];
+  public $permission = [];
 
 
   public static function instance($config = [])
   {
-    return new Secure([
-      "controller" => Helper::getValue("controller", $config, null),
-      "action" => Helper::getValue("action", $config, null),
-
-      "requiresAuth" => Helper::getValue("requiresAuth", $config, []),
-      "strictNoAuth" => Helper::getValue("strictNoAuth", $config, []),
-      "methods" => Helper::getValue("methods", $config, []),
-    ]);
+    return new Secure($config);
   }
 
 
@@ -48,8 +42,24 @@ class Secure extends BaseObject
   }
 
 
-  public function requirePermission(IAuthIdentity $identity)
+  public function hasPermission(IAuthIdentity $identity)
   {
-    return false;
+    $controllerPermissions = Helper::getValue("*", $this->permission, []);
+    $methodPermissions = Helper::getValue($this->action, $this->permission, []);
+
+
+    $requiredPermissions = array_merge(is_array($controllerPermissions) ? $controllerPermissions : [$controllerPermissions], is_array($methodPermissions) ? $methodPermissions : [$methodPermissions]);
+
+    $allowed = true;
+    foreach ($requiredPermissions as $permission) {
+      $isPermitted = $identity->hasPermission($permission);
+      if ($isPermitted) {
+        continue;
+      }
+
+      $allowed = $isPermitted;
+      break;
+    }
+    return $allowed;
   }
 }

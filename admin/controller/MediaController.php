@@ -7,6 +7,7 @@ use common\controller\Controller;
 use common\models\resource\Asset;
 use common\models\resource\AssetModel;
 use common\models\resource\File;
+use components\flash\Flash;
 use components\media\MediaComponent;
 use Exception;
 use lib\app\log\Logger;
@@ -19,8 +20,41 @@ class MediaController extends Controller
   public function secure()
   {
     return [
-      "requiresAuth" => ["actionUpload", "actionUploadUrl"]
+      "requiresAuth" => ["actionUpload", "actionUploadUrl", "actionDelete"]
     ];
+  }
+
+
+  public function actionUpdate()
+  {
+    $method = $this->request->method();
+
+    switch ($method) {
+      case "POST":
+        try {
+          $this->updateFile();
+          Flash::success("Filename changed", "File Updated");
+          Router::redirect($this->request->refer());
+        } catch (Exception $ex) {
+          Flash::error($ex->getMessage(), "File Update Failed");
+          Router::redirect($this->request->refer());
+        }
+        break;
+
+      default:
+        $this->jsonResponse("Invalid method", 405);
+        break;
+    }
+  }
+
+
+  private function updateFile()
+  {
+    $id = $this->request->data('id');
+    $name = $this->request->data("name");
+    $path = $this->request->data("path");
+    $asset = Asset::findOne(["id" => $id]);
+    $asset->move((empty($path) ? "/" : $path) . "$name");
   }
 
 
@@ -197,7 +231,6 @@ class MediaController extends Controller
   private function handleMedia()
   {
     $mediaId = $this->request->data("media");
-
     $asset = Asset::findOne(["id" => $mediaId]);
     if ($asset) {
       try {

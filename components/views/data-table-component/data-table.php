@@ -76,8 +76,14 @@ $columns = $columns ?? [];
 
 <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.js"></script>
 
-<script>
-  $(document).ready(function() {
+<?php
+
+
+$script = <<< JS
+$(document).ready(function() {
     $('#example').DataTable();
   });
-</script>
+JS;
+
+
+$this->registerJs($script);

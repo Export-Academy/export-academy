@@ -58,15 +58,17 @@ class Asset extends AssetModel
 
   public function getCreateDate()
   {
-    $date = new DateTime($this->created_at);
-    return date_format($date, "D, M d, Y h:i A");
+    $date = new DateTime($this->created_at, Database::timezone());
+    $date->setTimezone(User::timezone());
+    return date_format($date, "D M d, Y h:i A");
   }
 
 
   public function getUpdateDate()
   {
-    $date = new DateTime($this->updated_at);
-    return date_format($date, "D, M d, Y h:i A");
+    $date = new DateTime($this->updated_at, Database::timezone());
+    $date->setTimezone(User::timezone());
+    return date_format($date, "D M d, Y h:i A");
   }
 
   public function getAssetFormat()
@@ -135,6 +137,25 @@ class Asset extends AssetModel
     $this->updated_by = $user->userId();
 
     parent::update($update, $transaction);
+  }
+
+  public function move($destination, $source = null, $config = [])
+  {
+
+    $name = end(explode("/", $destination));
+
+    $destination = $destination . ".{$this->getExtension()}";
+    $db = Database::instance();
+
+    $db->transaction(function ($tr) use ($name, $destination, $config) {
+      $source = $this->getPath();
+
+      $this->dir = $destination;
+      $this->name = $name;
+
+      $this->update(true, $tr);
+      parent::move($destination, $source, $config);
+    });
   }
 
   public static function findOne($condition = false)
@@ -206,5 +227,11 @@ class Asset extends AssetModel
   public function getHandler(View $view)
   {
     return $this->assetFormat->handlerInstance($view);
+  }
+
+
+  public function getExtension()
+  {
+    return explode("/", mime_content_type($this->readStream()))[1];
   }
 }

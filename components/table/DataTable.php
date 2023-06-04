@@ -3,28 +3,30 @@
 namespace components\table;
 
 use components\BaseComponent;
+use lib\util\Helper;
 
 class DataTable extends BaseComponent
 {
 
   public function getViewsDirectory()
   {
-    return __DIR__ . "\\views\\";
+    return Helper::getAlias("@components\\table\\views\\", "\\");
   }
 
 
   public function getAssetDirectory()
   {
-    return __DIR__ . "\assets\\";
+    return Helper::getAlias("@components\\table\assets\\", "\\");
   }
 
 
-  public function table($items = [],)
+  public function table($data, $columns, $id = null, $options = [])
   {
+    $class = Helper::getValue("class", $options);
+    if ($class) {
+      unset($options["class"]);
+    }
 
-    $content = $this->render("index", [
-      "footerOptions"
-    ]);
-    return $content;
+    return $this->render("table", ["data" => $data, "columns" => $columns ?? [], "id" => $id, "options" => $options]);
   }
 }

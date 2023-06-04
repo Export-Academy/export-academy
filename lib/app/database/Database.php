@@ -3,6 +3,7 @@
 
 namespace lib\app\database;
 
+use common\models\System;
 use DateTimeZone;
 use Exception;
 use lib\app\log\Logger;
@@ -50,7 +51,7 @@ class Database extends BaseObject
 
   public static function timezone()
   {
-    return new DateTimeZone("UTC");
+    return System::getDefaultTimezone();
   }
 
   public function execute(Query $query, $lastId = false)

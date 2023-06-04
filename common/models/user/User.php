@@ -2,11 +2,17 @@
 
 namespace common\models\user;
 
+use common\models\access\Grants;
 use common\models\access\Role;
 use common\models\access\UserRole;
 use common\models\base\BaseModel;
+use DateTimeZone;
+use Exception;
 use lib\app\auth\interfaces\IAuthIdentity;
+use lib\app\database\Database;
 use lib\app\database\Query;
+use lib\app\Request;
+use lib\util\Helper;
 
 /**
  * @property int $id
@@ -15,6 +21,7 @@ use lib\app\database\Query;
  * @property string $email
  * @property string $password
  * @property string $token
+ * @property int $meta
  * @property int $type_id
  * @property bool $verified
  * @property bool $email_verified
@@ -34,6 +41,7 @@ class User extends BaseModel implements IAuthIdentity
   public $password;
   public $token;
   public $type_id;
+  public $meta;
   public $verified;
   public $email_verified;
   public $disabled;
@@ -52,6 +60,18 @@ class User extends BaseModel implements IAuthIdentity
   }
 
 
+  public function getUserMeta()
+  {
+    return $this->hasOne(UserMeta::class, ["id" => $this->meta]);
+  }
+
+
+  public function getTimezone()
+  {
+    return new DateTimeZone($this->userMeta->timezone);
+  }
+
+
   /**
    * Undocumented function
    *
@@ -63,10 +83,10 @@ class User extends BaseModel implements IAuthIdentity
     return $this->hasMany(UserRole::class, ['user_id' => $this->id]);
   }
 
-  public function getRoles($result = true)
+  public function getRoles()
   {
     $userRoleTableName = UserRole::tableName();
-    return $this->hasMany(Role::class, ["id" => "@$userRoleTableName.role_id"])->viaTable($userRoleTableName, ["user_id" => $this->id]);
+    return $this->hasMany(Role::class, ["id" => "@{$userRoleTableName}.role_id"])->viaTable($userRoleTableName, ["user_id" => $this->id]);
   }
 
   public function getUserType()
@@ -89,21 +109,18 @@ class User extends BaseModel implements IAuthIdentity
 
   public function hasPermission($permission)
   {
-  }
-
-
-  public function userPermissions()
-  {
-  }
-
-
-  public function userRoles()
-  {
+    $grant = Grants::find([
+      "role_id" => $this->getRoles()->select("id"),
+      "permission_id" => $permission
+    ])->one();
+    return isset($grant) ? true : false;
   }
 
 
   public function hasRole($role)
   {
+    $userRole = $this->getUserRoles()->where(["role_id" => $role]);
+    return $userRole ? true : false;
   }
 
   public function getDisplayName()
@@ -114,5 +131,33 @@ class User extends BaseModel implements IAuthIdentity
   public static function encryptPassword($password)
   {
     return hash('sha256', $password);
+  }
+
+  public static function create($data = [])
+  {
+    $password = Helper::getValue("password", $data, null);
+
+    if (empty($password)) throw new Exception("Password is required");
+    $data['password'] = self::encryptPassword($password);
+    $db = Database::instance();
+
+    $user = $db->transaction(function ($tr) use ($data) {
+      $meta = new UserMeta();
+      $meta->save($tr);
+      $data["meta"] = $meta->id;
+      $user = new User($data);
+      $user->save($tr);
+      return $user;
+    });
+    return $user;
+  }
+
+  public static function timezone()
+  {
+    $user = Request::getIdentity();
+    if ($user) {
+      return $user->getTimezone();
+    }
+    return Database::timezone();
   }
 }

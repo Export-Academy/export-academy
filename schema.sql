@@ -4,6 +4,10 @@ CREATE DATABASE `export-academy` DEFAULT CHARACTER SET = 'utf8mb4';
 
 USE `export-academy`;
 
+SET GLOBAL time_zone = '+0:00';
+
+SET @@GLOBAL.time_zone = '+0:00';
+
 CREATE TABLE
     `user_type` (
         `id` int PRIMARY KEY,
@@ -24,14 +28,21 @@ CREATE TABLE
         `disabled` boolean DEFAULT false,
         `requires_verification` boolean DEFAULT false,
         `type_id` int,
-        `last_logged_in` timestamp,
-        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+        `meta` int NOT NULL,
+        `last_logged_in` datetime,
+        `created_at` datetime NOT NULL DEFAULT (NOW()),
+        `updated_at` datetime NOT NULL DEFAULT (NOW())
+    );
+
+CREATE TABLE
+    `user_meta` (
+        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `timezone` varchar(50) NOT NULL DEFAULT "+0:00"
     );
 
 CREATE TABLE
     `permission` (
-        `id` int PRIMARY KEY AUTO_INCREMENT,
+        `id` int PRIMARY KEY,
         `name` varchar(255) UNIQUE NOT NULL,
         `description` text
     );
@@ -82,8 +93,8 @@ CREATE TABLE
         `user_id` int NOT NULL,
         `question_id` int NOT NULL,
         `content` blob NOT NULL,
-        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        `created_at` datetime NOT NULL DEFAULT (NOW()),
+        `updated_at` datetime NOT NULL DEFAULT (NOW()),
         PRIMARY KEY (`user_id`, `question_id`)
     );
 
@@ -109,8 +120,8 @@ CREATE TABLE
         `type` int NOT NULL,
         `link` int,
         `enabled` boolean DEFAULT false,
-        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+        `created_at` datetime NOT NULL DEFAULT (NOW()),
+        `updated_at` datetime NOT NULL DEFAULT (NOW())
     );
 
 CREATE TABLE
@@ -134,8 +145,8 @@ CREATE TABLE
         `content` blob NOT NULL,
         `enabled` boolean DEFAULT false,
         `format_id` int NOT NULL,
-        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+        `created_at` datetime NOT NULL DEFAULT (NOW()),
+        `updated_at` datetime NOT NULL DEFAULT (NOW())
     );
 
 CREATE TABLE
@@ -160,8 +171,8 @@ CREATE TABLE
         `format` int NOT NULL,
         `created_by` int NOT NULL,
         `updated_by` int NOT NULL,
-        `created_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-        `updated_at` timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP)
+        `created_at` datetime NOT NULL DEFAULT (NOW()),
+        `updated_at` datetime NOT NULL DEFAULT (NOW())
     );
 
 CREATE TABLE
@@ -183,6 +194,11 @@ CREATE TABLE
         `asset` int NOT NULL,
         `entity_id` int NOT NULL,
         PRIMARY KEY (`entity`, `entity_id`, `asset`)
+    );
+
+CREATE TABLE
+    `system` (
+        `timezone` varchar(50) NOT NULL DEFAULT "UTC"
     );
 
 CREATE INDEX `user_type_index_0` ON `user_type` (`name`);
@@ -230,6 +246,10 @@ CREATE INDEX `format_index_20` ON `format` (`name`);
 ALTER TABLE `user`
 ADD
     FOREIGN KEY (`type_id`) REFERENCES `user_type` (`id`);
+
+ALTER TABLE `user`
+ADD
+    FOREIGN KEY (`meta`) REFERENCES `user_meta` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `grants`
 ADD
@@ -337,37 +357,51 @@ ALTER TABLE `asset_relation`
 ADD
     FOREIGN KEY (`asset`) REFERENCES `asset` (`id`);
 
-INSERT INTO `permission` (`name`) VALUES ('Create User');
+INSERT INTO `permission` (`id`,`name`) VALUES (1,'Create User');
 
-INSERT INTO `permission` (`name`) VALUES ('Update User');
-
-INSERT INTO
-    `permission` (`name`)
-VALUES ('Access User Controller');
-
-INSERT INTO `permission` (`name`) VALUES ('Create Question');
-
-INSERT INTO `permission` (`name`) VALUES ('Update Question');
+INSERT INTO `permission` (`id`,`name`) VALUES (2,'Update User');
 
 INSERT INTO
-    `permission` (`name`)
-VALUES ('Access Question Controller');
+    `permission` (`id`, `name`)
+VALUES (3, 'Access User Controller');
+
+INSERT INTO `permission` (`id`,`name`) VALUES (4,'Create Question');
+
+INSERT INTO `permission` (`id`,`name`) VALUES (5,'Update Question');
 
 INSERT INTO
-    `permission` (`name`)
-VALUES ('Access Resource Controller');
+    `permission` (`id`, `name`)
+VALUES (
+        6,
+        'Access Question Controller'
+    );
 
-INSERT INTO `permission` (`name`) VALUES ('Update Resource');
+INSERT INTO
+    `permission` (`id`, `name`)
+VALUES (
+        7,
+        'Access Resource Controller'
+    );
 
-INSERT INTO `permission` (`name`) VALUES ('Create Resource');
+INSERT INTO `permission` (`id`,`name`) VALUES (8,'Update Resource');
 
-INSERT INTO `permission` (`name`) VALUES ('Create User Role');
+INSERT INTO `permission` (`id`,`name`) VALUES (9,'Create Resource');
 
-INSERT INTO `permission` (`name`) VALUES ('Update User Role');
+INSERT INTO
+    `permission` (`id`, `name`)
+VALUES (10, 'Create User Role');
 
-INSERT INTO `permission` (`name`) VALUES ('Create Permission');
+INSERT INTO
+    `permission` (`id`, `name`)
+VALUES (11, 'Update User Role');
 
-INSERT INTO `permission` (`name`) VALUES ('Update Permission');
+INSERT INTO
+    `permission` (`id`, `name`)
+VALUES (12, 'Create Permission');
+
+INSERT INTO
+    `permission` (`id`, `name`)
+VALUES (13, 'Update Permission');
 
 INSERT INTO `role` (`name`) VALUES ('Administrator');
 
@@ -430,8 +464,9 @@ INSERT INTO format(
         name,
         handler
     )
-VALUES
-(
+VALUES (
         'video',
         'common\\models\\resource\\format\\handlers\\VideoHandler'
     );
+
+INSERT INTO system(timezone) VALUES ('+0:00');

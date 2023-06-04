@@ -4,7 +4,7 @@
 namespace lib\app;
 
 use common\controller\Controller;
-use components\flash\Flash;
+use common\models\user\User;
 use Exception;
 use lib\app\auth\AuthHandler;
 use lib\app\auth\interfaces\IAuthHandler;
@@ -71,7 +71,6 @@ class App extends BaseObject
       $module = Helper::getValue("module", $action);
       if ($module !== "web") {
         View::reset();
-        Flash::reset();
       }
 
 
@@ -86,7 +85,7 @@ class App extends BaseObject
       }
 
       if (!class_exists($controller)) {
-        Router::redirect('/academy/_404');
+        Router::redirect(Helper::getURL('_404', ["r" => Request::refer()]));
         return;
       }
 
@@ -103,9 +102,9 @@ class App extends BaseObject
 
       if ($secure->requiresAuth()) {
         if ($user->isAuthenticated()) {
-          if ($secure->requirePermission($user))
-            $this->authHandler->forbid();
-          $this->router->route($action);
+          if ($secure->hasPermission($user))
+            $this->router->route($action);
+          $this->authHandler->forbid();
         } else {
           $this->authHandler->challenge($user);
         }

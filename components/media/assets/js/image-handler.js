@@ -44,8 +44,11 @@ class ImageHandler extends BaseHandler {
   }
 
   initialize() {
-    $(".media-image-container#media-image-handler img").attr({
-      src: this.src
+    $(".media-image-container#media-image-handler").css({
+      "background": `url("${this.src}")`,
+      "background-repeat": "no-repeat",
+      "background-size": "fit",
+      "background-position": "center"
     });
   }
 }

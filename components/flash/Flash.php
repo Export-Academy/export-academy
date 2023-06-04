@@ -80,6 +80,8 @@ class Flash extends BaseComponent
       }
     }
 
+    self::reset();
+
     $content = Html::tag("div", $content, ["class" => "toast-container"]);
 
     return Html::tag("div", $content, ["class" => "main-toast-container"]);

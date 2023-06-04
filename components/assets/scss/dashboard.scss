@@ -1,0 +1,89 @@
+$color-grey: #f1f1f1;
+$color-slate-grey: #ced2cc;
+$color-cloudy: #7e909a;
+$color-primary-blue: #2a94d6;
+$color-navy: #344a5f;
+$color-dark: #202020;
+
+.accordion-item {
+  background: none;
+}
+
+.academy-nav-item {
+  padding: 10px 0;
+  background: none;
+
+  &.active {
+    background: $color-dark;
+    .item {
+      color: $color-grey;
+    }
+  }
+
+  &.sub-item.active {
+    background: none !important;
+
+    .item {
+      color: $color-slate-grey !important;
+    }
+  }
+
+  .item {
+    text-decoration: none;
+    color: $color-grey;
+    font-weight: 600;
+
+    &:hover {
+      color: $color-cloudy !important;
+    }
+
+    .hstack {
+      padding: 2px 20px;
+    }
+  }
+}
+
+#sidebar-canvas {
+  background: $color-navy;
+  color: $color-grey;
+}
+
+.dashboard-nav {
+  background: $color-navy;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  font-size: 20px;
+  font-weight: 400;
+  .menu {
+    background: none;
+    color: $color-grey;
+    border: none;
+
+    &:hover {
+      color: $color-cloudy;
+    }
+  }
+
+  .user-detail {
+    background: none;
+    color: $color-grey;
+    border: none;
+    padding: 10px;
+
+    &:hover {
+      color: $color-cloudy;
+    }
+  }
+
+  ul.dropdown-menu {
+    border-radius: 5px;
+    border: none;
+    -webkit-box-shadow: 1px -4px 25px -11px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 1px -4px 25px -11px rgba(0, 0, 0, 0.75);
+    box-shadow: 1px -4px 25px -11px rgba(0, 0, 0, 0.75);
+
+    font-size: 18px;
+  }
+}

@@ -10,11 +10,9 @@ use lib\app\view\View;
  * 
  * */
 
-
-
 ?>
 
 
-<div class="media-image-container" id="media-image-handler" style="display: none">
-  <img src="#">
+
+<div class="media-image-container" id="media-image-handler" style="display: none;">
 </div>

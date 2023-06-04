@@ -12,6 +12,8 @@ class Modal extends BaseComponent
   const MODAL_SM = "sm";
   const MODAL_MD = "md";
   const MODAL_LG = "lg";
+  const MODAL_XL = "xl";
+  const MODAL_FULL = "fullscreen";
 
 
   public function getAssetDirectory()

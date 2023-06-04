@@ -1,7 +1,9 @@
 <?php
 
+use common\models\System;
 use components\form\FormComponent;
 use components\HtmlComponent;
+use lib\app\log\Logger;
 use lib\app\Request;
 use lib\app\view\View;
 
@@ -30,6 +32,9 @@ $passwordComponent = HtmlComponent::passwordInput($this, "password", "", [
   "id" => "password-input",
   "required" => true
 ]);
+
+
+Logger::log(System::getDefaultTimezone());
 
 ?>
 

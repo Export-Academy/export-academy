@@ -46,17 +46,14 @@ class AuthHandler extends BaseObject implements IAuthHandler
 
 
     if ($signOut)
-      Router::redirect("$this->challengePath");
-
-
-    $current_path = Request::url();
-    Router::redirect("$this->challengePath?r=$current_path");
+      Router::redirect(Helper::getURL($this->challengePath));
+    Router::redirect(Helper::getURL($this->challengePath, ["r" => Request::refer()]));
   }
 
 
   public function forbid()
   {
-    Router::redirect($this->forbiddenPath);
+    Router::redirect(Helper::getURL($this->forbiddenPath, ["r" => Request::refer()]));
   }
 
 
@@ -88,7 +85,7 @@ class AuthHandler extends BaseObject implements IAuthHandler
 
   public function handleAuthenticatedRedirect(IAuthIdentity $user)
   {
-    Router::redirect($this->redirectPath, true);
+    Router::redirect(Helper::getURL($this->redirectPath), true);
   }
 
 

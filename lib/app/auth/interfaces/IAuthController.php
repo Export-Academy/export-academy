@@ -17,7 +17,11 @@ interface IAuthController
    * "strictNoAuth" => ["actionLogin", ...]
    * // All endpoints within the controller will not be accessible to authenticated users
    *  "strictNoAuth" => ["*"]
-   * 
+   * // Permissions to access the system
+   * "permission" => [
+   * "actionIndex" => Permission::Name,
+   * "*" => [Permission::Name, Permission::Desc]
+   * ]
    * ```
    *
    * @return array

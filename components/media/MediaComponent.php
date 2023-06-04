@@ -4,6 +4,7 @@
 namespace components\media;
 
 use common\models\resource\AssetModel;
+use common\models\resource\interfaces\IAssetStorage;
 use components\BaseComponent;
 use lib\util\Helper;
 
@@ -36,5 +37,11 @@ class MediaComponent extends BaseComponent
   public function uploader($reload = false, $path = null)
   {
     return $this->render("uploader", ["reload" => $reload, "path" => $path]);
+  }
+
+
+  public function editor(IAssetStorage $asset)
+  {
+    return $this->render("editor", ["asset" => $asset]);
   }
 }

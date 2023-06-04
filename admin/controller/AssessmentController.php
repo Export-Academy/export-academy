@@ -4,10 +4,12 @@
 namespace admin\controller;
 
 use common\controller\Controller;
+use common\models\access\Permission;
 use common\models\assessment\Answer;
 use common\models\assessment\Question;
 use common\models\assessment\QuestionType;
 use common\models\base\BaseModel;
+use components\flash\Flash;
 use Exception;
 use lib\app\log\Logger;
 use lib\app\route\Router;
@@ -18,7 +20,12 @@ class AssessmentController extends Controller
   public function secure()
   {
     return [
-      "requiresAuth" => ["*"]
+      "requiresAuth" => ["*"],
+      "permission" => [
+        "*" => Permission::AccessQuestionController,
+        "actionBuildQuestion" => Permission::CreateQuestion,
+        "actionQuestion" => Permission::UpdateQuestion
+      ]
     ];
   }
 
@@ -75,6 +82,7 @@ class AssessmentController extends Controller
     $instance = $type::findOne(["id" => $id]);
 
     if (!isset($instance)) {
+      Flash::error("Failed to unlink");
       Router::redirect(Helper::getURL("admin/assessment"));
       return;
     }
@@ -83,12 +91,14 @@ class AssessmentController extends Controller
     $instance->update();
 
     if ($instance instanceof Question) {
+      Flash::success("Successfully Unlinked");
       Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $instance->id]));
       return;
     }
 
 
     $question = $instance->question;
+    Flash::success("Successfully Unlinked");
     Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
@@ -117,11 +127,13 @@ class AssessmentController extends Controller
     $instance->delete();
 
     if ($instance instanceof Question) {
+      Flash::success("Question $id was deleted");
       Router::redirect(Helper::getURL("admin/assessment"));
       return;
     }
 
     if ($question) {
+      Flash::success("Answer was deleted");
       Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
       return;
     }
@@ -154,24 +166,29 @@ class AssessmentController extends Controller
         "link" => $link
       ]);
     } catch (Exception $ex) {
+      Flash::error("Something went wrong: {$ex->getMessage()}");
       Logger::log($ex->getMessage(), "error");
+      Router::redirect(Helper::getURL("admin/assessment"));
     }
 
     if (!empty($link)) {
       $id = Helper::getValue("id", $link);
+      Flash::success("Question link established");
       Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $id]));
       return;
     }
 
     if (isset($qid)) {
+      Flash::success("Question updated successfully");
       Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $qid]));
       return;
     }
+    Flash::success("Question Created successfully");
     Router::redirect(Helper::getURL("admin/assessment"));
   }
 
   /**
-   * Updates exsiting answer
+   * Updates existing answer
    *
    * @return never
    */
@@ -182,6 +199,7 @@ class AssessmentController extends Controller
     $question = Question::findOne(["id" => $questionId]);
 
     if (!isset($question)) {
+      Flash::error("Your attempt to update question failed, question $questionId was not found");
       Router::redirect(Helper::getURL("admin/assessment"));
     }
 
@@ -195,6 +213,7 @@ class AssessmentController extends Controller
 
 
     $question->update();
+    Flash::success("Changes saved successfully");
     Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
@@ -208,6 +227,7 @@ class AssessmentController extends Controller
     $id = $this->request->data("id");
     $answer = Answer::findOne(["id" => $id]);
     if (!isset($answer)) {
+      Flash::error("Answer was not found");
       Router::redirect(Helper::getURL("admin/assessment"));
     }
     $data = $this->request->data(get_class($answer), []);
@@ -215,6 +235,7 @@ class AssessmentController extends Controller
     $answer->link = empty($link) ? null : $link;
     $answer->update();
     $question = $answer->question;
+    Flash::success("Answer was successfully updated");
     Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
   }
 
@@ -228,12 +249,15 @@ class AssessmentController extends Controller
     $id = $this->request->data("id");
     $question = Question::findOne(["id" => $id]);
     if (!isset($question)) {
+      Flash::error("Failed to find question $id");
       Router::redirect(Helper::getURL("admin/assessment"));
     }
     $context = $this->request->data($question->questionType->handler);
     try {
       $answer = Answer::configure($question, $context);
+      Flash::success("Answer created");
     } catch (Exception $ex) {
+      Flash::error("Something went wrong: {$ex->getMessage()}");
       Logger::log($ex->getMessage(), "error");
     }
     Router::redirect(Helper::getURL("admin/assessment/question", ["id" => $question->id]));
@@ -251,6 +275,7 @@ class AssessmentController extends Controller
     if ($question) {
       $this->render("question", ["question" => $question, "title" => "Question ($question->id)"]);
     }
+    Flash::error("Question $id was not found");
     Router::redirect(Helper::getURL("admin/assessment"));
   }
 }
