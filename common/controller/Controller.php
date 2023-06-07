@@ -94,13 +94,13 @@ abstract class Controller extends BaseObject implements IAuthController, IViewab
       $mime = $mime ?? mime_content_type($handle);
       ob_clean();
 
-      echo file_get_contents($path);
-
+      $content = file_get_contents($path);
       $status = fclose($handle);
 
       if ($status) {
         header_remove();
         header("Content-Type: $mime");
+        echo $content;
         http_response_code(200);
       } else {
         throw new Exception("File not found");

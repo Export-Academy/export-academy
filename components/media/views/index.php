@@ -15,6 +15,7 @@ $this->registerSCSSFile("style");
 $this->registerJsFile("base-handler", $this::POS_HEAD);
 $this->registerJsFile("image-handler", $this::POS_HEAD);
 $this->registerJsFile("video-handler", $this::POS_HEAD);
+$this->registerJsFile("application-handler", $this::POS_HEAD);
 $this->registerJsFile("media", $this::POS_END);
 
 
@@ -36,9 +37,9 @@ $current = "";
     if (empty($dir)) continue;
     $current .= $dir  ? $dir . "/" : "";
   ?>
-  <?= Html::tag('a', $dir, ["href" =>
+    <?= Html::tag('a', $dir, ["href" =>
     Helper::getURL("admin/resource", ["path" => $current])]) ?>
-  <div><i data-feather="chevron-right" width="16" height="16"></i></div>
+    <div><i data-feather="chevron-right" width="16" height="16"></i></div>
   <?php endforeach ?>
 </div>
 
@@ -52,14 +53,14 @@ $current = "";
   <div class="col-lg-8 col-md-12">
     <div class="row">
       <?php if (empty($assets)) : ?>
-      <div class="fw-semibold fs-6 p-5">No Files were Found</div>
+        <div class="fw-semibold fs-6 p-5">No Files were Found</div>
       <?php else : ?>
-      <?php foreach ($assets as $asset) :
+        <?php foreach ($assets as $asset) :
           /** @var FormatHandler */
           $handler = $asset->getHandler($this);
         ?>
-      <div class="col-lg-4 col-md-6 col-sm-12"><?= $handler->renderThumbnail($asset) ?></div>
-      <?php endforeach; ?>
+          <div class="col-lg-4 col-md-6 col-sm-12"><?= $handler->renderThumbnail($asset) ?></div>
+        <?php endforeach; ?>
       <?php endif; ?>
 
     </div>

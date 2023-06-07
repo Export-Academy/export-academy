@@ -54,7 +54,9 @@ class MediaController extends Controller
     $name = $this->request->data("name");
     $path = $this->request->data("path");
     $asset = Asset::findOne(["id" => $id]);
-    $asset->move((empty($path) ? "/" : $path) . "$name");
+
+    $destination = $path . "$name";
+    $asset->move($destination);
   }
 
 

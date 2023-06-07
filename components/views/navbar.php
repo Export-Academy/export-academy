@@ -33,11 +33,15 @@ $components = HtmlComponent::instance($this);
         </div>
       </button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item fw-semibold" href="<?= Helper::getURL("admin/account") ?>">Account</a></li>
+        <li><a class="dropdown-item fw-semibold hstack justify-content-between" href="<?= Helper::getURL("admin/account") ?>"> <i data-feather="user" width="18" height="18"></i>
+            <div>Account</div>
+          </a></li>
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item fw-semibold" href="<?= Helper::getURL("sign_out") ?>">Sign Out</a></li>
+        <li><a class="dropdown-item fw-semibold text-danger hstack justify-content-between" href="<?= Helper::getURL("sign_out") ?>"><i data-feather="log-out" width="18" height="18"></i>
+            <div>Sign Out</div>
+          </a></li>
       </ul>
     </div>
   </div>
@@ -47,7 +51,7 @@ $components = HtmlComponent::instance($this);
 <div id="sidebar-canvas" class="offcanvas offcanvas-start" tabindex="-1">
   <div class="offcanvas-header">
     <div class="fw-semibold fs-3">Export Academy</div>
-    <div class="fw-semibold">Admin Portal</div>
+    <div class="fw-bold">Admin Portal</div>
   </div>
   <div class="offcanvas-body mt-5">
 

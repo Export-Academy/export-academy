@@ -3,6 +3,7 @@
  * @property {string} id 
  * @property {string|undefined} path
  * @property {boolean} reload
+ * @property {string} selectedType
  */
 
 class Uploader {
@@ -19,7 +20,7 @@ class Uploader {
    * @param {UploaderConfiguration} config 
    */
   static init(config) {
-    const { id, path, reload } = config;
+    const { id, path, reload, selectedType } = config;
     const uploader = new Uploader();
 
     uploader.id = id;
@@ -30,7 +31,10 @@ class Uploader {
 
     this.registry[id] = uploader;
 
-    console.log(this.registry);
+    $(selectedType).on("dropdown.change", function (e, value) {
+      uploader.fileInput.prop("accept", value);
+      $(`${selectedType}-desc`).html(value.length === 0 ? "all" : `(${value})`);
+    });
     return uploader;
   }
 
@@ -76,7 +80,6 @@ class Uploader {
 
 
     this.urlUploadButton.on('click', async function (e) {
-      console.log('Triggering URL Upload')
       uploader.handleFileURL(uploader);
     });
   }
@@ -85,7 +88,7 @@ class Uploader {
     const url = uploader.urlInput.val();
 
     if (url.length === 0) return;
-    console.log(url);
+
     uploader.uploadFile({ url });
     return;
   }
@@ -123,7 +126,6 @@ class Uploader {
 
   handleFileUpload(e, uploader) {
     const files = e.currentTarget.files;
-    console.log(files)
     uploader.uploadFile({ file: files[0] });
   }
 
@@ -157,8 +159,6 @@ class Uploader {
 
       res = await AdminController.fetch("media", "upload_url", null, data);
     }
-
-    console.log(res);
 
 
     if (res) {

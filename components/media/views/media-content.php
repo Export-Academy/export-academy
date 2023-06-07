@@ -1,6 +1,7 @@
 <?php
 
 use common\models\resource\AssetModel;
+use common\models\resource\format\handlers\ApplicationHandler;
 use common\models\resource\format\handlers\ImageHandler;
 use common\models\resource\format\handlers\VideoHandler;
 use lib\app\view\View;
@@ -17,12 +18,13 @@ use lib\app\view\View;
 <div class="media-container">
   <?= VideoHandler::instance($this)->renderView() ?>
   <?= ImageHandler::instance($this)->renderView() ?>
+  <?= ApplicationHandler::instance($this)->renderView() ?>
 </div>
 
 <div class="media-details-container my-3" id="media-details-container-handle" style="display: none">
   <div class="row gap-3">
     <div class="col-auto">
-      <small class="text-muted">Filename</small>
+      <small class="text-muted">Name</small>
       <div id="filename" class="fw-semibold">-</div>
     </div>
 
@@ -37,7 +39,7 @@ use lib\app\view\View;
     </div>
 
     <div class="col-auto">
-      <small class="text-muted">Created</small>
+      <small class="text-muted">Uploaded by</small>
       <div id="created-user" class="fw-semibold">-</div>
       <small id="created-date" class="fw-semibold">-</small>
     </div>

@@ -123,3 +123,22 @@ $color-dark: #202020;
     height: 100%;
   }
 }
+
+.media-app-container {
+  position: relative;
+
+  a {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: $color-navy;
+    color: $color-grey;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $color-navy;
+      color: $color-grey;
+    }
+  }
+}

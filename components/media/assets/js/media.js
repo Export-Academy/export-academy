@@ -8,7 +8,8 @@
 class Handler {
   static types = {
     VideoHandler: VideoHandler,
-    ImageHandler: ImageHandler
+    ImageHandler: ImageHandler,
+    ApplicationHandler: ApplicationHandler
   };
 
   /**

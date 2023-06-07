@@ -1,8 +1,8 @@
 <?php
 
 use common\models\resource\AssetModel;
+use common\models\resource\format\handlers\ApplicationHandler;
 use common\models\resource\format\handlers\ImageHandler;
-use common\models\resource\format\handlers\TextHandler;
 use common\models\resource\format\handlers\VideoHandler;
 use components\form\FormComponent;
 use components\media\MediaComponent;
@@ -27,34 +27,31 @@ $modalId = "editor-modal-" . spl_object_id($this);
   <div class="thumbnail-container" id="thumbnail-<?= $asset->getId() ?>" type="button" data-bs-toggle="dropdown">
     <div class="thumbnail-display">
       <?php if ($context instanceof VideoHandler) : ?>
-      <i data-feather="film" width="28" height="28"></i>
-      <?php endif; ?>
-
-      <?php if ($context instanceof TextHandler) : ?>
-      <i data-feather="file" width="28" height="28"></i>
+        <i data-feather="film" width="28" height="28"></i>
       <?php endif; ?>
 
 
       <?php if ($context instanceof ImageHandler) : ?>
-      <i data-feather="image" width="28" height="28"></i>
+        <i data-feather="image" width="28" height="28"></i>
+      <?php endif; ?>
+
+      <?php if ($context instanceof ApplicationHandler) : ?>
+        <i data-feather="monitor" width="28" height="28"></i>
       <?php endif; ?>
     </div>
     <div class="detail-container">
-      <div class="main">
+      <div class="main text-truncate" style="width: 260px;">
         <?= $asset->getName() ?>
       </div>
-      <div class="text-muted text-truncate" style="min-width: 100%;">
+      <div class="text-muted text-truncate" style="width: 200px;">
         <small><?= $asset->getPath() ?></small>
       </div>
     </div>
   </div>
   <ul class="dropdown-menu">
-    <li><button data-type="<?= basename($format->handler) ?>" data-key="<?= $asset->getId() ?>" type="button"
-        data-key="<?= $asset->getId() ?>" class="button dropdown-item view-asset-button">View</button></li>
-    <li><button type="button" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>"
-        class="button dropdown-item">Edit</button></li>
-    <li><button id="media-delete-<?= $asset->getId() ?>" data-id="<?= $asset->getId() ?>"
-        class="button dropdown-item">Delete</button></li>
+    <li><button data-type="<?= basename($format->handler) ?>" data-key="<?= $asset->getId() ?>" type="button" data-key="<?= $asset->getId() ?>" class="button dropdown-item view-asset-button">View</button></li>
+    <li><button type="button" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>" class="button dropdown-item">Edit</button></li>
+    <li><button id="media-delete-<?= $asset->getId() ?>" data-id="<?= $asset->getId() ?>" class="button dropdown-item">Delete</button></li>
   </ul>
 </div>
 

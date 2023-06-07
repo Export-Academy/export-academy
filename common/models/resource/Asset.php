@@ -18,6 +18,7 @@ class Asset extends AssetModel
   public $id;
   public $name;
   public $dir;
+  public $ext;
   public $format;
   public $created_at;
   public $updated_at;
@@ -73,13 +74,13 @@ class Asset extends AssetModel
 
   public function getAssetFormat()
   {
-    return $this->hasOne(Format::class, ["id" => $this->format])->cache(30);
+    return $this->hasOne(Format::class, ["id" => $this->format]);
   }
 
 
   public function getPath(): string
   {
-    return $this->dir;
+    return $this->dir . $this->name . ".$this->ext";
   }
 
   public function getName(): string
@@ -97,7 +98,6 @@ class Asset extends AssetModel
    */
   public static function create(File $file)
   {
-
     $format = $file->getFormat();
     if (!$format) throw new Exception("Unsupported format");
     $db = Database::instance();
@@ -109,11 +109,13 @@ class Asset extends AssetModel
     $asset = $db->transaction(function ($tr) use ($file, $format, $user) {
       $config = array(
         "name" => $file->name,
-        "dir" => $file->getParsedPath(),
+        "dir" => $file->getDirectory(),
         "format" => $format->id,
+        "ext" => $file->getExtension(),
         "created_by" => $user->userId(),
         "updated_by" => $user->userId()
       );
+
       $instance  = new Asset($config);
 
 
@@ -143,14 +145,13 @@ class Asset extends AssetModel
   {
 
     $name = end(explode("/", $destination));
+    $destination = "$destination.{$this->ext}";
 
-    $destination = $destination . ".{$this->getExtension()}";
     $db = Database::instance();
 
     $db->transaction(function ($tr) use ($name, $destination, $config) {
       $source = $this->getPath();
 
-      $this->dir = $destination;
       $this->name = $name;
 
       $this->update(true, $tr);

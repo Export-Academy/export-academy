@@ -1,5 +1,6 @@
 <?php
 
+use common\models\resource\format\Format;
 use components\HtmlComponent;
 use components\modal\Modal;
 use lib\app\view\View;
@@ -19,8 +20,11 @@ $reload = $reload ? 'true' : 'false';
 
 
 $header = <<< HTML
-<div class="fw-semibold fs-6">Upload File</div>
+<div class="fw-semibold fs-4">Upload File</div>
 HTML;
+
+$selectedTypeId = "uploader-type-$id";
+$dropdown = HtmlComponent::dropdown($this, "type", null, Format::getTypeOptions(), ["id" => $selectedTypeId]);
 
 
 $content = <<< HTML
@@ -28,22 +32,27 @@ $content = <<< HTML
 <div role="tabpanel">
   <ul class="nav nav-underline" role="tablist">
     <li class="nav-item">
-      <a class="flex-sm-fill text-sm-center nav-link active" data-bs-toggle="list" href="#file-upload" role="tab">Upload
+      <a class="flex-md-fill text-md-center nav-link active" data-bs-toggle="list" href="#file-upload" role="tab">Upload
         File</a>
     </li>
     <li class="nav-item">
-      <a class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="list" href="#file-url-upload" role="tab">By
+      <a class="flex-md-fill text-md-center nav-link" data-bs-toggle="list" href="#file-url-upload" role="tab">By
         URL</a>
     </li>
   </ul>
 </div>
 <div class="tab-content rounded-0 p-3 mt-3">
   <div class="tab-pane fade show active position-relative" id="file-upload" role="tabpanel">
-    <div class="vstack justify-content-center align-items-center p-5" id="drag-drop-area-$id">
-      <i data-feather="upload-cloud" width="180" height="180" stroke="gray"></i>
-      <div class="fw-light fs-5 text-center">drag and drop a file here</div>
-      <input type="file" class="form-control mt-5" id="file-input-$id" />
-    </div>
+  <div class="form-group" >
+        <label class="fw-semibold">Select Accepted File</label>
+        {$dropdown}
+      </div>
+  <div class="vstack justify-content-center align-items-center p-5 border" id="drag-drop-area-$id">
+        <i data-feather="upload-cloud" width="120" height="120" stroke="lightgrey"></i>
+        <div class="fw-light fs-5 text-center">drag and drop a file here</div>
+        <small class="text-center text-muted" >Accepting <span id='$selectedTypeId-desc' >all</span> file types</small>
+        <input type="file" class="form-control mt-5" id="file-input-$id" />
+      </div>
   </div>
 <div class="tab-pane fade" id="file-url-upload" role="tabpanel">
   <div class="vstack justify-content-center align-items-center p-5">
@@ -64,12 +73,12 @@ $content = <<< HTML
 
 HTML;
 
-$this->registerJS("Uploader.init({ id: `$id` , path: `$path`, reload: $reload })", $this::POS_LOAD);
+$this->registerJS("Uploader.init({ id: `$id` , path: `$path`, reload: $reload, selectedType: `#$selectedTypeId` })", $this::POS_LOAD);
 
 
 ?>
 
-<?= Modal::instance($this)->show("uploader-modal-$id", $content, $header, null, ["size" => Modal::MODAL_XL, "showFooter" => false]) ?>
+<?= Modal::instance($this)->show("uploader-modal-$id", $content, $header, null, ["size" => Modal::MODAL_LG, "showFooter" => false]) ?>
 
 <div class="d-flex justify-content-end">
   <button type="button" class="btn" id="uploader-trigger-button-<?= $id ?>">

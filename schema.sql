@@ -168,6 +168,7 @@ CREATE TABLE
         `id` int PRIMARY KEY AUTO_INCREMENT,
         `name` varchar(250) NOT NULL,
         `dir` varchar(100),
+        `ext` varchar(10) NOT NULL,
         `format` int NOT NULL,
         `created_by` int NOT NULL,
         `updated_by` int NOT NULL,
@@ -447,7 +448,7 @@ INSERT INTO format(
         handler
     )
 VALUES (
-        'image',
+        'png,jpeg,jpg,gif',
         'common\\models\\resource\\format\\handlers\\ImageHandler'
     );
 
@@ -456,8 +457,8 @@ INSERT INTO format(
         handler
     )
 VALUES (
-        'text',
-        'common\\models\\resource\\format\\handlers\\TextHandler'
+        'mp4',
+        'common\\models\\resource\\format\\handlers\\VideoHandler'
     );
 
 INSERT INTO format(
@@ -465,8 +466,8 @@ INSERT INTO format(
         handler
     )
 VALUES (
-        'video',
-        'common\\models\\resource\\format\\handlers\\VideoHandler'
+        'pdf',
+        'common\\models\\resource\\format\\handlers\\ApplicationHandler'
     );
 
 INSERT INTO system(timezone) VALUES ('+0:00');

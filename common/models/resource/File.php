@@ -4,6 +4,7 @@
 namespace common\models\resource;
 
 use common\models\resource\format\Format;
+use lib\app\log\Logger;
 use lib\util\BaseObject;
 
 class File extends BaseObject
@@ -16,7 +17,12 @@ class File extends BaseObject
 
   public function getParsedPath()
   {
-    return (isset($this->path) ? "$this->path/$this->name" : $this->name) . "." . $this->getExtension();
+    return empty($this->path) ? "/$this->name.{$this->getExtension()}" : "$this->path/$this->name.{$this->getExtension()}";
+  }
+
+  public function getDirectory()
+  {
+    return empty($this->path) ? "/" : "$this->path/";
   }
 
 
@@ -46,12 +52,11 @@ class File extends BaseObject
   public function getFormat()
   {
     $type = $this->getType();
-    $name = explode("/", $type)[0];
-    $format = Format::findOne(["name" => $name]);
+    $name = end(explode("/", $type));
+    $format = Format::findOne("name LIKE '%$name%'");
 
     return $format ?? false;
   }
-
 
   public function getType()
   {

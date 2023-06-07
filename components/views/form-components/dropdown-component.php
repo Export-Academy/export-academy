@@ -8,18 +8,14 @@ use lib\util\html\Html;
  */
 
 
-$prefix = spl_object_id($this->context);
+$prefix = spl_object_id($this);
 
 ?>
 
 
 
-<div class="btn-group">
+<div class="w-100">
   <?= Html::hiddenInput($value ?? null, $name ?? "", ["id" => "$prefix-selected-item-input"]) ?>
-
-  <hr>
-
-
   <div type="button" data-bs-toggle="dropdown" class="hstack gap-5 justify-content-between w-100 p-3">
     <div class="fw-semibold text-muted text-wrap" id="<?= $prefix ?>-dropdown-item-label">
       <?= $label ?? "Select Option" ?>
@@ -40,6 +36,10 @@ $prefix = spl_object_id($this->context);
       <div class="text-center">No Options</div>
     <?php endif; ?>
   </ul>
+
+  <?php if (isset($id)) : ?>
+    <div id="<?= $id ?>" data-value=""></div>
+  <?php endif; ?>
 
 </div>
 
@@ -63,6 +63,8 @@ $('$dropdownItem').on("click", function (e) {
 
   $('$hiddenInput').val(value);
 
+  $("#$id").data("value", value);
+  $("#$id").trigger("dropdown.change", [value]);
 })
 JS;
 

@@ -13,7 +13,6 @@ use DateTime;
 use lib\util\BaseObject;
 use lib\util\Helper;
 use Exception;
-use lib\app\Request;
 use PDO;
 
 
@@ -373,15 +372,15 @@ class Query extends BaseObject implements IExpression
 
   public function all(Transaction $tr = null)
   {
-    $res = Request::get(md5($this->createCommand()));
+    // $res = Request::get(md5($this->createCommand()));
 
-    if (!isset($res)) {
-      $res = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
+    // if (!isset($res)) {
+    $res = (isset($tr)) ? $tr->execute($this)->fetchAll(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetchAll(PDO::FETCH_ASSOC);
 
-      if ($this->cache) {
-        Request::add(md5($this->createCommand()), $res);
-      }
-    }
+    // if ($this->cache) {
+    // Request::add(md5($this->createCommand()), $res);
+    // }
+    // }
 
     if ($res)
       return array_map(function ($data) {
@@ -394,14 +393,14 @@ class Query extends BaseObject implements IExpression
 
   public function one(Transaction $tr = null)
   {
-    $res = Request::get(md5($this->createCommand()));
-    if (!isset($res)) {
-      $res = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
+    // $res = Request::get(md5($this->createCommand()));
+    // if (!isset($res)) {
+    $res = isset($tr) ? $tr->execute($this)->fetch(PDO::FETCH_ASSOC) : $this->database->execute($this)->fetch(PDO::FETCH_ASSOC);
 
-      if ($this->cache) {
-        Request::add(md5($this->createCommand()), $res);
-      }
-    }
+    // if ($this->cache) {
+    // Request::add(md5($this->createCommand()), $res);
+    // }
+    // }
     if ($res)
       return $this->getModelInstance($res);
     return null;
